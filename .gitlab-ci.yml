@@ -1,0 +1,3 @@
+include:
+  project: 'git-ops/pipelines/scripts'
+  file: 'pipeline/.pipeline-portal-detran.yml'

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="SPA Portal do Cidadão ">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="SPA Portal do Cidadão">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link id="favicon" rel="icon" type="image/png" href="logoWhite.png"/>
+  <script>
+    (function() {
+      const favicon = document.getElementById('favicon');
+      function updateFavicon(e) {
+        if (e.matches) {
+          // Dark mode
+          favicon.href = 'logoWhite.png';
+        } else {
+          // Light mode
+          favicon.href = 'logo.png';
+        }
+      }
+      const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      if (darkModeMediaQuery.addEventListener) {
+        darkModeMediaQuery.addEventListener('change', updateFavicon);
+      } else if (darkModeMediaQuery.addListener) {
+        darkModeMediaQuery.addListener(updateFavicon);
+      }
+      updateFavicon(darkModeMediaQuery);
+    })();
+  </script>
+
+  <title> SPA Portal do cidadão</title>
+  <link rel="manifest" href="manifest.json">
+  
+  <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+</head>
+<body>
+  <div id="overlay" style="background-color: #3E6BF7; position: absolute; top: 0px; left: 0px; z-index: 1000000; overflow: hidden; width: 100vw; height: 100vh;">
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+      <div style="color: white; font-family: Arial, sans-serif; font-size: 36px; text-align: center;"><img src="detran-logo.png" width="240"  alt="Loading..."><br/>Carregando...</div>
+    </div>
+  </div>
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>
+<script>
+  // Create a new div element with an ID and some styling 
+    document.addEventListener("DOMContentLoaded", function(event) { 
+      document.getElementById("overlay").remove(); 
+    });
+</script>

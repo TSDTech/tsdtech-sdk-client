@@ -1,0 +1,60 @@
+import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
+import 'package:voucherize/core/services/base.api.dart';
+
+class IntraApi {
+  final String _baseUrl;
+
+  IntraApi(this._baseUrl);
+  String get baseUrl => _baseUrl;
+
+  @protected
+  Future<Response> get(String path, {Map<String, dynamic>? queryParameters, Map<String, dynamic>? headers}) async {
+    return await BaseApi.get(
+      joinUrl(_baseUrl, path),
+      queryParameters: queryParameters,
+      headers: headers,
+    );
+  }
+
+  @protected
+  Future<Response> post(String path, {Object? data, Map<String, dynamic>? headers}) async {
+    return await BaseApi.post(
+      joinUrl(_baseUrl, path),
+      data: data,
+      headers: headers,
+    );
+  }
+
+  @protected
+  Future<Response> put(String path, {Object? data, Map<String, dynamic>? headers}) async {
+    return await BaseApi.put(
+      joinUrl(_baseUrl, path),
+      data: data,
+      headers: headers,
+    );
+  }
+
+  @protected
+  Future<Response> patch(String path, {Object? data, Map<String, dynamic>? headers}) async {
+    return await BaseApi.patch(
+      joinUrl(_baseUrl, path),
+      data: data,
+      headers: headers,
+    );
+  }
+
+  @protected
+  Future<Response> delete(String path, {Object? data, Map<String, dynamic>? headers}) async {
+    return await BaseApi.delete(
+      joinUrl(_baseUrl, path),
+      data: data,
+      headers: headers,
+    );
+  }
+    String joinUrl(String baseUrl, String path) {
+    baseUrl = baseUrl.endsWith('/') ? baseUrl.substring(0, baseUrl.length - 1) : baseUrl;
+    path = path.startsWith('/') ? path : '/$path';
+    return '$baseUrl$path';
+  }
+}

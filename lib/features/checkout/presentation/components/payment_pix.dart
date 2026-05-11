@@ -3,13 +3,13 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:voucherize/core/router/router.dart';
-import 'package:voucherize/core/services/intra-api/md-checkout/checkouts_service.dart';
-import 'package:voucherize/features/cart/core/stores/cart_store.dart';
-import 'package:voucherize/features/checkout/core/stores/checkout_store.dart';
-import 'package:voucherize/models/checkouts/calculate_item.model.dart';
-import 'package:voucherize/models/checkouts/checkout_request.model.dart';
-import 'package:voucherize/models/checkouts/pix_data.model.dart';
+import 'package:tsdtech_client_sdk/core/router/router.dart';
+import 'package:tsdtech_client_sdk/core/services/intra-api/md-checkout/checkouts_service.dart';
+import 'package:tsdtech_client_sdk/features/cart/core/stores/cart_store.dart';
+import 'package:tsdtech_client_sdk/features/checkout/core/stores/checkout_store.dart';
+import 'package:tsdtech_client_sdk/models/checkouts/calculate_item.model.dart';
+import 'package:tsdtech_client_sdk/models/checkouts/checkout_request.model.dart';
+import 'package:tsdtech_client_sdk/models/checkouts/pix_data.model.dart';
 
 class PaymentPix extends StatefulWidget {
   const PaymentPix({super.key});

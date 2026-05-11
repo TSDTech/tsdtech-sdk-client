@@ -2,12 +2,12 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
-import 'package:voucherize/core/components/nav_header.dart';
-import 'package:voucherize/features/services_catalog/core/stores/home_store.dart';
-import 'package:voucherize/core/components/ds_text.dart';
-import 'package:voucherize/features/services_catalog/presentation/components/category_chip.dart';
-import 'package:voucherize/features/cart/presentation/components/cart_drawer.dart';
-import 'package:voucherize/features/services_catalog/presentation/components/services_grid.dart';
+import 'package:tsdtech_client_sdk/core/components/nav_header.dart';
+import 'package:tsdtech_client_sdk/features/services_catalog/core/stores/home_store.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_text.dart';
+import 'package:tsdtech_client_sdk/features/services_catalog/presentation/components/category_chip.dart';
+import 'package:tsdtech_client_sdk/features/cart/presentation/components/cart_drawer.dart';
+import 'package:tsdtech_client_sdk/features/services_catalog/presentation/components/services_grid.dart';
 
 @RoutePage()
 class HomeScreen extends StatelessWidget {

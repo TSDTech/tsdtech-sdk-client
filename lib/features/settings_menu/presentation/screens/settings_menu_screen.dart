@@ -1,9 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:voucherize/core/components/ds_text.dart';
-import 'package:voucherize/core/components/nav_header.dart';
-import 'package:voucherize/features/settings_menu/presentation/components/settings_card.dart';
-import 'package:voucherize/features/settings_menu/presentation/components/settings_link.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_text.dart';
+import 'package:tsdtech_client_sdk/core/components/nav_header.dart';
+import 'package:tsdtech_client_sdk/features/settings_menu/presentation/components/settings_card.dart';
+import 'package:tsdtech_client_sdk/features/settings_menu/presentation/components/settings_link.dart';
 
 @RoutePage()
 class SettingsMenuScreen extends StatelessWidget {

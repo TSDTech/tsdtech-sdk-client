@@ -2,17 +2,17 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:voucherize/core/components/nav_header.dart';
-import 'package:voucherize/core/components/ds_text.dart';
-import 'package:voucherize/core/router/router.dart';
-import 'package:voucherize/features/cart/core/stores/cart_store.dart';
-import 'package:voucherize/features/checkout/presentation/components/order_item.dart';
-import 'package:voucherize/features/checkout/core/stores/checkout_store.dart';
-import 'package:voucherize/features/checkout/core/models/payment_method.dart';
-import 'package:voucherize/features/checkout/presentation/components/payment_pix.dart';
-import 'package:voucherize/features/checkout/presentation/components/payment_card.dart';
-import 'package:voucherize/features/checkout/presentation/components/payment_boleto.dart';
-import 'package:voucherize/features/checkout/presentation/components/payment_option_tile.dart';
+import 'package:tsdtech_client_sdk/core/components/nav_header.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_text.dart';
+import 'package:tsdtech_client_sdk/core/router/router.dart';
+import 'package:tsdtech_client_sdk/features/cart/core/stores/cart_store.dart';
+import 'package:tsdtech_client_sdk/features/checkout/presentation/components/order_item.dart';
+import 'package:tsdtech_client_sdk/features/checkout/core/stores/checkout_store.dart';
+import 'package:tsdtech_client_sdk/features/checkout/core/models/payment_method.dart';
+import 'package:tsdtech_client_sdk/features/checkout/presentation/components/payment_pix.dart';
+import 'package:tsdtech_client_sdk/features/checkout/presentation/components/payment_card.dart';
+import 'package:tsdtech_client_sdk/features/checkout/presentation/components/payment_boleto.dart';
+import 'package:tsdtech_client_sdk/features/checkout/presentation/components/payment_option_tile.dart';
 
 @RoutePage()
 class CheckoutScreen extends StatelessWidget {

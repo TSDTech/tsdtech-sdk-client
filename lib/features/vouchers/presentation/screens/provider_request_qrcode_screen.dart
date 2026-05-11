@@ -3,15 +3,15 @@ import 'dart:convert';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:voucherize/features/vouchers/core/stores/provider_request_store.dart';
-import 'package:voucherize/models/vouchers/provider_request.model.dart';
+import 'package:tsdtech_client_sdk/features/vouchers/core/stores/provider_request_store.dart';
+import 'package:tsdtech_client_sdk/models/vouchers/provider_request.model.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:voucherize/core/components/nav_header.dart';
-import 'package:voucherize/core/components/ds_text.dart';
-import 'package:voucherize/features/vouchers/core/stores/vouchers_store.dart';
-import 'package:voucherize/core/router/router.dart';
-// import 'package:voucherize/models/vouchers/voucher.model.dart';
+import 'package:tsdtech_client_sdk/core/components/nav_header.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_text.dart';
+import 'package:tsdtech_client_sdk/features/vouchers/core/stores/vouchers_store.dart';
+import 'package:tsdtech_client_sdk/core/router/router.dart';
+// import 'package:tsdtech_client_sdk/models/vouchers/voucher.model.dart';
 
 @RoutePage()
 class ProviderRequestQRCodeScreen extends StatelessWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
-import 'package:voucherize/core/local_storage/administrator/administrator_id.prefs.dart';
-import 'package:voucherize/models/auth/signup-request-client.model.dart';
+import 'package:tsdtech_client_sdk/core/local_storage/administrator/administrator_id.prefs.dart';
+import 'package:tsdtech_client_sdk/models/auth/signup-request-client.model.dart';
 
 
 part 'signup_person_store.g.dart';

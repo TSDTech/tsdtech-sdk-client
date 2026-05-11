@@ -2,12 +2,12 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
-import 'package:voucherize/core/components/nav_header.dart';
-import 'package:voucherize/core/components/ds_text.dart';
-import 'package:voucherize/core/router/router.dart';
-import 'package:voucherize/models/vouchers/result_type.dart';
-import 'package:voucherize/features/vouchers/presentation/components/comprovante_modal.dart';
-import 'package:voucherize/features/vouchers/core/stores/provider_request_store.dart';
+import 'package:tsdtech_client_sdk/core/components/nav_header.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_text.dart';
+import 'package:tsdtech_client_sdk/core/router/router.dart';
+import 'package:tsdtech_client_sdk/models/vouchers/result_type.dart';
+import 'package:tsdtech_client_sdk/features/vouchers/presentation/components/comprovante_modal.dart';
+import 'package:tsdtech_client_sdk/features/vouchers/core/stores/provider_request_store.dart';
 
 @RoutePage()
 class ProviderRequestFinishedScreen extends StatelessWidget {

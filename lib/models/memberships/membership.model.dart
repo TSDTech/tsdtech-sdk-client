@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:voucherize/models/auth/client-user-entity.model.dart';
+import 'package:tsdtech_client_sdk/models/auth/client-user-entity.model.dart';
 
 part 'membership.model.g.dart';
 

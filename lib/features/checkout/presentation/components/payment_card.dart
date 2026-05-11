@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:voucherize/core/components/ds_text.dart';
-import 'package:voucherize/features/checkout/core/stores/checkout_store.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_text.dart';
+import 'package:tsdtech_client_sdk/features/checkout/core/stores/checkout_store.dart';
 
 /// Caminho dos ícones de bandeira (SVG). Salve elo.svg, mastercard.svg e visa.svg em assets/icons/card_brands/
 const String _cardBrandsPath = 'assets/icons/card_brands';

@@ -1,6 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:voucherize/core/components/ds_circular_progress_indicator.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_circular_progress_indicator.dart';
 
 enum DsFileUploadState { idle, uploading, uploaded }
 

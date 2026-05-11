@@ -1,11 +1,11 @@
 import 'package:mobx/mobx.dart';
-import 'package:voucherize/models/vouchers/voucher.model.dart';
-import 'package:voucherize/core/services/intra-api/md-vouchers/vouchers_service.dart';
-import 'package:voucherize/core/services/intra-api/md-providers/provider_requests_service.dart';
-import 'package:voucherize/models/providers/provider.model.dart';
-import 'package:voucherize/models/value_result.dart';
-import 'package:voucherize/models/common/paginated_list.model.dart';
-import 'package:voucherize/models/common/pagination.model.dart';
+import 'package:tsdtech_client_sdk/models/vouchers/voucher.model.dart';
+import 'package:tsdtech_client_sdk/core/services/intra-api/md-vouchers/vouchers_service.dart';
+import 'package:tsdtech_client_sdk/core/services/intra-api/md-providers/provider_requests_service.dart';
+import 'package:tsdtech_client_sdk/models/providers/provider.model.dart';
+import 'package:tsdtech_client_sdk/models/value_result.dart';
+import 'package:tsdtech_client_sdk/models/common/paginated_list.model.dart';
+import 'package:tsdtech_client_sdk/models/common/pagination.model.dart';
 
 part 'vouchers_store.g.dart';
 

@@ -1,11 +1,11 @@
 import 'package:mobx/mobx.dart';
 import 'package:get_it/get_it.dart';
-import 'package:voucherize/core/services/intra-api/md-services/services/services_service.dart';
-import 'package:voucherize/core/services/intra-api/md-services/services/service_types_service.dart';
-import 'package:voucherize/models/services/service_type.model.dart';
-import 'package:voucherize/models/common/pagination.model.dart';
-import 'package:voucherize/core/local_storage/administrator/administrator_id.prefs.dart';
-import 'package:voucherize/models/services/service.model.dart';
+import 'package:tsdtech_client_sdk/core/services/intra-api/md-services/services/services_service.dart';
+import 'package:tsdtech_client_sdk/core/services/intra-api/md-services/services/service_types_service.dart';
+import 'package:tsdtech_client_sdk/models/services/service_type.model.dart';
+import 'package:tsdtech_client_sdk/models/common/pagination.model.dart';
+import 'package:tsdtech_client_sdk/core/local_storage/administrator/administrator_id.prefs.dart';
+import 'package:tsdtech_client_sdk/models/services/service.model.dart';
 
 part 'home_store.g.dart';
 

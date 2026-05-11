@@ -1,4 +1,4 @@
-import 'package:voucherize/core/local_storage/shared_prefs_helper.dart';
+import 'package:tsdtech_client_sdk/core/local_storage/shared_prefs_helper.dart';
 
 class AdministratorIdPrefs {
   static const _key = 'administrator_id';

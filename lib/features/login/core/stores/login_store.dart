@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
-import 'package:voucherize/core/services/intra-api/md-authorizers/client-users/auth_service.dart';
-import 'package:voucherize/models/value_result.dart';
+import 'package:tsdtech_client_sdk/core/services/intra-api/md-authorizers/client-users/auth_service.dart';
+import 'package:tsdtech_client_sdk/models/value_result.dart';
 
 part 'login_store.g.dart';
 

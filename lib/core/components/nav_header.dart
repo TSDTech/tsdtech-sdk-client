@@ -1,18 +1,18 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:voucherize/core/router/router.dart';
-import 'package:voucherize/models/navigation/nav_item.model.dart';
-import 'package:voucherize/core/components/ds_text.dart';
+import 'package:tsdtech_client_sdk/core/router/router.dart';
+import 'package:tsdtech_client_sdk/models/navigation/nav_item.model.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_text.dart';
 // ds_button removed from this file: replaced sign-up button with custom InkWell
-import 'package:voucherize/features/auth/core/stores/auth_store.dart';
-import 'package:voucherize/core/local_storage/client_user_token_data/client_user_token_data.prefs.dart';
-import 'package:voucherize/models/auth/client-user-token-data.model.dart';
-import 'package:voucherize/features/cart/core/stores/cart_store.dart';
-import 'package:voucherize/features/cart/presentation/components/cart_drawer.dart';
+import 'package:tsdtech_client_sdk/features/auth/core/stores/auth_store.dart';
+import 'package:tsdtech_client_sdk/core/local_storage/client_user_token_data/client_user_token_data.prefs.dart';
+import 'package:tsdtech_client_sdk/models/auth/client-user-token-data.model.dart';
+import 'package:tsdtech_client_sdk/features/cart/core/stores/cart_store.dart';
+import 'package:tsdtech_client_sdk/features/cart/presentation/components/cart_drawer.dart';
 import 'dart:math' as math;
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:voucherize/features/login/core/stores/login_store.dart';
+import 'package:tsdtech_client_sdk/features/login/core/stores/login_store.dart';
 
 /// App-wide navigation header matching the public layout.
 class NavHeader extends StatelessWidget implements PreferredSizeWidget {

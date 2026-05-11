@@ -1,13 +1,54 @@
-import 'package:voucherize/core/services/intra-api/intra.api.dart';
-import 'package:voucherize/core/constants/constants.dart';
-import 'package:voucherize/models/auth/client-user-entity.model.dart';
-import 'package:voucherize/models/value_result.dart';
+import 'package:tsdtech_client_sdk/core/services/intra-api/intra.api.dart';
+import 'package:tsdtech_client_sdk/core/constants/constants.dart';
+import 'package:tsdtech_client_sdk/models/auth/client-user-entity.model.dart';
+import 'package:tsdtech_client_sdk/models/value_result.dart';
 
+/// Service for managing client user profiles.
+///
+/// This service provides methods for updating client user information
+/// such as email, password, name, phone, and other profile details.
+///
+/// ## Usage
+/// ```dart
+/// final clientsService = ClientsService.instance;
+/// final result = await clientsService.patchClient(
+///   name: 'John Updated',
+///   phone: '+5511999999999',
+/// );
+/// ```
+///
+/// ## Singleton Pattern
+/// Access the service via [ClientsService.instance].
 class ClientsService extends IntraApi {
+  /// Singleton instance of [ClientsService].
   static final ClientsService instance = ClientsService();
 
+  /// Creates a [ClientsService] instance with the base URL from [Constants].
   ClientsService() : super(Constants.getBaseUrl());
 
+  /// Updates the authenticated client's profile information.
+  ///
+  /// All parameters are optional - only provided fields will be updated.
+  ///
+  /// - [email]: New email address (optional)
+  /// - [password]: New password (optional)
+  /// - [name]: New first name (optional)
+  /// - [secondName]: New last name (optional)
+  /// - [phone]: New phone number (optional)
+  /// - [administratorId]: Administrator identifier (optional)
+  /// - Returns: [ValueResult] containing the updated [ClientUserEntity]
+  ///
+  /// ## Example
+  /// ```dart
+  /// final result = await clientsService.patchClient(
+  ///   name: 'John',
+  ///   secondName: 'Doe',
+  ///   phone: '+5511987654321',
+  /// );
+  /// if (result.isSuccess) {
+  ///   print('Profile updated: ${result.value.name}');
+  /// }
+  /// ```
   Future<ValueResult<ClientUserEntity>> patchClient(
       {String? email,
       String? password,

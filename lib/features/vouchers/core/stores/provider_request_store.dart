@@ -1,7 +1,7 @@
 import 'package:mobx/mobx.dart';
-import 'package:voucherize/models/vouchers/provider_request.model.dart';
-import 'package:voucherize/core/services/intra-api/md-providers/provider_requests_service.dart';
-import 'package:voucherize/models/common/pagination.model.dart';
+import 'package:tsdtech_client_sdk/models/vouchers/provider_request.model.dart';
+import 'package:tsdtech_client_sdk/core/services/intra-api/md-providers/provider_requests_service.dart';
+import 'package:tsdtech_client_sdk/models/common/pagination.model.dart';
 
 part 'provider_request_store.g.dart';
 

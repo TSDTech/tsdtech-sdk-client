@@ -1,10 +1,10 @@
 import 'package:mobx/mobx.dart';
 import 'package:dio/dio.dart';
-import 'package:voucherize/core/services/intra-api/md-orders/orders_service.dart';
-import 'package:voucherize/models/common/pagination.model.dart';
-import 'package:voucherize/models/orders/order.model.dart';
-import 'package:voucherize/models/common/paginated_list.model.dart';
-import 'package:voucherize/models/value_result.dart';
+import 'package:tsdtech_client_sdk/core/services/intra-api/md-orders/orders_service.dart';
+import 'package:tsdtech_client_sdk/models/common/pagination.model.dart';
+import 'package:tsdtech_client_sdk/models/orders/order.model.dart';
+import 'package:tsdtech_client_sdk/models/common/paginated_list.model.dart';
+import 'package:tsdtech_client_sdk/models/value_result.dart';
 
 part 'purchase_history_store.g.dart';
 

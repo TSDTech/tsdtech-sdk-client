@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:voucherize/core/local_storage/shared_prefs_helper.dart';
-import 'package:voucherize/models/cart/cart_item.model.dart';
+import 'package:tsdtech_client_sdk/core/local_storage/shared_prefs_helper.dart';
+import 'package:tsdtech_client_sdk/models/cart/cart_item.model.dart';
 
 class CartPrefs {
   static const _key = 'cart_data';

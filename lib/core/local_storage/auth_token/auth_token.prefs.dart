@@ -1,4 +1,4 @@
-import 'package:voucherize/core/local_storage/shared_prefs_helper.dart';
+import 'package:tsdtech_client_sdk/core/local_storage/shared_prefs_helper.dart';
 
 class AuthTokenPrefs {
   static const _authTokenKey = 'auth_token';

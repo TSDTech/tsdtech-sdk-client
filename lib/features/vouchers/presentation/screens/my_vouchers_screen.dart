@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:voucherize/core/components/nav_header.dart';
-import 'package:voucherize/core/components/ds_text.dart';
-import 'package:voucherize/core/local_storage/administrator/administrator_id.prefs.dart';
-import 'package:voucherize/features/vouchers/core/stores/vouchers_store.dart';
-import 'package:voucherize/features/vouchers/core/stores/provider_request_store.dart';
-import 'package:voucherize/features/vouchers/presentation/components/voucher_filters.dart';
-import 'package:voucherize/features/vouchers/presentation/components/voucher_tabs.dart';
-import 'package:voucherize/features/vouchers/presentation/components/voucher_card.dart';
-import 'package:voucherize/features/vouchers/presentation/components/provider_request_card.dart';
-import 'package:voucherize/models/vouchers/voucher.model.dart';
-import 'package:voucherize/core/router/router.dart';
-import 'package:voucherize/models/vouchers/provider_request.model.dart';
+import 'package:tsdtech_client_sdk/core/components/nav_header.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_text.dart';
+import 'package:tsdtech_client_sdk/core/local_storage/administrator/administrator_id.prefs.dart';
+import 'package:tsdtech_client_sdk/features/vouchers/core/stores/vouchers_store.dart';
+import 'package:tsdtech_client_sdk/features/vouchers/core/stores/provider_request_store.dart';
+import 'package:tsdtech_client_sdk/features/vouchers/presentation/components/voucher_filters.dart';
+import 'package:tsdtech_client_sdk/features/vouchers/presentation/components/voucher_tabs.dart';
+import 'package:tsdtech_client_sdk/features/vouchers/presentation/components/voucher_card.dart';
+import 'package:tsdtech_client_sdk/features/vouchers/presentation/components/provider_request_card.dart';
+import 'package:tsdtech_client_sdk/models/vouchers/voucher.model.dart';
+import 'package:tsdtech_client_sdk/core/router/router.dart';
+import 'package:tsdtech_client_sdk/models/vouchers/provider_request.model.dart';
 // replaced shimmer with a simple circular loader per user preference
 
 @RoutePage()

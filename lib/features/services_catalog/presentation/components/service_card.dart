@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:voucherize/core/components/ds_text.dart';
-import 'package:voucherize/core/components/ds_button.dart';
-import 'package:voucherize/features/cart/core/stores/cart_store.dart';
-import 'package:voucherize/models/services/service.model.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_text.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_button.dart';
+import 'package:tsdtech_client_sdk/features/cart/core/stores/cart_store.dart';
+import 'package:tsdtech_client_sdk/models/services/service.model.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
 class ServiceCard extends StatelessWidget {

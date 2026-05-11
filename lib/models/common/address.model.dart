@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:voucherize/core/utils/unix_datetime.decorator.dart';
+import 'package:tsdtech_client_sdk/core/utils/unix_datetime.decorator.dart';
 
 part 'address.model.g.dart';
 

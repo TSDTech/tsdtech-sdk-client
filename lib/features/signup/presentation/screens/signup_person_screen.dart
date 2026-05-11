@@ -1,15 +1,15 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:voucherize/core/components/ds_button.dart';
-import 'package:voucherize/core/components/ds_fullscreen_loader.dart';
-import 'package:voucherize/core/components/ds_text.dart';
-import 'package:voucherize/core/components/ds_textfield.dart';
-import 'package:voucherize/core/router/router.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_button.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_fullscreen_loader.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_text.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_textfield.dart';
+import 'package:tsdtech_client_sdk/core/router/router.dart';
 import 'package:get_it/get_it.dart';
-import 'package:voucherize/features/signup/core/stores/signup_person_store.dart';
-import 'package:voucherize/core/services/intra-api/md-authorizers/client-users/auth_service.dart';
-import 'package:voucherize/models/value_result.dart';
+import 'package:tsdtech_client_sdk/features/signup/core/stores/signup_person_store.dart';
+import 'package:tsdtech_client_sdk/core/services/intra-api/md-authorizers/client-users/auth_service.dart';
+import 'package:tsdtech_client_sdk/models/value_result.dart';
 
 @RoutePage()
 class SignupPersonScreen extends StatelessWidget {

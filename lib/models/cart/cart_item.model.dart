@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:voucherize/models/services/service.model.dart';
+import 'package:tsdtech_client_sdk/models/services/service.model.dart';
 
 part 'cart_item.model.g.dart';
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:voucherize/core/components/ds_text.dart';
-import 'package:voucherize/features/checkout/core/models/payment_method.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_text.dart';
+import 'package:tsdtech_client_sdk/features/checkout/core/models/payment_method.dart';
 
 /// Tile de opção de pagamento com container estilizado, ícone e título/subtítulo.
 /// Quando selecionado, exibe [contentWhenSelected] dentro do mesmo container.

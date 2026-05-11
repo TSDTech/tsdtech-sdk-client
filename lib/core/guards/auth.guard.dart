@@ -1,6 +1,6 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:voucherize/core/local_storage/client_user_token_data/client_user_token_data.prefs.dart';
-import 'package:voucherize/core/router/router.dart';
+import 'package:tsdtech_client_sdk/core/local_storage/client_user_token_data/client_user_token_data.prefs.dart';
+import 'package:tsdtech_client_sdk/core/router/router.dart';
 
 class AuthGuard extends AutoRouteGuard {
   @override

@@ -1,9 +1,9 @@
 import 'package:mobx/mobx.dart';
 import 'dart:async';
 
-import 'package:voucherize/models/services/service.model.dart';
-import 'package:voucherize/core/local_storage/cart/cart.prefs.dart';
-import 'package:voucherize/models/cart/cart_item.model.dart';
+import 'package:tsdtech_client_sdk/models/services/service.model.dart';
+import 'package:tsdtech_client_sdk/core/local_storage/cart/cart.prefs.dart';
+import 'package:tsdtech_client_sdk/models/cart/cart_item.model.dart';
 
 part 'cart_store.g.dart';
 

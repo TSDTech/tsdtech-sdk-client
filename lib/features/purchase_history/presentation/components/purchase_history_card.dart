@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
-import 'package:voucherize/core/components/ds_text.dart';
-import 'package:voucherize/features/purchase_history/core/purchase_history_store.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_text.dart';
+import 'package:tsdtech_client_sdk/features/purchase_history/core/purchase_history_store.dart';
 
 class PurchaseHistoryTable extends StatelessWidget {
   const PurchaseHistoryTable({super.key});

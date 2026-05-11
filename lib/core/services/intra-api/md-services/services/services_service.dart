@@ -1,18 +1,63 @@
-import 'package:voucherize/core/services/intra-api/intra.api.dart';
-import 'package:voucherize/core/constants/constants.dart';
-import 'package:voucherize/models/value_result.dart';
-import 'package:voucherize/models/common/paginated_list.model.dart';
-import 'package:voucherize/models/common/pagination.model.dart';
-import 'package:voucherize/models/services/service.model.dart';
-import 'package:voucherize/models/forms/service_form.model.dart';
+import 'package:tsdtech_client_sdk/core/services/intra-api/intra.api.dart';
+import 'package:tsdtech_client_sdk/core/constants/constants.dart';
+import 'package:tsdtech_client_sdk/models/value_result.dart';
+import 'package:tsdtech_client_sdk/models/common/paginated_list.model.dart';
+import 'package:tsdtech_client_sdk/models/common/pagination.model.dart';
+import 'package:tsdtech_client_sdk/models/services/service.model.dart';
+import 'package:tsdtech_client_sdk/models/forms/service_form.model.dart';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 
+/// Service for managing services and service forms.
+///
+/// This service provides methods for listing public services, retrieving
+/// service form models, and submitting service forms.
+///
+/// ## Usage
+/// ```dart
+/// final servicesService = ServicesService.instance;
+///
+/// // List public services
+/// final services = await servicesService.getPublicServices(
+///   pagination: Pagination(page: 1, pageCount: 20),
+///   status: 'active',
+/// );
+///
+/// // Get service form
+/// final form = await servicesService.getServiceFormModel(
+///   formId: 'form-123',
+/// );
+///
+/// // Submit service form
+/// await servicesService.submitServiceForm(
+///   formData,
+///   serviceId: 'service-123',
+///   administratorId: 'admin-123',
+/// );
+/// ```
+///
+/// ## Singleton Pattern
+/// Access the service via [ServicesService.instance].
 class ServicesService extends IntraApi {
+  /// Singleton instance of [ServicesService].
   static final ServicesService instance = ServicesService();
 
+  /// Creates a [ServicesService] instance with the base URL from [Constants].
   ServicesService() : super(Constants.getBaseUrl());
 
+  /// Retrieves a list of public services with optional filtering.
+  ///
+  /// - [pagination]: Optional pagination parameters (page, pageCount)
+  /// - [ids]: Filter by service IDs (optional)
+  /// - [names]: Filter by service names (optional)
+  /// - [codes]: Filter by service codes (optional)
+  /// - [administratorIds]: Filter by administrator IDs (optional)
+  /// - [status]: Filter by service status (optional, e.g., 'active')
+  /// - [serviceTypeIds]: Filter by service type IDs (optional)
+  /// - [searchTerm]: Search by name/code (optional)
+  /// - [administrator]: Include administrator details (optional)
+  /// - [serviceType]: Include service type details (optional)
+  /// - Returns: [ValueResult] containing a [PaginatedList] of [Service] objects
   Future<ValueResult<PaginatedList<Service>>> getPublicServices({
     Pagination? pagination,
     List<String>? ids,
@@ -46,7 +91,7 @@ class ServicesService extends IntraApi {
       final response = await get(path, queryParameters: queryParams);
 
       final paginated = PaginatedList<Service>.fromJson(
-        response.data,
+        response.data as Map<String, dynamic>,
         (item) => Service.fromJson(item as Map<String, dynamic>),
       );
 
@@ -56,6 +101,22 @@ class ServicesService extends IntraApi {
     }
   }
 
+  /// Retrieves a service form model by its ID.
+  ///
+  /// - [formId]: The ID of the service form to retrieve (required)
+  /// - Returns: [ValueResult] containing the [ServiceForm] model
+  ///
+  /// ## Response Handling
+  /// Handles multiple response formats:
+  /// - List with 'form' field (string or Map)
+  /// - Map with 'items' containing forms
+  /// - Direct form object
+  ///
+  /// ## Error Handling
+  /// Returns [ValueResult.failure] if:
+  /// - Form not found
+  /// - Invalid response format
+  /// - Parsing fails
   Future<ValueResult<ServiceForm>> getServiceFormModel(
       {required String formId}) async {
     try {
@@ -147,14 +208,41 @@ class ServicesService extends IntraApi {
     }
   }
 
+  /// Submits a service form with the provided payload.
+  ///
+  /// - [payload]: The form data to submit as a Map
+  /// - [serviceId]: Optional service ID to associate (optional)
+  /// - [administratorId]: Optional administrator ID (optional)
+  /// - [voucherId]: Optional voucher ID (optional)
+  /// - [providerId]: Optional provider ID (optional)
+  /// - Returns: [ValueResult] containing true on successful submission
+  ///
+  /// ## Example
+  /// ```dart
+  /// final result = await servicesService.submitServiceForm(
+  ///   {
+  ///     'field1': 'value1',
+  ///     'field2': 'value2',
+  ///   },
+  ///   serviceId: 'service-123',
+  ///   voucherId: 'voucher-456',
+  /// );
+  /// if (result.isSuccess && result.value) {
+  ///   print('Form submitted successfully');
+  /// }
+  /// ```
   Future<ValueResult<bool>> submitServiceForm(Map<String, dynamic> payload,
-      {String? serviceId, String? administratorId, String? voucherId, String? providerId}) async {
+      {String? serviceId,
+      String? administratorId,
+      String? voucherId,
+      String? providerId}) async {
     try {
       const path = '/service-forms/client/submit';
       final requestData = Map<String, dynamic>.from(payload);
       if (serviceId != null) requestData['serviceId'] = serviceId;
-      if (administratorId != null)
+      if (administratorId != null) {
         requestData['administratorId'] = administratorId;
+      }
       if (voucherId != null) requestData['voucherId'] = voucherId;
       if (providerId != null) requestData['providerId'] = providerId;
       final response = await post(path, data: requestData);

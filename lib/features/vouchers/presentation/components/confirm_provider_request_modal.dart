@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:voucherize/core/components/ds_text.dart';
-import 'package:voucherize/features/vouchers/core/stores/provider_request_store.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_text.dart';
+import 'package:tsdtech_client_sdk/features/vouchers/core/stores/provider_request_store.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
-import 'package:voucherize/models/vouchers/provider_request.model.dart';
+import 'package:tsdtech_client_sdk/models/vouchers/provider_request.model.dart';
 
 /// A separate confirmation modal for provider requests.
 ///

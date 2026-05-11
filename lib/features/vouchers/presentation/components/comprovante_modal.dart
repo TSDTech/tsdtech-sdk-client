@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:voucherize/core/components/ds_text.dart';
-import 'package:voucherize/models/vouchers/provider_request.model.dart';
-import 'package:voucherize/models/vouchers/result_type.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_text.dart';
+import 'package:tsdtech_client_sdk/models/vouchers/provider_request.model.dart';
+import 'package:tsdtech_client_sdk/models/vouchers/result_type.dart';
 
 Future<void> showComprovanteModal(BuildContext context, ProviderRequest request) async {
   final type = ResultTypeX.fromStatus(request.status.isNotEmpty ? request.status : request.result);

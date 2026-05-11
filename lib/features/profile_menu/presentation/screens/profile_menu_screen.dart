@@ -2,9 +2,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
-import 'package:voucherize/core/components/nav_header.dart';
-import 'package:voucherize/core/local_storage/client_user_token_data/client_user_token_data.prefs.dart';
-import 'package:voucherize/features/profile_menu/core/profile_menu_store.dart';
+import 'package:tsdtech_client_sdk/core/components/nav_header.dart';
+import 'package:tsdtech_client_sdk/core/local_storage/client_user_token_data/client_user_token_data.prefs.dart';
+import 'package:tsdtech_client_sdk/features/profile_menu/core/profile_menu_store.dart';
 
 @RoutePage()
 class ProfileMenuScreen extends StatelessWidget {

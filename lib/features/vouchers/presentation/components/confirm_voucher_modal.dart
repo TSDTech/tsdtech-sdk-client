@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:voucherize/core/components/ds_text.dart';
-import 'package:voucherize/features/vouchers/core/stores/vouchers_store.dart';
-import 'package:voucherize/features/vouchers/core/stores/provider_request_store.dart';
-import 'package:voucherize/models/vouchers/voucher.model.dart';
-import 'package:voucherize/models/vouchers/provider_request.model.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_text.dart';
+import 'package:tsdtech_client_sdk/features/vouchers/core/stores/vouchers_store.dart';
+import 'package:tsdtech_client_sdk/features/vouchers/core/stores/provider_request_store.dart';
+import 'package:tsdtech_client_sdk/models/vouchers/voucher.model.dart';
+import 'package:tsdtech_client_sdk/models/vouchers/provider_request.model.dart';
 import 'package:intl/intl.dart';
 import 'package:get_it/get_it.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:voucherize/core/services/intra-api/md-services/services/services_service.dart';
-import 'package:voucherize/core/router/router.dart';
+import 'package:tsdtech_client_sdk/core/services/intra-api/md-services/services/services_service.dart';
+import 'package:tsdtech_client_sdk/core/router/router.dart';
 
 void showConfirmVoucherModal(BuildContext context, VouchersStore store, String voucherServiceId, String administratorId, String providerSelectedId, String voucherId, {Map<String, dynamic>? payload}) {
   final Voucher voucher = store.vouchers.firstWhere(

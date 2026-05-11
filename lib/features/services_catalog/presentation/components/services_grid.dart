@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:voucherize/features/services_catalog/presentation/components/service_card.dart';
-import 'package:voucherize/models/services/service.model.dart';
+import 'package:tsdtech_client_sdk/features/services_catalog/presentation/components/service_card.dart';
+import 'package:tsdtech_client_sdk/models/services/service.model.dart';
 
 class ServicesGrid extends StatelessWidget {
   final List<Service> services;

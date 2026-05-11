@@ -1,13 +1,13 @@
 import 'package:mobx/mobx.dart';
 import 'package:get_it/get_it.dart';
-import 'package:voucherize/core/local_storage/client_user_token_data/client_user_token_data.prefs.dart';
-import 'package:voucherize/core/services/intra-api/md-checkout/checkouts_service.dart';
-import 'package:voucherize/features/cart/core/stores/cart_store.dart';
-import 'package:voucherize/models/checkouts/calculate_request.model.dart';
-import 'package:voucherize/models/checkouts/calculate_item.model.dart';
-import 'package:voucherize/models/checkouts/checkout_request.model.dart';
-import 'package:voucherize/models/checkouts/checkout_response.model.dart';
-import 'package:voucherize/models/value_result.dart';
+import 'package:tsdtech_client_sdk/core/local_storage/client_user_token_data/client_user_token_data.prefs.dart';
+import 'package:tsdtech_client_sdk/core/services/intra-api/md-checkout/checkouts_service.dart';
+import 'package:tsdtech_client_sdk/features/cart/core/stores/cart_store.dart';
+import 'package:tsdtech_client_sdk/models/checkouts/calculate_request.model.dart';
+import 'package:tsdtech_client_sdk/models/checkouts/calculate_item.model.dart';
+import 'package:tsdtech_client_sdk/models/checkouts/checkout_request.model.dart';
+import 'package:tsdtech_client_sdk/models/checkouts/checkout_response.model.dart';
+import 'package:tsdtech_client_sdk/models/value_result.dart';
 import '../models/payment_method.dart';
 
 part 'checkout_store.g.dart';

@@ -1,18 +1,18 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:voucherize/core/components/nav_header.dart';
-import 'package:voucherize/core/components/ds_text.dart';
+import 'package:tsdtech_client_sdk/core/components/nav_header.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_text.dart';
 import 'package:get_it/get_it.dart';
-import 'package:voucherize/features/vouchers/core/stores/provider_request_store.dart';
-import 'package:voucherize/core/services/intra-api/md-services/services/services_service.dart';
-import 'package:voucherize/models/value_result.dart';
-import 'package:voucherize/models/forms/service_form.model.dart';
-import 'package:voucherize/models/forms/service_form_field.model.dart';
-import 'package:voucherize/models/vouchers/provider_request.model.dart';
-import 'package:voucherize/core/router/router.dart';
-import 'package:voucherize/features/vouchers/core/stores/vouchers_store.dart';
-import 'package:voucherize/features/vouchers/presentation/components/dynamic_form.dart';
-import 'package:voucherize/features/vouchers/presentation/components/confirm_voucher_modal.dart';
+import 'package:tsdtech_client_sdk/features/vouchers/core/stores/provider_request_store.dart';
+import 'package:tsdtech_client_sdk/core/services/intra-api/md-services/services/services_service.dart';
+import 'package:tsdtech_client_sdk/models/value_result.dart';
+import 'package:tsdtech_client_sdk/models/forms/service_form.model.dart';
+import 'package:tsdtech_client_sdk/models/forms/service_form_field.model.dart';
+import 'package:tsdtech_client_sdk/models/vouchers/provider_request.model.dart';
+import 'package:tsdtech_client_sdk/core/router/router.dart';
+import 'package:tsdtech_client_sdk/features/vouchers/core/stores/vouchers_store.dart';
+import 'package:tsdtech_client_sdk/features/vouchers/presentation/components/dynamic_form.dart';
+import 'package:tsdtech_client_sdk/features/vouchers/presentation/components/confirm_voucher_modal.dart';
 
 @RoutePage()
 class ProviderRequestFormScreen extends StatelessWidget {

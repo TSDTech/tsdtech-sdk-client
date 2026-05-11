@@ -74,19 +74,19 @@ class _PaymentCardState extends State<PaymentCard> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
+                const Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text('Número do cartão', style: _labelStyle),
-                    const SizedBox(height: 6),
+                    SizedBox(height: 6),
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         _CardBrandSvg(asset: '$_cardBrandsPath/elo.svg'),
-                        const SizedBox(width: 8),
+                        SizedBox(width: 8),
                         _CardBrandSvg(asset: '$_cardBrandsPath/mastercard.svg'),
-                        const SizedBox(width: 8),
+                        SizedBox(width: 8),
                         _CardBrandSvg(asset: '$_cardBrandsPath/visa.svg'),
                       ],
                     ),
@@ -120,7 +120,7 @@ class _PaymentCardState extends State<PaymentCard> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Nome no cartão', style: _labelStyle),
+                const Text('Nome no cartão', style: _labelStyle),
                 const SizedBox(height: 14),
                 TextFormField(
                   controller: _cardHolderController,
@@ -148,7 +148,7 @@ class _PaymentCardState extends State<PaymentCard> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Validade (MM/AA)', style: _labelStyle),
+                      const Text('Validade (MM/AA)', style: _labelStyle),
                       const SizedBox(height: 14),
                       TextFormField(
                         controller: _expiryController,
@@ -178,7 +178,7 @@ class _PaymentCardState extends State<PaymentCard> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('CVV', style: _labelStyle),
+                      const Text('CVV', style: _labelStyle),
                       const SizedBox(height: 14),
                       TextFormField(
                         controller: _cvvController,
@@ -248,7 +248,7 @@ class _CardBrandSvg extends StatelessWidget {
       width: _size,
       height: _size,
       fit: BoxFit.contain,
-      placeholderBuilder: (_) => SizedBox(width: _size, height: _size),
+      placeholderBuilder: (_) => const SizedBox(width: _size, height: _size),
     );
   }
 }
@@ -287,10 +287,9 @@ class ExpiryDateTextInputFormatter extends TextInputFormatter {
     final digits = newValue.text.replaceAll(RegExp(r'[^0-9]'), '');
     String formatted = digits;
     if (digits.length >= 3) {
-      formatted = digits.substring(0, 2) +
-          '/' +
-          digits.substring(2, digits.length > 4 ? 4 : digits.length);
-    } else if (digits.length >= 1 && digits.length <= 2) {
+      formatted =
+          '${digits.substring(0, 2)}/${digits.substring(2, digits.length > 4 ? 4 : digits.length)}';
+    } else if (digits.isNotEmpty && digits.length <= 2) {
       formatted = digits;
     }
 

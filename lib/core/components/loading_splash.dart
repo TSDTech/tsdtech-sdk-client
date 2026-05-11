@@ -25,10 +25,12 @@ class LoadingSplash extends StatelessWidget {
           child: Center(
             child: Card(
               elevation: 18,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16)),
               margin: const EdgeInsets.symmetric(horizontal: 24),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 28.0, vertical: 28),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 28.0, vertical: 28),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -39,14 +41,21 @@ class LoadingSplash extends StatelessWidget {
                         color: const Color(0xFFEEF2FF),
                         borderRadius: BorderRadius.circular(18),
                       ),
-                      child: Image.asset('assets/detran-logo.png', width: 80, height: 80),
+                      child: Image.asset('assets/detran-logo.png',
+                          width: 80, height: 80),
                     ),
                     const SizedBox(height: 18),
-                    Text(message ?? 'Carregando...', style: const TextStyle(fontSize: 14, color: Color(0xFF475569))),
+                    Text(message ?? 'Carregando...',
+                        style: const TextStyle(
+                            fontSize: 14, color: Color(0xFF475569))),
                     const SizedBox(height: 18),
                     SizedBox(
                       width: 160,
-                      child: indicator ?? const LinearProgressIndicator(minHeight: 6, color: Color(0xFF2563EB), backgroundColor: Color(0xFFEFF6FF)),
+                      child: indicator ??
+                          const LinearProgressIndicator(
+                              minHeight: 6,
+                              color: Color(0xFF2563EB),
+                              backgroundColor: Color(0xFFEFF6FF)),
                     )
                   ],
                 ),

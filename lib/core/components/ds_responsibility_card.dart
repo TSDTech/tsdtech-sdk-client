@@ -5,7 +5,8 @@ class ResponsibilityCard extends StatelessWidget {
   final String description;
   final String responsible;
 
-  const ResponsibilityCard({super.key, 
+  const ResponsibilityCard({
+    super.key,
     required this.title,
     required this.description,
     required this.responsible,

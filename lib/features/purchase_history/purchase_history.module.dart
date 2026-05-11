@@ -18,6 +18,7 @@ class PurchaseHistoryModule extends ModuleBase {
 
   @override
   void inject(GetIt sl) {
-    sl.registerLazySingleton<PurchaseHistoryStore>(() => PurchaseHistoryStore());
+    sl.registerLazySingleton<PurchaseHistoryStore>(
+        () => PurchaseHistoryStore());
   }
 }

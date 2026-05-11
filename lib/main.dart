@@ -59,7 +59,7 @@ class VoucherizeApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
-        scaffoldBackgroundColor: Color.fromRGBO(243, 243, 243, 1),
+        scaffoldBackgroundColor: const Color.fromRGBO(243, 243, 243, 1),
         fontFamily: GoogleFonts.inter().fontFamily,
         textTheme: GoogleFonts.interTextTheme(ThemeData.light().textTheme),
       ),

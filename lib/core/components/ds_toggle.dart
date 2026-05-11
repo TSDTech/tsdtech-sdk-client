@@ -23,10 +23,10 @@ class DsBox extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          DsText(
+          const DsText(
             text: 'Responsável pelo pagamento dos débitos:',
             variant: DsTextVariant.baseBold,
-            color: const Color.fromRGBO(31, 41, 55, 1),
+            color: Color.fromRGBO(31, 41, 55, 1),
             textAlign: TextAlign.left,
           ),
           const SizedBox(height: 16),

@@ -18,6 +18,7 @@ class BillData {
     required this.digitalAccountPinbankId,
   });
 
-  factory BillData.fromJson(Map<String, dynamic> json) => _$BillDataFromJson(json);
+  factory BillData.fromJson(Map<String, dynamic> json) =>
+      _$BillDataFromJson(json);
   Map<String, dynamic> toJson() => _$BillDataToJson(this);
 }

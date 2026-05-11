@@ -8,5 +8,5 @@ class BackMsVouchersModule extends ModuleBase {
     if (!sl.isRegistered<VouchersService>()) {
       sl.registerLazySingleton<VouchersService>(() => VouchersService());
     }
-}
+  }
 }

@@ -24,7 +24,8 @@ class DsRichText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final baseStyle = DsText.styles[variant]?.copyWith(color: color);
-    final boldStyle = DsText.styles[DsTextVariant.baseRegularBold]?.copyWith(color: color);
+    final boldStyle =
+        DsText.styles[DsTextVariant.baseRegularBold]?.copyWith(color: color);
 
     return RichText(
       textAlign: textAlign ?? TextAlign.start,

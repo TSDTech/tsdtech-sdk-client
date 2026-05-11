@@ -18,7 +18,6 @@ class DsTextfield extends StatelessWidget {
   final String? errorText;
   final Widget? suffixIcon;
 
-
   const DsTextfield({
     Key? key,
     this.controller,
@@ -36,8 +35,8 @@ class DsTextfield extends StatelessWidget {
   }) : super(key: key);
 
   TextStyle? get _hintStyle => DsText.styles[DsTextVariant.normal]?.copyWith(
-    color:const Color.fromRGBO(75, 85, 91, 1), // sua cor desejada
-  );
+        color: const Color.fromRGBO(75, 85, 91, 1), // sua cor desejada
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -75,8 +74,10 @@ class DsTextfield extends StatelessWidget {
                 color: Color.fromRGBO(226, 232, 240, 1),
               ),
             ),
-            contentPadding: contentPadding ?? const EdgeInsets.fromLTRB(12, 10, 12, 10), // left, top, right, bottom
-            suffixIcon: suffixIcon, 
+            contentPadding: contentPadding ??
+                const EdgeInsets.fromLTRB(
+                    12, 10, 12, 10), // left, top, right, bottom
+            suffixIcon: suffixIcon,
           ),
           validator: validator,
           onChanged: onChanged,

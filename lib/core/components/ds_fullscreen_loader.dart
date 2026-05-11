@@ -9,7 +9,7 @@ class DsFullscreenLoader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.black.withOpacity(0.45),
+      color: Colors.black.withValues(alpha: 0.45),
       child: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,

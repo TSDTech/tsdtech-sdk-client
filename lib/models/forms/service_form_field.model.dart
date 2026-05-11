@@ -21,6 +21,7 @@ class ServiceFormField {
     this.validationKey,
   });
 
-  factory ServiceFormField.fromJson(Map<String, dynamic> json) => _$ServiceFormFieldFromJson(json);
+  factory ServiceFormField.fromJson(Map<String, dynamic> json) =>
+      _$ServiceFormFieldFromJson(json);
   Map<String, dynamic> toJson() => _$ServiceFormFieldToJson(this);
 }

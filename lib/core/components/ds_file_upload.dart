@@ -9,7 +9,7 @@ class DsFileUpload extends StatelessWidget {
   static const int _bytesPerKB = 1024;
   static const int _kbThreshold = 1000;
   static const String _maxSizeErrorMessage =
-      "Arquivo muito grande. Tamanho máximo: 10MB";
+      'Arquivo muito grande. Tamanho máximo: 10MB';
 
   final String title;
   final String description;

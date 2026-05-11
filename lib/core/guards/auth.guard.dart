@@ -25,7 +25,6 @@ class AuthGuard extends AutoRouteGuard {
       return;
     }
 
-
     if (requiresAuth == false && isLoggedIn) {
       router.replace(const EmptyRouterRoute());
       return;

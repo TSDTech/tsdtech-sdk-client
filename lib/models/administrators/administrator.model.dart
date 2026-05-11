@@ -26,6 +26,7 @@ class Administrator {
     this.updatedAt,
   });
 
-  factory Administrator.fromJson(Map<String, dynamic> json) => _$AdministratorFromJson(json);
+  factory Administrator.fromJson(Map<String, dynamic> json) =>
+      _$AdministratorFromJson(json);
   Map<String, dynamic> toJson() => _$AdministratorToJson(this);
 }

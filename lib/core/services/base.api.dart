@@ -49,9 +49,10 @@ abstract class BaseApi {
     } on DioException catch (e) {
       if (kDebugMode) {
         debugPrint('[BaseApi] DioError: ${e.type} ${e.message}');
-        if (e.response != null)
+        if (e.response != null) {
           debugPrint(
               '[BaseApi] response: ${e.response?.statusCode} ${e.response?.data}');
+        }
       }
       if (_isServiceUnavailable(e)) {
         throw Exception(

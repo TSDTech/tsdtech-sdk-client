@@ -53,7 +53,7 @@ abstract class _CheckoutStoreBase with Store {
       (_) => cart.items,
       (_) => calculateTotal(),
     );
-    
+
     // Calculate initial total
     calculateTotal();
   }
@@ -82,15 +82,17 @@ abstract class _CheckoutStoreBase with Store {
     }
 
     // Convert CartItem to CalculateItem with only serviceId, price, and quantity
-    final calculateItems = cart.items.map((cartItem) => CalculateItem(
-      serviceId: cartItem.service.id ?? '',
-      value: cartItem.service.price ?? 0.0,
-      quantity: cartItem.quantity,
-    )).toList();
+    final calculateItems = cart.items
+        .map((cartItem) => CalculateItem(
+              serviceId: cartItem.service.id ?? '',
+              value: cartItem.service.price ?? 0.0,
+              quantity: cartItem.quantity,
+            ))
+        .toList();
 
     final request = CalculateRequest(cart: calculateItems);
     final result = await CheckoutsService.instance.calculateCart(request);
-    
+
     if (result.isSuccess && result.value != null) {
       _total = result.value!.totalValue;
     } else {
@@ -99,22 +101,26 @@ abstract class _CheckoutStoreBase with Store {
   }
 
   @action
-  Future<ValueResult<CheckoutResponse>> createCheckout({String? encryptedCard}) async {
+  Future<ValueResult<CheckoutResponse>> createCheckout(
+      {String? encryptedCard}) async {
     isProcessing = true;
     final paymentMethodString = _getPaymentMethodString(selectedPayment);
     final card = _buildCardPaymentData();
-    final installmentNumber = _parseInstallments(_cardPaymentInput?.installments);
+    final installmentNumber =
+        _parseInstallments(_cardPaymentInput?.installments);
     final billPayer = _buildBillPayerData();
     final billDueDate = _buildBillDueDateIso();
     final billInstructions = _buildBillInstructions();
-    
+
     // Convert CartItem to CalculateItem with only serviceId, value, and quantity
-    final cartItems = cart.items.map((cartItem) => CalculateItem(
-      serviceId: cartItem.service.id ?? '',
-      value: cartItem.service.price ?? 0.0,
-      quantity: cartItem.quantity,
-    )).toList();
-    
+    final cartItems = cart.items
+        .map((cartItem) => CalculateItem(
+              serviceId: cartItem.service.id ?? '',
+              value: cartItem.service.price ?? 0.0,
+              quantity: cartItem.quantity,
+            ))
+        .toList();
+
     final request = CheckoutRequest(
       cart: cartItems,
       paymentMethod: paymentMethodString,
@@ -196,9 +202,8 @@ abstract class _CheckoutStoreBase with Store {
 
     // Session data complements payer identity; address fields are temporary
     // placeholders while the checkout flow has no address form yet.
-    final composedAddressInfo = [cpf, email, phone]
-        .where((v) => v.isNotEmpty)
-        .join(' | ');
+    final composedAddressInfo =
+        [cpf, email, phone].where((v) => v.isNotEmpty).join(' | ');
 
     return BillPayerData(
       name: name.isNotEmpty ? name : 'Cliente',

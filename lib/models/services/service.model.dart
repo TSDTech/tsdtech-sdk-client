@@ -35,7 +35,8 @@ class Service {
     this.updatedAt,
   });
 
-  factory Service.fromJson(Map<String, dynamic> json) => _$ServiceFromJson(json);
+  factory Service.fromJson(Map<String, dynamic> json) =>
+      _$ServiceFromJson(json);
 
   Map<String, dynamic> toJson() => _$ServiceToJson(this);
 }

@@ -17,7 +17,8 @@ class Membership {
     this.clientUser,
   });
 
-  factory Membership.fromJson(Map<String, dynamic> json) => _$MembershipFromJson(json);
+  factory Membership.fromJson(Map<String, dynamic> json) =>
+      _$MembershipFromJson(json);
 
   Map<String, dynamic> toJson() => _$MembershipToJson(this);
 }

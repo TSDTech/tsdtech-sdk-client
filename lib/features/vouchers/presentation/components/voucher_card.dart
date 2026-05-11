@@ -113,8 +113,7 @@ class VoucherCard extends StatelessWidget {
                         builder: (_) => VoucherQRCodeScreen(
                             voucherId: voucher.id,
                             serviceId: voucher.serviceId,
-                            code: voucher.code
-                            ),
+                            code: voucher.code),
                       ),
                     );
                   },

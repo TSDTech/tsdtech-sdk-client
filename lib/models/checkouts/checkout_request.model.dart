@@ -27,7 +27,8 @@ class CheckoutRequest {
     this.installmentNumber,
   });
 
-  factory CheckoutRequest.fromJson(Map<String, dynamic> json) => _$CheckoutRequestFromJson(json);
+  factory CheckoutRequest.fromJson(Map<String, dynamic> json) =>
+      _$CheckoutRequestFromJson(json);
   Map<String, dynamic> toJson() => _$CheckoutRequestToJson(this);
 }
 

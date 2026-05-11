@@ -11,6 +11,7 @@ class PaymentOptionTile extends StatelessWidget {
   final String title;
   final String subtitle;
   final IconData icon;
+
   /// Exibido dentro do tile quando esta opção está selecionada (ex: PaymentPix, PaymentCard).
   final Widget? contentWhenSelected;
 
@@ -35,7 +36,8 @@ class PaymentOptionTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 255, 255, 255),
         borderRadius: BorderRadius.circular(5),
-        border: Border.all(width: 1, color: const Color.fromRGBO(231, 229, 228, 1)),
+        border:
+            Border.all(width: 1, color: const Color.fromRGBO(231, 229, 228, 1)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -45,7 +47,8 @@ class PaymentOptionTile extends StatelessWidget {
             value: value,
             groupValue: groupValue,
             onChanged: (v) => onChanged(v),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             title: Row(
               children: [
                 Icon(icon, size: 24),

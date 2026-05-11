@@ -39,7 +39,8 @@ class TabButton<T> extends StatelessWidget {
                 borderRadius: radius,
               ),
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                 child: Center(
                   child: DsText(
                     text: tab.label,

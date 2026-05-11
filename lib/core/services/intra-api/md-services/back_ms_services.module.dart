@@ -10,7 +10,8 @@ class BackMsServicesModule extends ModuleBase {
       sl.registerLazySingleton<ServicesService>(() => ServicesService());
     }
     if (!sl.isRegistered<ServiceTypesService>()) {
-      sl.registerLazySingleton<ServiceTypesService>(() => ServiceTypesService());
+      sl.registerLazySingleton<ServiceTypesService>(
+          () => ServiceTypesService());
     }
   }
 }

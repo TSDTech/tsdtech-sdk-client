@@ -70,7 +70,8 @@ abstract class _VouchersStore with Store {
       }).toList();
 
   @computed
-  List<Voucher> get inProgressVouchers => vouchers.where((v) => v.status == 'scheduled').toList();
+  List<Voucher> get inProgressVouchers =>
+      vouchers.where((v) => v.status == 'scheduled').toList();
 
   @computed
   List<Voucher> get filteredVouchers {
@@ -92,12 +93,17 @@ abstract class _VouchersStore with Store {
 
     // Search filter: by service name
     if (searchQuery.isNotEmpty) {
-      filtered = filtered.where((v) =>
-        (v.service?.name ?? '').toLowerCase().contains(searchQuery.toLowerCase()) ||
-        v.id.toLowerCase().contains(searchQuery.toLowerCase()) ||
-        v.serviceId.toLowerCase().contains(searchQuery.toLowerCase()) ||
-        (formValues['plate'] ?? '').toLowerCase().contains(searchQuery.toLowerCase())
-      ).toList();
+      filtered = filtered
+          .where((v) =>
+              (v.service?.name ?? '')
+                  .toLowerCase()
+                  .contains(searchQuery.toLowerCase()) ||
+              v.id.toLowerCase().contains(searchQuery.toLowerCase()) ||
+              v.serviceId.toLowerCase().contains(searchQuery.toLowerCase()) ||
+              (formValues['plate'] ?? '')
+                  .toLowerCase()
+                  .contains(searchQuery.toLowerCase()))
+          .toList();
     }
 
     // Date range filter: by createdAt or order.createdAt
@@ -182,9 +188,9 @@ abstract class _VouchersStore with Store {
 
     // Tag filter: by service.tags
     if (tagFilter != null && tagFilter!.isNotEmpty) {
-      filtered = filtered.where((v) =>
-        (v.service?.tags ?? []).contains(tagFilter)
-      ).toList();
+      filtered = filtered
+          .where((v) => (v.service?.tags ?? []).contains(tagFilter))
+          .toList();
     }
 
     return filtered;
@@ -197,8 +203,6 @@ abstract class _VouchersStore with Store {
   void setSelectedTab(int index) {
     selectedTab = index;
   }
-
-
 
   @action
   void saveFormData(Map<String, dynamic> data) {
@@ -235,13 +239,14 @@ abstract class _VouchersStore with Store {
     try {
       // Debug log to confirm fetch invocation
       // ignore: avoid_print
-  final pageSize = pageSizeParam;
-  print('[VouchersStore] fetchMyVouchers called page=$page pageSize=$pageSize populateClients=$populateClients populateServiceIds=$populateServiceIds populateOrderIds=$populateOrderIds');
-  // Prevent fetching beyond available pages
-  if (page > 1 && !hasMore) return;
-  isLoading = true;
-  errorMessage = null;
-  final pagination = Pagination(page: page, pageCount: pageSize);
+      final pageSize = pageSizeParam;
+      print(
+          '[VouchersStore] fetchMyVouchers called page=$page pageSize=$pageSize populateClients=$populateClients populateServiceIds=$populateServiceIds populateOrderIds=$populateOrderIds');
+      // Prevent fetching beyond available pages
+      if (page > 1 && !hasMore) return;
+      isLoading = true;
+      errorMessage = null;
+      final pagination = Pagination(page: page, pageCount: pageSize);
       final result = await VouchersService.instance.getVouchersClient(
         pagination: pagination,
         clients: populateClients,
@@ -280,7 +285,10 @@ abstract class _VouchersStore with Store {
   /// Fetch providers that match a service id. Returns the raw ValueResult so callers
   /// can inspect pagination/items. Keeps network logic inside the store.
   @action
-  Future<ValueResult<PaginatedList<ProviderModel>>> fetchProvidersForService(String serviceId, {int page = 1, int pageSize = 10}) async {
+  Future<ValueResult<PaginatedList<ProviderModel>>> fetchProvidersForService(
+      String serviceId,
+      {int page = 1,
+      int pageSize = 10}) async {
     try {
       isLoadingProviders = true;
       final pagination = Pagination(page: page, pageCount: pageSize);

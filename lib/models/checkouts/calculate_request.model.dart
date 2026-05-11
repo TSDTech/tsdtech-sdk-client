@@ -9,6 +9,7 @@ class CalculateRequest {
 
   CalculateRequest({required this.cart});
 
-  factory CalculateRequest.fromJson(Map<String, dynamic> json) => _$CalculateRequestFromJson(json);
+  factory CalculateRequest.fromJson(Map<String, dynamic> json) =>
+      _$CalculateRequestFromJson(json);
   Map<String, dynamic> toJson() => _$CalculateRequestToJson(this);
 }

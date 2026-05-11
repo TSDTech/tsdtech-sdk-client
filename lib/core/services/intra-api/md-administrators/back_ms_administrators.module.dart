@@ -6,7 +6,8 @@ class BackMsAdministratorsModule extends ModuleBase {
   @override
   void inject(GetIt sl) {
     if (!sl.isRegistered<AdministratorsService>()) {
-      sl.registerLazySingleton<AdministratorsService>(() => AdministratorsService());
+      sl.registerLazySingleton<AdministratorsService>(
+          () => AdministratorsService());
     }
   }
 }

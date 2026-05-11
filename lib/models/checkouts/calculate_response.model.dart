@@ -10,6 +10,7 @@ class CalculateResponse {
 
   CalculateResponse({required this.totalValue, this.cart});
 
-  factory CalculateResponse.fromJson(Map<String, dynamic> json) => _$CalculateResponseFromJson(json);
+  factory CalculateResponse.fromJson(Map<String, dynamic> json) =>
+      _$CalculateResponseFromJson(json);
   Map<String, dynamic> toJson() => _$CalculateResponseToJson(this);
 }

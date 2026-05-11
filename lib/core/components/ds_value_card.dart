@@ -5,7 +5,8 @@ class ValueCard extends StatelessWidget {
   final Color textColor;
   final double fontSize;
 
-  const ValueCard({super.key, 
+  const ValueCard({
+    super.key,
     required this.value,
     required this.textColor,
     required this.fontSize,

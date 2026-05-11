@@ -70,7 +70,8 @@ class ProviderRequest {
     this.observacoes = '',
   });
 
-  factory ProviderRequest.fromJson(Map<String, dynamic> json) => _$ProviderRequestFromJson(json);
+  factory ProviderRequest.fromJson(Map<String, dynamic> json) =>
+      _$ProviderRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$ProviderRequestToJson(this);
 }

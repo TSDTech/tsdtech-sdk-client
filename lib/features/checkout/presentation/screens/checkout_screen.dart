@@ -77,8 +77,8 @@ class CheckoutScreen extends StatelessWidget {
                                 const SizedBox(width: 24),
                                 Expanded(
                                   flex: 1,
-                                  child:
-                                      _buildPaymentSection(context, cart, checkout),
+                                  child: _buildPaymentSection(
+                                      context, cart, checkout),
                                 ),
                               ],
                             ),
@@ -137,13 +137,12 @@ class CheckoutScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Row(
+                const Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Icon(Icons.credit_card,
-                        size: 20, color: const Color(0xFF2563EB)),
-                    const SizedBox(width: 8),
-                    const DsText(
+                    Icon(Icons.credit_card, size: 20, color: Color(0xFF2563EB)),
+                    SizedBox(width: 8),
+                    DsText(
                         text: 'Forma de pagamento',
                         color: Color.fromRGBO(17, 24, 39, 1),
                         variant: DsTextVariant.baseBold),
@@ -221,9 +220,8 @@ class CheckoutScreen extends StatelessWidget {
                       AutoRouter.of(context)
                           .replaceAll([const PurchaseHistoryRoute()]);
                       cart.clear();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text('Checkout criado com sucesso!')));
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text('Checkout criado com sucesso!')));
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content:
@@ -240,7 +238,9 @@ class CheckoutScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 14),
           ),
           child: DsText(
-            text: checkout.isProcessing ? 'Processando...' : 'Confirmar pagamento',
+            text: checkout.isProcessing
+                ? 'Processando...'
+                : 'Confirmar pagamento',
             variant: DsTextVariant.baseBold,
             color: Colors.white,
           ),

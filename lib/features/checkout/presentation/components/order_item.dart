@@ -12,19 +12,30 @@ class OrderItem extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(color: const Color(0xFFF3F4F6), borderRadius: BorderRadius.circular(8)),
+      decoration: BoxDecoration(
+          color: const Color(0xFFF3F4F6),
+          borderRadius: BorderRadius.circular(8)),
       child: Row(
         children: [
           Expanded(
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              DsText(text: service.name ?? '', variant: DsTextVariant.smallBold),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              DsText(
+                  text: service.name ?? '', variant: DsTextVariant.smallBold),
               const SizedBox(height: 6),
-              DsText(text: service.description ?? '', variant: DsTextVariant.small, maxLines: 2, overflow: TextOverflow.ellipsis),
+              DsText(
+                  text: service.description ?? '',
+                  variant: DsTextVariant.small,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis),
             ]),
           ),
           const SizedBox(width: 12),
           Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-            DsText(text: 'R\$ ${(service.price ?? 0.0).toStringAsFixed(2)}', variant: DsTextVariant.baseBold, color: const Color(0xFF10B981)),
+            DsText(
+                text: 'R\$ ${(service.price ?? 0.0).toStringAsFixed(2)}',
+                variant: DsTextVariant.baseBold,
+                color: const Color(0xFF10B981)),
             const SizedBox(height: 6),
             DsText(text: 'Qtd: ${item.quantity}', variant: DsTextVariant.small),
           ])

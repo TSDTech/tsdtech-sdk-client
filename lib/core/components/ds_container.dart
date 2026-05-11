@@ -57,7 +57,9 @@ class DsContainer extends StatelessWidget {
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
                 icon: Icon(
-                  minimized! ? LucideIcons.chevronRight : LucideIcons.chevronDown,
+                  minimized!
+                      ? LucideIcons.chevronRight
+                      : LucideIcons.chevronDown,
                   color: const Color.fromRGBO(0, 87, 168, 1),
                 ),
                 onPressed: onToggle,

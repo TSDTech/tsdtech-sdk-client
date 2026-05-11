@@ -17,7 +17,6 @@ import 'package:tsdtech_client_sdk/features/vouchers/presentation/screens/provid
 import 'package:tsdtech_client_sdk/features/vouchers/presentation/screens/provider_request_qrcode_screen.dart';
 import 'package:tsdtech_client_sdk/features/vouchers/presentation/screens/voucher_qrcode_screen.dart';
 
-
 // Importa todos os módulos de features
 import 'package:tsdtech_client_sdk/main.module.dart';
 part 'router.gr.dart';

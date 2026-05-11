@@ -30,7 +30,8 @@ class SettingsMenuScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   const DsText(
-                    text: 'Tudo mais fácil: escolha o serviço, compre seu voucher e acompanhe seus cupons',
+                    text:
+                        'Tudo mais fácil: escolha o serviço, compre seu voucher e acompanhe seus cupons',
                     variant: DsTextVariant.textVoucher,
                   ),
                   const SizedBox(height: 32),
@@ -39,21 +40,26 @@ class SettingsMenuScreen extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(16),
-                      boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 8)],
+                      boxShadow: [
+                        const BoxShadow(color: Colors.black12, blurRadius: 8)
+                      ],
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 32),
+                    child: const Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 24, horizontal: 32),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
-                            children: const [
+                            children: [
                               Icon(Icons.person_outline, color: Colors.black54),
                               SizedBox(width: 8),
-                              DsText(text: 'Meu perfil  >  Configurações', variant: DsTextVariant.baseBold),
+                              DsText(
+                                  text: 'Meu perfil  >  Configurações',
+                                  variant: DsTextVariant.baseBold),
                             ],
                           ),
-                          const SizedBox(height: 32),
+                          SizedBox(height: 32),
                           // Card: Conta e Segurança
                           SettingsCard(
                             title: 'Conta e Segurança',
@@ -61,7 +67,7 @@ class SettingsMenuScreen extends StatelessWidget {
                               SettingsLink('Alterar senha'),
                             ],
                           ),
-                          const SizedBox(height: 18),
+                          SizedBox(height: 18),
                           // Card: Preferências do Usuário
                           SettingsCard(
                             title: 'Preferências do Usuário',
@@ -70,7 +76,7 @@ class SettingsMenuScreen extends StatelessWidget {
                               SettingsLink('Notificações'),
                             ],
                           ),
-                          const SizedBox(height: 18),
+                          SizedBox(height: 18),
                           // Card: Privacidade
                           SettingsCard(
                             title: 'Privacidade',
@@ -80,7 +86,7 @@ class SettingsMenuScreen extends StatelessWidget {
                               SettingsLink('Excluir conta'),
                             ],
                           ),
-                          const SizedBox(height: 18),
+                          SizedBox(height: 18),
                           // Card: Suporte
                           SettingsCard(
                             title: 'Suporte',

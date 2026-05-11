@@ -34,37 +34,48 @@ class HomeScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 32),
-                  const DsText(text: 'Portal do Cidadão', variant: DsTextVariant.titleVoucher),
+                  const DsText(
+                      text: 'Portal do Cidadão',
+                      variant: DsTextVariant.titleVoucher),
                   const SizedBox(height: 8),
-                  const DsText(text: 'Tudo mais fácil: escolha o serviço, compre seu voucher \ne acompanhe seus cupons.', variant: DsTextVariant.textVoucher),
+                  const DsText(
+                      text:
+                          'Tudo mais fácil: escolha o serviço, compre seu voucher \ne acompanhe seus cupons.',
+                      variant: DsTextVariant.textVoucher),
                   const SizedBox(height: 24),
                   Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12),
-                      boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 8)],
+                      boxShadow: [
+                        const BoxShadow(color: Colors.black12, blurRadius: 8)
+                      ],
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(32),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const DsText(text: 'Catálogo de Serviços', variant: DsTextVariant.baseBold),
+                          const DsText(
+                              text: 'Catálogo de Serviços',
+                              variant: DsTextVariant.baseBold),
                           const SizedBox(height: 18),
                           const SizedBox(height: 8),
                           // Barra de busca
                           TextField(
                             onChanged: store.setSearchQuery,
                             decoration: InputDecoration(
-                              hintText: 'Buscar por nome, código ou palavra-chave...',
+                              hintText:
+                                  'Buscar por nome, código ou palavra-chave...',
                               filled: true,
                               fillColor: const Color(0xFFF3F4F6),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8),
                                 borderSide: BorderSide.none,
                               ),
-                              prefixIcon: const Icon(Icons.search, color: Colors.grey),
+                              prefixIcon:
+                                  const Icon(Icons.search, color: Colors.grey),
                             ),
                           ),
                           const SizedBox(height: 18),
@@ -80,23 +91,26 @@ class HomeScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(width: 8),
                                 ...store.serviceTypes.map((t) => Padding(
-                                      padding: const EdgeInsets.only(right: 8.0),
+                                      padding:
+                                          const EdgeInsets.only(right: 8.0),
                                       child: CategoryChip(
                                         label: t.name ?? '—',
-                                        selected: store.selectedCategory == t.id,
+                                        selected:
+                                            store.selectedCategory == t.id,
                                         onTap: () => store.selectCategory(t.id),
                                       ),
                                     )),
                                 const SizedBox(width: 8),
-                                const Icon(Icons.chevron_right, color: Color(0xFF2563EB)),
+                                const Icon(Icons.chevron_right,
+                                    color: Color(0xFF2563EB)),
                               ],
                             ),
                           ),
                           const SizedBox(height: 24),
-              // Grid/lista de serviços
-              store.isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : ServicesGrid(services: store.filteredServices),
+                          // Grid/lista de serviços
+                          store.isLoading
+                              ? const Center(child: CircularProgressIndicator())
+                              : ServicesGrid(services: store.filteredServices),
                         ],
                       ),
                     ),

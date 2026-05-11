@@ -129,8 +129,7 @@ class DsButton extends StatelessWidget {
     DsButtonVariant.signUp: ElevatedButton.styleFrom(
       backgroundColor: const Color(0xFFEAF2FB), // Cor do Figma (#EAF2FB)
       foregroundColor: const Color(0xFF004080), // Cor do texto (#004080)
-      textStyle: DsText
-          .styles[DsTextVariant.baseBold],
+      textStyle: DsText.styles[DsTextVariant.baseBold],
       padding: const EdgeInsets.symmetric(
         vertical: 12,
         horizontal: 16,

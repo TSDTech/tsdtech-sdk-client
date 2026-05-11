@@ -28,7 +28,7 @@ class DsOptionButton extends StatelessWidget {
           color: isSelected ? Colors.blue : Colors.grey[300]!,
         ),
         backgroundColor:
-            isSelected ? Colors.blue.withOpacity(0.1) : Colors.white,
+            isSelected ? Colors.blue.withValues(alpha: 0.1) : Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),

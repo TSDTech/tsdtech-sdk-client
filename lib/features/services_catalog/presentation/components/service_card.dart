@@ -16,14 +16,14 @@ class ServiceCard extends StatelessWidget {
   final Service? service;
 
   const ServiceCard(
-    {required this.title,
-    required this.code,
-    required this.description,
-    required this.price,
-    required this.tags,
-    this.onAdd,
-    this.service,
-    super.key});
+      {required this.title,
+      required this.code,
+      required this.description,
+      required this.price,
+      required this.tags,
+      this.onAdd,
+      this.service,
+      super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -86,18 +86,26 @@ class ServiceCard extends StatelessWidget {
                     width: double.infinity,
                     height: 42,
                     child: ElevatedButton.icon(
-                      onPressed: () {}, // keep enabled so styles apply consistently
-                      icon: const Icon(Icons.shopping_cart, color: Colors.white),
-                      label: const DsText(text: 'Adicionado', variant: DsTextVariant.baseBold, color: Colors.white),
+                      onPressed:
+                          () {}, // keep enabled so styles apply consistently
+                      icon:
+                          const Icon(Icons.shopping_cart, color: Colors.white),
+                      label: const DsText(
+                          text: 'Adicionado',
+                          variant: DsTextVariant.baseBold,
+                          color: Colors.white),
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(horizontal: 14),
                         backgroundColor: const Color(0xFF10B981),
                         foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                        textStyle: const TextStyle(fontSize: 14, height: 20/14),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8)),
+                        textStyle:
+                            const TextStyle(fontSize: 14, height: 20 / 14),
                       ).copyWith(
-                        backgroundColor: MaterialStateProperty.all(const Color(0xFF10B981)),
-                        foregroundColor: MaterialStateProperty.all(Colors.white),
+                        backgroundColor:
+                            WidgetStateProperty.all(const Color(0xFF10B981)),
+                        foregroundColor: WidgetStateProperty.all(Colors.white),
                       ),
                     ),
                   );

@@ -18,25 +18,33 @@ class ProviderRequestQRCodeScreen extends StatelessWidget {
   final String providerRequestId;
   final String serviceId;
   final String administratorId;
-  const ProviderRequestQRCodeScreen({super.key, required this.providerRequestId, required this.serviceId, required this.administratorId});
+  const ProviderRequestQRCodeScreen(
+      {super.key,
+      required this.providerRequestId,
+      required this.serviceId,
+      required this.administratorId});
 
   @override
   Widget build(BuildContext context) {
-  final vouchersStore = GetIt.instance<VouchersStore>();
-  final providerStore = GetIt.instance<ProviderRequestStore>();
-  // Ensure vouchers/provider requests are loaded
-  vouchersStore.fetchMyVouchers();
-  providerStore.fetchProviderRequests();
+    final vouchersStore = GetIt.instance<VouchersStore>();
+    final providerStore = GetIt.instance<ProviderRequestStore>();
+    // Ensure vouchers/provider requests are loaded
+    vouchersStore.fetchMyVouchers();
+    providerStore.fetchProviderRequests();
     // Use selected ids from the provider store or fallback to first pending request
-    final fallback = providerStore.providerRequests.isNotEmpty ? providerStore.providerRequests.first : null;
-    final providerRequestId = providerStore.selectedProviderRequestId ?? (fallback?.id ?? '');
+    final fallback = providerStore.providerRequests.isNotEmpty
+        ? providerStore.providerRequests.first
+        : null;
+    final providerRequestId =
+        providerStore.selectedProviderRequestId ?? (fallback?.id ?? '');
 
-  // Build QR payload containing only the providerRequestId
-  //final qrPayload = {"type" : "PROVIDER-REQUEST", "code" : providerRequestCode};
-  final qrPayload = { "type": "PROVIDER-REQUEST", "code": providerRequestId };
+    // Build QR payload containing only the providerRequestId
+    //final qrPayload = {"type" : "PROVIDER-REQUEST", "code" : providerRequestCode};
+    final qrPayload = {'type': 'PROVIDER-REQUEST', 'code': providerRequestId};
 
     // find the providerRequest object for display (may be null)
-    final ProviderRequest providerRequestObj = providerStore.providerRequests.firstWhere(
+    final ProviderRequest providerRequestObj =
+        providerStore.providerRequests.firstWhere(
       (r) => r.id == providerRequestId,
       orElse: () => fallback ?? ProviderRequest(id: '0'),
     );
@@ -83,35 +91,55 @@ class ProviderRequestQRCodeScreen extends StatelessWidget {
                           Row(
                             children: [
                               IconButton(
-                                icon: const Icon(Icons.arrow_back, color: Colors.black87),
+                                icon: const Icon(Icons.arrow_back,
+                                    color: Colors.black87),
                                 onPressed: () {
                                   // Prefer pop when possible (returns to previous screen).
                                   // If there's nothing to pop (screen opened directly), replace with the form route.
                                   if (Navigator.of(context).canPop()) {
                                     Navigator.of(context).pop();
                                   } else if (providerRequestId.isNotEmpty) {
-                                    context.router.replace(ProviderRequestFormRoute(providerRequestId: providerRequestId, serviceId: providerRequestObj.serviceId ?? '', administratorId: providerRequestObj.administratorId ?? ''));
+                                    context.router.replace(
+                                        ProviderRequestFormRoute(
+                                            providerRequestId:
+                                                providerRequestId,
+                                            serviceId:
+                                                providerRequestObj.serviceId ??
+                                                    '',
+                                            administratorId: providerRequestObj
+                                                    .administratorId ??
+                                                ''));
                                   } else {
                                     // As a last resort, replace to the MyVouchers screen
-                                    context.router.replace(const MyVouchersRoute());
+                                    context.router
+                                        .replace(const MyVouchersRoute());
                                   }
                                 },
                               ),
                               const SizedBox(width: 4),
-                              const Icon(LucideIcons.ticket400, color: Colors.black87),
+                              const Icon(LucideIcons.ticket400,
+                                  color: Colors.black87),
                               const SizedBox(width: 8),
-                              const DsText(text: 'Verificação do Serviço', variant: DsTextVariant.subTitleVoucher),
+                              const DsText(
+                                  text: 'Verificação do Serviço',
+                                  variant: DsTextVariant.subTitleVoucher),
                             ],
                           ),
                           const SizedBox(height: 24),
 
                           // Voucher Info
-              DsText(
-                text: providerRequestObj.service?.name ?? (providerRequestObj.serviceName.isNotEmpty ? providerRequestObj.serviceName : providerRequestId),
-                variant: DsTextVariant.baseBold),
-              const SizedBox(height: 8),
                           DsText(
-                            text: providerRequestObj.service?.description ?? (providerRequestObj.observacoes.isNotEmpty ? providerRequestObj.observacoes : ''),
+                              text: providerRequestObj.service?.name ??
+                                  (providerRequestObj.serviceName.isNotEmpty
+                                      ? providerRequestObj.serviceName
+                                      : providerRequestId),
+                              variant: DsTextVariant.baseBold),
+                          const SizedBox(height: 8),
+                          DsText(
+                            text: providerRequestObj.service?.description ??
+                                (providerRequestObj.observacoes.isNotEmpty
+                                    ? providerRequestObj.observacoes
+                                    : ''),
                             variant: DsTextVariant.small,
                           ),
                           const SizedBox(height: 24),
@@ -133,7 +161,14 @@ class ProviderRequestQRCodeScreen extends StatelessWidget {
                                 version: QrVersions.auto,
                                 size: 200.0,
                                 backgroundColor: Colors.white,
-                                foregroundColor: Colors.black,
+                                eyeStyle: const QrEyeStyle(
+                                  eyeShape: QrEyeShape.square,
+                                  color: Colors.black,
+                                ),
+                                dataModuleStyle: const QrDataModuleStyle(
+                                  dataModuleShape: QrDataModuleShape.square,
+                                  color: Colors.black,
+                                ),
                               ),
                             ),
                           ),
@@ -151,16 +186,21 @@ class ProviderRequestQRCodeScreen extends StatelessWidget {
                                 if (created != null && created.isNotEmpty) {
                                   try {
                                     final date = DateTime.parse(created);
-                                    final day = date.day.toString().padLeft(2, '0');
-                                    final month = date.month.toString().padLeft(2, '0');
+                                    final day =
+                                        date.day.toString().padLeft(2, '0');
+                                    final month =
+                                        date.month.toString().padLeft(2, '0');
                                     final year = date.year.toString();
                                     final hour = date.hour.toString();
-                                    appointmentText = 'Agendado: $day/$month/$year às ${hour}h';
+                                    appointmentText =
+                                        'Agendado: $day/$month/$year às ${hour}h';
                                   } catch (_) {
                                     appointmentText = 'Agendado: -';
                                   }
                                 }
-                                return DsText(text: appointmentText, variant: DsTextVariant.small);
+                                return DsText(
+                                    text: appointmentText,
+                                    variant: DsTextVariant.small);
                               }),
                             ],
                           ),

@@ -24,7 +24,9 @@ class CartPrefs {
       }
       final items = decoded['items'] as List<dynamic>?;
       if (items == null) return null;
-      return items.map((e) => CartItem.fromJson(Map<String, dynamic>.from(e as Map))).toList();
+      return items
+          .map((e) => CartItem.fromJson(Map<String, dynamic>.from(e as Map)))
+          .toList();
     } catch (_) {
       return null;
     }

@@ -3,7 +3,6 @@ import 'package:mobx/mobx.dart';
 import 'package:tsdtech_client_sdk/core/local_storage/administrator/administrator_id.prefs.dart';
 import 'package:tsdtech_client_sdk/models/auth/signup-request-client.model.dart';
 
-
 part 'signup_person_store.g.dart';
 
 class SignupPersonStore = _SignupPersonStore with _$SignupPersonStore;

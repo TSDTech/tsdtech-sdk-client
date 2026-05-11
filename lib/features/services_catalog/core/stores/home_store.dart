@@ -53,11 +53,13 @@ abstract class _HomeStore with Store {
       final sl = GetIt.instance;
       final svc = sl<ServicesService>();
       final typesSvc = sl<ServiceTypesService>();
-      var adminId = AdministratorIdPrefs.get();
+      final adminId = AdministratorIdPrefs.get();
       if (adminId == null || adminId.isEmpty) return;
 
       // load service types
-      final typesRes = await typesSvc.getPublicServiceTypes(pagination: Pagination(page: 1, pageCount: 50), administratorIds: [adminId]);
+      final typesRes = await typesSvc.getPublicServiceTypes(
+          pagination: Pagination(page: 1, pageCount: 50),
+          administratorIds: [adminId]);
       if (typesRes.isSuccess) {
         final pag = typesRes.value;
         if (pag != null) serviceTypes = pag.items;
@@ -66,7 +68,9 @@ abstract class _HomeStore with Store {
       // load services (filtered by selectedCategory/serviceType id if set and searchTerm)
       final result = await svc.getPublicServices(
         administratorIds: [adminId],
-        serviceTypeIds: selectedCategory != null && selectedCategory!.isNotEmpty ? [selectedCategory!] : null,
+        serviceTypeIds: selectedCategory != null && selectedCategory!.isNotEmpty
+            ? [selectedCategory!]
+            : null,
         searchTerm: searchQuery,
       );
 
@@ -91,5 +95,4 @@ abstract class _HomeStore with Store {
     // refresh services when category changes
     loadInitial();
   }
-
 }

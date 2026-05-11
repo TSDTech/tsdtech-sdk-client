@@ -93,7 +93,7 @@ class _PaymentBoletoState extends State<PaymentBoleto> {
     if (_isLoading) {
       return Container(
         padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(color: Colors.white),
+        decoration: const BoxDecoration(color: Colors.white),
         child: const Center(child: CircularProgressIndicator()),
       );
     }
@@ -101,7 +101,7 @@ class _PaymentBoletoState extends State<PaymentBoleto> {
     if (_error != null) {
       return Container(
         padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(color: Colors.white),
+        decoration: const BoxDecoration(color: Colors.white),
         child: Text(_error!,
             style: const TextStyle(fontSize: 14, color: _grayText)),
       );
@@ -109,7 +109,7 @@ class _PaymentBoletoState extends State<PaymentBoleto> {
 
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: Colors.white),
+      decoration: const BoxDecoration(color: Colors.white),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -120,7 +120,7 @@ class _PaymentBoletoState extends State<PaymentBoleto> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'Valor do pedido',
                     style: TextStyle(
                         fontSize: 14,
@@ -130,7 +130,7 @@ class _PaymentBoletoState extends State<PaymentBoleto> {
                   const SizedBox(height: 4),
                   Text(
                     totalFormatted,
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                         color: _blackText),
@@ -140,7 +140,7 @@ class _PaymentBoletoState extends State<PaymentBoleto> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(
+                  const Text(
                     'Vencimento',
                     style: TextStyle(
                         fontSize: 14,
@@ -150,7 +150,7 @@ class _PaymentBoletoState extends State<PaymentBoleto> {
                   const SizedBox(height: 4),
                   Text(
                     _vencimento ?? 'Em até 3 dias úteis',
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
                         color: _grayText),
@@ -166,7 +166,7 @@ class _PaymentBoletoState extends State<PaymentBoleto> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'Código do Boleto',
                   style: TextStyle(
                       fontSize: 14,
@@ -189,7 +189,7 @@ class _PaymentBoletoState extends State<PaymentBoleto> {
                 const SizedBox(height: 4),
                 SelectableText(
                   _billData?.digitableLine ?? '',
-                  style: TextStyle(fontSize: 12, color: _grayText),
+                  style: const TextStyle(fontSize: 12, color: _grayText),
                 ),
               ],
             ),
@@ -211,7 +211,7 @@ class _PaymentBoletoState extends State<PaymentBoleto> {
           const SizedBox(height: 12),
 
           // Aviso
-          Text(
+          const Text(
             'Lembre-se: após o vencimento o boleto não poderá ser pago e seu pedido será cancelado.',
             style: TextStyle(fontSize: 12, color: _grayText, height: 1.4),
           ),

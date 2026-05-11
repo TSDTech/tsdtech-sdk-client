@@ -17,9 +17,9 @@ class NoResultsBox extends StatelessWidget {
             color: const Color(0xFFF7F8FA),
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Column(
+          child: const Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
+            children: [
               Icon(Icons.search, size: 32, color: Colors.grey),
               SizedBox(height: 8),
               DsText(
@@ -29,14 +29,15 @@ class NoResultsBox extends StatelessWidget {
               ),
               SizedBox(height: 6),
               DsText(
-                text: 'Você pode alterar o filtro ou visualizar todos os serviços disponíveis.',
+                text:
+                    'Você pode alterar o filtro ou visualizar todos os serviços disponíveis.',
                 variant: DsTextVariant.small,
                 color: Colors.black54,
               ),
             ],
           ),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         SizedBox(
           width: 240,
           child: ElevatedButton(
@@ -44,7 +45,8 @@ class NoResultsBox extends StatelessWidget {
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF2563EB),
               padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
             ),
             child: const DsText(
               text: 'Ver todos os serviços',

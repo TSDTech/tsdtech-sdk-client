@@ -28,7 +28,8 @@ class ClientUserEntity {
     this.memberships,
   });
 
-  factory ClientUserEntity.fromJson(Map<String, dynamic> json) => _$ClientUserEntityFromJson(json);
+  factory ClientUserEntity.fromJson(Map<String, dynamic> json) =>
+      _$ClientUserEntityFromJson(json);
 
   Map<String, dynamic> toJson() => _$ClientUserEntityToJson(this);
 }

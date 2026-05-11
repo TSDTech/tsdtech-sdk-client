@@ -9,7 +9,8 @@ class ProviderRequestStore = _ProviderRequestStore with _$ProviderRequestStore;
 
 abstract class _ProviderRequestStore with Store {
   @observable
-  ObservableList<ProviderRequest> providerRequests = ObservableList<ProviderRequest>();
+  ObservableList<ProviderRequest> providerRequests =
+      ObservableList<ProviderRequest>();
 
   // populate flags controlled by the store
   @observable
@@ -63,7 +64,8 @@ abstract class _ProviderRequestStore with Store {
   String? selectedServiceId;
 
   @action
-  void setSelected({required String providerRequestId, required String serviceId}) {
+  void setSelected(
+      {required String providerRequestId, required String serviceId}) {
     selectedProviderRequestId = providerRequestId;
     selectedServiceId = serviceId;
   }
@@ -101,7 +103,9 @@ abstract class _ProviderRequestStore with Store {
       }).toList();
 
   @computed
-  List<ProviderRequest> get scheduledRequests => providerRequests.where((r) => r.status.toUpperCase() == 'PENDING').toList();
+  List<ProviderRequest> get scheduledRequests => providerRequests
+      .where((r) => r.status.toUpperCase() == 'PENDING')
+      .toList();
 
   @computed
   List<ProviderRequest> get filteredScheduledRequests {
@@ -109,11 +113,16 @@ abstract class _ProviderRequestStore with Store {
 
     // Search filter: by service name, provider request id, voucher id
     if (searchQuery.isNotEmpty) {
-      filtered = filtered.where((pr) =>
-        (pr.service?.name ?? '').toLowerCase().contains(searchQuery.toLowerCase()) ||
-        pr.id.toLowerCase().contains(searchQuery.toLowerCase()) ||
-        (pr.voucherId ?? '').toLowerCase().contains(searchQuery.toLowerCase())
-      ).toList();
+      filtered = filtered
+          .where((pr) =>
+              (pr.service?.name ?? '')
+                  .toLowerCase()
+                  .contains(searchQuery.toLowerCase()) ||
+              pr.id.toLowerCase().contains(searchQuery.toLowerCase()) ||
+              (pr.voucherId ?? '')
+                  .toLowerCase()
+                  .contains(searchQuery.toLowerCase()))
+          .toList();
     }
 
     // Date range filter: by createdAt (validity date for provider requests)
@@ -127,17 +136,21 @@ abstract class _ProviderRequestStore with Store {
         } catch (_) {}
         if (prDate == null) return false;
 
-        bool matchesStart = startDateFilter.isEmpty || prDate.isAfter(DateTime.parse(startDateFilter).subtract(const Duration(days: 1)));
-        bool matchesEnd = endDateFilter.isEmpty || prDate.isBefore(DateTime.parse(endDateFilter).add(const Duration(days: 1)));
+        final bool matchesStart = startDateFilter.isEmpty ||
+            prDate.isAfter(DateTime.parse(startDateFilter)
+                .subtract(const Duration(days: 1)));
+        final bool matchesEnd = endDateFilter.isEmpty ||
+            prDate.isBefore(
+                DateTime.parse(endDateFilter).add(const Duration(days: 1)));
         return matchesStart && matchesEnd;
       }).toList();
     }
 
     // Tag filter: by service.tags
     if (tagFilter != null && tagFilter!.isNotEmpty) {
-      filtered = filtered.where((pr) =>
-        (pr.service?.tags ?? []).contains(tagFilter)
-      ).toList();
+      filtered = filtered
+          .where((pr) => (pr.service?.tags ?? []).contains(tagFilter))
+          .toList();
     }
 
     return filtered;
@@ -149,11 +162,16 @@ abstract class _ProviderRequestStore with Store {
 
     // Search filter: by service name, provider request id, voucher id
     if (searchQuery.isNotEmpty) {
-      filtered = filtered.where((pr) =>
-        (pr.service?.name ?? '').toLowerCase().contains(searchQuery.toLowerCase()) ||
-        pr.id.toLowerCase().contains(searchQuery.toLowerCase()) ||
-        (pr.voucherId ?? '').toLowerCase().contains(searchQuery.toLowerCase())
-      ).toList();
+      filtered = filtered
+          .where((pr) =>
+              (pr.service?.name ?? '')
+                  .toLowerCase()
+                  .contains(searchQuery.toLowerCase()) ||
+              pr.id.toLowerCase().contains(searchQuery.toLowerCase()) ||
+              (pr.voucherId ?? '')
+                  .toLowerCase()
+                  .contains(searchQuery.toLowerCase()))
+          .toList();
     }
 
     // Date range filter: by createdAt (validity date for provider requests)
@@ -167,17 +185,21 @@ abstract class _ProviderRequestStore with Store {
         } catch (_) {}
         if (prDate == null) return false;
 
-        bool matchesStart = startDateFilter.isEmpty || prDate.isAfter(DateTime.parse(startDateFilter).subtract(const Duration(days: 1)));
-        bool matchesEnd = endDateFilter.isEmpty || prDate.isBefore(DateTime.parse(endDateFilter).add(const Duration(days: 1)));
+        final bool matchesStart = startDateFilter.isEmpty ||
+            prDate.isAfter(DateTime.parse(startDateFilter)
+                .subtract(const Duration(days: 1)));
+        final bool matchesEnd = endDateFilter.isEmpty ||
+            prDate.isBefore(
+                DateTime.parse(endDateFilter).add(const Duration(days: 1)));
         return matchesStart && matchesEnd;
       }).toList();
     }
 
     // Tag filter: by service.tags
     if (tagFilter != null && tagFilter!.isNotEmpty) {
-      filtered = filtered.where((pr) =>
-        (pr.service?.tags ?? []).contains(tagFilter)
-      ).toList();
+      filtered = filtered
+          .where((pr) => (pr.service?.tags ?? []).contains(tagFilter))
+          .toList();
     }
 
     return filtered;
@@ -189,20 +211,21 @@ abstract class _ProviderRequestStore with Store {
   @computed
   int get completedCount => completedRequests.length;
 
-
-
   @action
-  Future<void> fetchProviderRequests({int page = 1, int pageSizeParam = 10}) async {
+  Future<void> fetchProviderRequests(
+      {int page = 1, int pageSizeParam = 10}) async {
     try {
       // Debug log to confirm fetch invocation
       // ignore: avoid_print
       final pageSize = pageSizeParam;
-      print('[ProviderRequestStore] fetchProviderRequests called page=$page pageSize=$pageSize populateClients=$populateClients populateServiceIds=$populateServiceIds populateVoucherIds=$populateVoucherIds populateProviderIds=$populateProviderIds populateAdministratorIds=$populateAdministratorIds');
+      print(
+          '[ProviderRequestStore] fetchProviderRequests called page=$page pageSize=$pageSize populateClients=$populateClients populateServiceIds=$populateServiceIds populateVoucherIds=$populateVoucherIds populateProviderIds=$populateProviderIds populateAdministratorIds=$populateAdministratorIds');
       if (page > 1 && !hasMore) return;
       isLoading = true;
       errorMessage = null;
       final pagination = Pagination(page: page, pageCount: pageSize);
-      final result = await ProviderRequestsService.instance.getProviderRequestsClient(
+      final result =
+          await ProviderRequestsService.instance.getProviderRequestsClient(
         pagination: pagination,
         clients: populateClients,
         service: populateServiceIds,

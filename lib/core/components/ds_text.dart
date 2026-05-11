@@ -1,7 +1,36 @@
 import 'package:flutter/material.dart';
 
-enum DsTextVariant { textVoucher, titleVoucher, boldTitle, base, baseBold, small, title, section, normal, statusBar, statusBarNumber, baseBoldTab, baseBoldMedium, smallBold, carTitle, carDescription, carPlate, titleText, finesTitle, foundVehicle, baseRegular, baseRegularBold, carModel, plate, text, debtValueLarge, mediumTitle, subTitleVoucher, smallBoldIcon }
-
+enum DsTextVariant {
+  textVoucher,
+  titleVoucher,
+  boldTitle,
+  base,
+  baseBold,
+  small,
+  title,
+  section,
+  normal,
+  statusBar,
+  statusBarNumber,
+  baseBoldTab,
+  baseBoldMedium,
+  smallBold,
+  carTitle,
+  carDescription,
+  carPlate,
+  titleText,
+  finesTitle,
+  foundVehicle,
+  baseRegular,
+  baseRegularBold,
+  carModel,
+  plate,
+  text,
+  debtValueLarge,
+  mediumTitle,
+  subTitleVoucher,
+  smallBoldIcon
+}
 
 class DsText extends StatelessWidget {
   final String text;
@@ -62,13 +91,15 @@ class DsText extends StatelessWidget {
     // Prefer small
     DsTextVariant.small: _small,
     DsTextVariant.smallBold: _small.copyWith(fontWeight: FontWeight.w600),
-    DsTextVariant.smallBoldIcon: _small.copyWith(fontSize: 10, height: 12 / 10, fontWeight: FontWeight.w600),
+    DsTextVariant.smallBoldIcon: _small.copyWith(
+        fontSize: 10, height: 12 / 10, fontWeight: FontWeight.w600),
 
     // Prefer medium
     DsTextVariant.base: _medium,
     DsTextVariant.baseRegular: _medium,
     DsTextVariant.baseBold: _medium.copyWith(fontWeight: FontWeight.w600),
-    DsTextVariant.baseRegularBold: _medium.copyWith(fontWeight: FontWeight.w700),
+    DsTextVariant.baseRegularBold:
+        _medium.copyWith(fontWeight: FontWeight.w700),
     DsTextVariant.baseBoldTab: _medium.copyWith(fontSize: 11, height: 15 / 11),
     DsTextVariant.normal: _medium,
     DsTextVariant.text: _medium,
@@ -80,7 +111,8 @@ class DsText extends StatelessWidget {
     DsTextVariant.title: _large,
     DsTextVariant.section: _large,
     DsTextVariant.mediumTitle: _large,
-    DsTextVariant.subTitleVoucher: _large.copyWith(fontSize: 24, height: 27 / 24),
+    DsTextVariant.subTitleVoucher:
+        _large.copyWith(fontSize: 24, height: 27 / 24),
     DsTextVariant.titleVoucher: _bold.copyWith(fontSize: 30, height: 39 / 30),
 
     // Map legacy car/fines/plate variants to medium/large as appropriate

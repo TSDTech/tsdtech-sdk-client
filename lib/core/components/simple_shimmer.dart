@@ -4,7 +4,8 @@ import 'package:shimmer/shimmer.dart';
 class SimpleShimmer extends StatelessWidget {
   final int count;
   final double height;
-  const SimpleShimmer({Key? key, this.count = 6, this.height = 80}) : super(key: key);
+  const SimpleShimmer({Key? key, this.count = 6, this.height = 80})
+      : super(key: key);
 
   Widget _shimmerItem(BuildContext context) {
     return Padding(
@@ -14,14 +15,16 @@ class SimpleShimmer extends StatelessWidget {
           Container(
             width: 96,
             height: height,
-            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(8)),
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(8)),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(height: 16, width: double.infinity, color: Colors.white),
+                Container(
+                    height: 16, width: double.infinity, color: Colors.white),
                 const SizedBox(height: 8),
                 Container(height: 12, width: 150, color: Colors.white),
                 const SizedBox(height: 8),

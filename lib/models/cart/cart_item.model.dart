@@ -10,6 +10,7 @@ class CartItem {
 
   CartItem({required this.service, required this.quantity});
 
-  factory CartItem.fromJson(Map<String, dynamic> json) => _$CartItemFromJson(json);
+  factory CartItem.fromJson(Map<String, dynamic> json) =>
+      _$CartItemFromJson(json);
   Map<String, dynamic> toJson() => _$CartItemToJson(this);
 }

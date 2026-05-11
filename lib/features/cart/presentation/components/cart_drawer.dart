@@ -234,8 +234,7 @@ class _CartDrawerState extends State<CartDrawer> {
                                               const DsText(
                                                   text: 'Por unidade',
                                                   variant: DsTextVariant.small,
-                                                  color:
-                                                      Color(0xFF6B7280)),
+                                                  color: Color(0xFF6B7280)),
                                               const SizedBox(height: 8),
                                               IconButton(
                                                   onPressed: () {

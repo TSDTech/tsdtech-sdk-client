@@ -8,6 +8,5 @@ class BackMsAuthorizerModule extends ModuleBase {
     if (!sl.isRegistered<OrdersService>()) {
       sl.registerLazySingleton<OrdersService>(() => OrdersService());
     }
-
   }
 }

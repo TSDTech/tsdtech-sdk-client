@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
 import 'package:tsdtech_client_sdk/core/components/ds_button.dart';
@@ -71,7 +70,7 @@ class LoginScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 20,
                     offset: const Offset(0, 6),
                   ),
@@ -194,8 +193,8 @@ class LoginScreen extends StatelessWidget {
                               ],
                             ),
                             TextButton(
-                              onPressed: () =>
-                                  context.router.push(ForgotPasswordRoute()),
+                              onPressed: () => context.router
+                                  .push(const ForgotPasswordRoute()),
                               child: const DsText(
                                   text: 'Esqueci minha senha',
                                   variant: DsTextVariant.smallBold),

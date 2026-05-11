@@ -7,6 +7,6 @@ enum PaymentMethod {
   final String label;
   const PaymentMethod(this.value, this.label);
 
-  static PaymentMethod fromIndex(int i) =>
-      PaymentMethod.values.firstWhere((e) => e.value == i, orElse: () => PaymentMethod.pix);
+  static PaymentMethod fromIndex(int i) => PaymentMethod.values
+      .firstWhere((e) => e.value == i, orElse: () => PaymentMethod.pix);
 }

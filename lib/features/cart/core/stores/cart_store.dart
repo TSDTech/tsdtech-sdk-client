@@ -41,7 +41,8 @@ abstract class _CartStore with Store {
     final idx = _items.indexWhere((i) => i.service.id == service.id);
     if (idx >= 0) {
       final existing = _items[idx];
-      _items[idx] = CartItem(service: existing.service, quantity: existing.quantity + 1);
+      _items[idx] =
+          CartItem(service: existing.service, quantity: existing.quantity + 1);
     } else {
       _items.add(CartItem(service: service, quantity: 1));
     }
@@ -50,7 +51,7 @@ abstract class _CartStore with Store {
 
   @action
   void remove(Service service) {
-  _items.removeWhere((i) => i.service.id == service.id);
+    _items.removeWhere((i) => i.service.id == service.id);
     _persist();
   }
 
@@ -59,7 +60,8 @@ abstract class _CartStore with Store {
     final idx = _items.indexWhere((i) => i.service.id == service.id);
     if (idx >= 0) {
       final existing = _items[idx];
-  _items[idx] = CartItem(service: existing.service, quantity: existing.quantity + 1);
+      _items[idx] =
+          CartItem(service: existing.service, quantity: existing.quantity + 1);
       _persist();
     }
   }
@@ -70,7 +72,8 @@ abstract class _CartStore with Store {
     if (idx >= 0) {
       final existing = _items[idx];
       if (existing.quantity > 1) {
-        _items[idx] = CartItem(service: existing.service, quantity: existing.quantity - 1);
+        _items[idx] = CartItem(
+            service: existing.service, quantity: existing.quantity - 1);
         _persist();
       } else {
         _items.removeAt(idx);
@@ -84,7 +87,10 @@ abstract class _CartStore with Store {
   }
 
   int quantityOf(Service service) {
-    return _items.firstWhere((i) => i.service.id == service.id, orElse: () => CartItem(service: service, quantity: 0)).quantity;
+    return _items
+        .firstWhere((i) => i.service.id == service.id,
+            orElse: () => CartItem(service: service, quantity: 0))
+        .quantity;
   }
 
   @computed
@@ -97,8 +103,6 @@ abstract class _CartStore with Store {
     return sum;
   }
 
-  
-
   @action
   void clear() {
     _items.clear();
@@ -107,7 +111,7 @@ abstract class _CartStore with Store {
 
   Future<void> _persist() async {
     try {
-  await CartPrefs.set(_items.toList());
+      await CartPrefs.set(_items.toList());
     } catch (_) {
       // ignore persistence errors
     }

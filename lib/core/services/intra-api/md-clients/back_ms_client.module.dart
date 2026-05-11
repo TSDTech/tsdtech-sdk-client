@@ -8,6 +8,5 @@ class BackMsClientsModule extends ModuleBase {
     if (!sl.isRegistered<ClientsService>()) {
       sl.registerLazySingleton<ClientsService>(() => ClientsService());
     }
-
   }
 }

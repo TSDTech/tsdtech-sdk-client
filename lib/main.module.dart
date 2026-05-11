@@ -6,9 +6,9 @@ import 'package:tsdtech_client_sdk/features/features.module.dart';
 class MainModule extends ModuleBase {
   @override
   List<ModuleBase> get imports => [
-    IntraApiModule(),
-    FeaturesModule(),
-  ];
+        IntraApiModule(),
+        FeaturesModule(),
+      ];
 
   @override
   void inject(GetIt sl) {}

@@ -24,6 +24,7 @@ class ClientUserTokenDataPrefs {
     await SharedPrefsHelper.prefs.setString(_key, _encode(data.toJson()));
   }
 
-  static Map<String, dynamic> _decode(String raw) => Map<String, dynamic>.from(jsonDecode(raw) as Map);
+  static Map<String, dynamic> _decode(String raw) =>
+      Map<String, dynamic>.from(jsonDecode(raw) as Map);
   static String _encode(Map<String, dynamic> json) => jsonEncode(json);
 }

@@ -20,13 +20,13 @@ class VouchersModule extends ModuleBase {
           page: MyVouchersFormRoute.page,
           meta: const {'requiresAuth': true},
           guards: [AuthGuard()],
-        ),  
+        ),
         AutoRoute(
           path: '/vouchers/request/qrcode',
-          page: ProviderRequestQRCodeRoute.page,  
+          page: ProviderRequestQRCodeRoute.page,
           meta: const {'requiresAuth': true},
           guards: [AuthGuard()],
-        ),  
+        ),
         AutoRoute(
           path: '/vouchers/request/form',
           page: ProviderRequestFormRoute.page,
@@ -47,7 +47,8 @@ class VouchersModule extends ModuleBase {
       sl.registerLazySingleton<VouchersStore>(() => VouchersStore());
     }
     if (!sl.isRegistered<ProviderRequestStore>()) {
-      sl.registerLazySingleton<ProviderRequestStore>(() => ProviderRequestStore());
+      sl.registerLazySingleton<ProviderRequestStore>(
+          () => ProviderRequestStore());
     }
   }
 }

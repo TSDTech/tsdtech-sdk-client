@@ -7,30 +7,30 @@ part 'order.model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class OrderModel {
-	final String id;
-	final String? hash;
-	final String? status;
-	final String? clientId;
-	final String? orderPaymentInfoId;
-	final DateTime? createdAt;
-	final DateTime? updatedAt;
-	final OrderClientInfo? client;
-	final OrderPaymentInfo? orderPaymentInfo;
+  final String id;
+  final String? hash;
+  final String? status;
+  final String? clientId;
+  final String? orderPaymentInfoId;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+  final OrderClientInfo? client;
+  final OrderPaymentInfo? orderPaymentInfo;
 
-	OrderModel({
-		required this.id,
-		this.hash,
-		this.status,
-		this.clientId,
-		this.orderPaymentInfoId,
-		this.createdAt,
-		this.updatedAt,
-		this.client,
-		this.orderPaymentInfo,
-	});
+  OrderModel({
+    required this.id,
+    this.hash,
+    this.status,
+    this.clientId,
+    this.orderPaymentInfoId,
+    this.createdAt,
+    this.updatedAt,
+    this.client,
+    this.orderPaymentInfo,
+  });
 
-	factory OrderModel.fromJson(Map<String, dynamic> json) => _$OrderModelFromJson(json);
+  factory OrderModel.fromJson(Map<String, dynamic> json) =>
+      _$OrderModelFromJson(json);
 
-	Map<String, dynamic> toJson() => _$OrderModelToJson(this);
+  Map<String, dynamic> toJson() => _$OrderModelToJson(this);
 }
-

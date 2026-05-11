@@ -83,8 +83,9 @@ class AuthServiceClientUser extends IntraApi {
   }) async {
     try {
       final adminId = AdministratorIdPrefs.get();
-      if (adminId == null || adminId.isEmpty)
+      if (adminId == null || adminId.isEmpty) {
         throw Exception('administratorId is required for login');
+      }
 
       final response = await post('/auth-client-users/public/login', data: {
         'email': email,
@@ -148,8 +149,9 @@ class AuthServiceClientUser extends IntraApi {
       await SharedPrefsHelper.prefs.clear();
 
       final adminId = AdministratorIdPrefs.get();
-      if (adminId == null || adminId.isEmpty)
+      if (adminId == null || adminId.isEmpty) {
         throw Exception('administratorId is required for signup');
+      }
 
       final payload = dto.toJson()..removeWhere((k, v) => v == null);
       // remove legacy fullDomain param and replace by administratorId

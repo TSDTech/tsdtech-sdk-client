@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:get_it/get_it.dart';
-import 'package:voucherize/core/components/ds_text.dart';
-import 'package:voucherize/features/purchase_history/core/purchase_history_store.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_text.dart';
+import 'package:tsdtech_client_sdk/features/purchase_history/core/purchase_history_store.dart';
 
 class PurchaseHistoryTable extends StatelessWidget {
   const PurchaseHistoryTable({super.key});
@@ -44,7 +44,8 @@ class PurchaseHistoryTable extends StatelessWidget {
     return Observer(builder: (_) {
       if (store.isLoading) {
         return const Center(
-          child: SizedBox(height: 64, width: 64, child: CircularProgressIndicator()),
+          child: SizedBox(
+              height: 64, width: 64, child: CircularProgressIndicator()),
         );
       }
 
@@ -52,7 +53,9 @@ class PurchaseHistoryTable extends StatelessWidget {
         final err = store.lastFetchResult!.error;
         return Padding(
           padding: const EdgeInsets.all(16.0),
-          child: DsText(text: 'Erro ao carregar histórico: $err', variant: DsTextVariant.baseBold),
+          child: DsText(
+              text: 'Erro ao carregar histórico: $err',
+              variant: DsTextVariant.baseBold),
         );
       }
 
@@ -61,7 +64,9 @@ class PurchaseHistoryTable extends StatelessWidget {
       if (purchases.isEmpty) {
         return const Padding(
           padding: EdgeInsets.all(16.0),
-          child: DsText(text: 'Nenhum resultado encontrado.', variant: DsTextVariant.baseBold),
+          child: DsText(
+              text: 'Nenhum resultado encontrado.',
+              variant: DsTextVariant.baseBold),
         );
       }
 
@@ -69,7 +74,8 @@ class PurchaseHistoryTable extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         child: DataTable(
           columnSpacing: 0,
-          dataRowHeight: 70,
+          dataRowMinHeight: 70,
+          dataRowMaxHeight: 70,
           columns: const [
             DataColumn(
               label: Padding(
@@ -78,7 +84,8 @@ class PurchaseHistoryTable extends StatelessWidget {
                   width: 210,
                   child: Align(
                     alignment: Alignment.centerLeft,
-                    child: DsText(text: 'ID Transação', variant: DsTextVariant.baseBold),
+                    child: DsText(
+                        text: 'ID Transação', variant: DsTextVariant.baseBold),
                   ),
                 ),
               ),
@@ -90,7 +97,8 @@ class PurchaseHistoryTable extends StatelessWidget {
                   width: 210,
                   child: Align(
                     alignment: Alignment.centerLeft,
-                    child: DsText(text: 'Data/hora', variant: DsTextVariant.baseBold),
+                    child: DsText(
+                        text: 'Data/hora', variant: DsTextVariant.baseBold),
                   ),
                 ),
               ),
@@ -102,7 +110,9 @@ class PurchaseHistoryTable extends StatelessWidget {
                   width: 280,
                   child: Align(
                     alignment: Alignment.centerLeft,
-                    child: DsText(text: 'Forma de pagamento', variant: DsTextVariant.baseBold),
+                    child: DsText(
+                        text: 'Forma de pagamento',
+                        variant: DsTextVariant.baseBold),
                   ),
                 ),
               ),
@@ -114,7 +124,8 @@ class PurchaseHistoryTable extends StatelessWidget {
                   width: 210,
                   child: Align(
                     alignment: Alignment.centerLeft,
-                    child: DsText(text: 'Valor pago', variant: DsTextVariant.baseBold),
+                    child: DsText(
+                        text: 'Valor pago', variant: DsTextVariant.baseBold),
                   ),
                 ),
               ),
@@ -126,7 +137,8 @@ class PurchaseHistoryTable extends StatelessWidget {
                   width: 210,
                   child: Align(
                     alignment: Alignment.centerLeft,
-                    child: DsText(text: 'Status', variant: DsTextVariant.baseBold),
+                    child:
+                        DsText(text: 'Status', variant: DsTextVariant.baseBold),
                   ),
                 ),
               ),
@@ -139,7 +151,11 @@ class PurchaseHistoryTable extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: SizedBox(
                     width: 110,
-                    child: Align(alignment: Alignment.centerLeft, child: DsText(text: p['transactionId'] ?? '', variant: DsTextVariant.baseBold)),
+                    child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: DsText(
+                            text: p['transactionId'] ?? '',
+                            variant: DsTextVariant.baseBold)),
                   ),
                 ),
               ),
@@ -148,7 +164,11 @@ class PurchaseHistoryTable extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: SizedBox(
                     width: 110,
-                    child: Align(alignment: Alignment.centerLeft, child: DsText(text: p['date'] ?? '', variant: DsTextVariant.small)),
+                    child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: DsText(
+                            text: p['date'] ?? '',
+                            variant: DsTextVariant.small)),
                   ),
                 ),
               ),
@@ -162,9 +182,18 @@ class PurchaseHistoryTable extends StatelessWidget {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(p['paymentMethod'] == 'PIX' ? Icons.qr_code : p['paymentMethod'] == 'Crédito' ? Icons.credit_card : Icons.receipt_long, size: 18, color: Colors.blueGrey),
+                          Icon(
+                              p['paymentMethod'] == 'PIX'
+                                  ? Icons.qr_code
+                                  : p['paymentMethod'] == 'Crédito'
+                                      ? Icons.credit_card
+                                      : Icons.receipt_long,
+                              size: 18,
+                              color: Colors.blueGrey),
                           const SizedBox(width: 6),
-                          DsText(text: p['paymentMethod'] ?? '', variant: DsTextVariant.small),
+                          DsText(
+                              text: p['paymentMethod'] ?? '',
+                              variant: DsTextVariant.small),
                         ],
                       ),
                     ),
@@ -176,7 +205,12 @@ class PurchaseHistoryTable extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: SizedBox(
                     width: 110,
-                    child: Align(alignment: Alignment.centerLeft, child: DsText(text: p['amount'] ?? '', variant: DsTextVariant.baseBold, color: const Color(0xFF199A4E))),
+                    child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: DsText(
+                            text: p['amount'] ?? '',
+                            variant: DsTextVariant.baseBold,
+                            color: const Color(0xFF199A4E))),
                   ),
                 ),
               ),
@@ -187,13 +221,17 @@ class PurchaseHistoryTable extends StatelessWidget {
                     width: 110,
                     child: Container(
                       height: 36,
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: getStatusColor(p['status'] ?? ''),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       alignment: Alignment.centerLeft,
-                      child: DsText(text: p['status'] ?? '', variant: DsTextVariant.baseBold, color: getStatusTextColor(p['status'] ?? '')),
+                      child: DsText(
+                          text: p['status'] ?? '',
+                          variant: DsTextVariant.baseBold,
+                          color: getStatusTextColor(p['status'] ?? '')),
                     ),
                   ),
                 ),

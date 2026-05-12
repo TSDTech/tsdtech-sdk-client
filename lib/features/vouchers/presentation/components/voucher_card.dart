@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:voucherize/core/components/ds_text.dart';
-import 'package:voucherize/models/vouchers/voucher.model.dart';
-import 'package:voucherize/features/vouchers/presentation/screens/voucher_qrcode_screen.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_text.dart';
+import 'package:tsdtech_client_sdk/models/vouchers/voucher.model.dart';
+import 'package:tsdtech_client_sdk/features/vouchers/presentation/screens/voucher_qrcode_screen.dart';
 
 class VoucherCard extends StatelessWidget {
   final Voucher voucher;
@@ -113,8 +113,7 @@ class VoucherCard extends StatelessWidget {
                         builder: (_) => VoucherQRCodeScreen(
                             voucherId: voucher.id,
                             serviceId: voucher.serviceId,
-                            code: voucher.code
-                            ),
+                            code: voucher.code),
                       ),
                     );
                   },

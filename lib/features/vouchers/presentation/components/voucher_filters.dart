@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:voucherize/core/components/ds_text.dart';
-import 'package:voucherize/features/vouchers/core/stores/vouchers_store.dart';
-import 'package:voucherize/features/vouchers/core/stores/provider_request_store.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_text.dart';
+import 'package:tsdtech_client_sdk/features/vouchers/core/stores/vouchers_store.dart';
+import 'package:tsdtech_client_sdk/features/vouchers/core/stores/provider_request_store.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:intl/intl.dart';
 
@@ -56,7 +56,11 @@ class VoucherFilters extends StatelessWidget {
           Expanded(
             child: AbsorbPointer(
               child: TextField(
-                controller: TextEditingController(text: vouchersStore.startDateFilter.isNotEmpty ? DateFormat('dd/MM/yyyy').format(DateTime.parse(vouchersStore.startDateFilter)) : ''),
+                controller: TextEditingController(
+                    text: vouchersStore.startDateFilter.isNotEmpty
+                        ? DateFormat('dd/MM/yyyy').format(
+                            DateTime.parse(vouchersStore.startDateFilter))
+                        : ''),
                 onChanged: (_) {},
                 readOnly: true,
                 decoration: InputDecoration(
@@ -67,7 +71,8 @@ class VoucherFilters extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                     borderSide: BorderSide.none,
                   ),
-                  prefixIcon: const Icon(Icons.calendar_today_outlined, color: Colors.grey),
+                  prefixIcon: const Icon(Icons.calendar_today_outlined,
+                      color: Colors.grey),
                 ),
               ),
             ),
@@ -77,7 +82,11 @@ class VoucherFilters extends StatelessWidget {
           Expanded(
             child: AbsorbPointer(
               child: TextField(
-                controller: TextEditingController(text: vouchersStore.endDateFilter.isNotEmpty ? DateFormat('dd/MM/yyyy').format(DateTime.parse(vouchersStore.endDateFilter)) : ''),
+                controller: TextEditingController(
+                    text: vouchersStore.endDateFilter.isNotEmpty
+                        ? DateFormat('dd/MM/yyyy')
+                            .format(DateTime.parse(vouchersStore.endDateFilter))
+                        : ''),
                 onChanged: (_) {},
                 readOnly: true,
                 decoration: InputDecoration(
@@ -88,19 +97,20 @@ class VoucherFilters extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                     borderSide: BorderSide.none,
                   ),
-                  prefixIcon: const Icon(Icons.calendar_today_outlined, color: Colors.grey),
+                  prefixIcon: const Icon(Icons.calendar_today_outlined,
+                      color: Colors.grey),
                 ),
               ),
             ),
           ),
           const SizedBox(width: 12),
           // Clear dates button
-          SizedBox(
+          const SizedBox(
             width: 40,
             child: IconButton(
               tooltip: 'Limpar datas',
               padding: EdgeInsets.zero,
-              icon: const Icon(Icons.clear, color: Colors.grey),
+              icon: Icon(Icons.clear, color: Colors.grey),
               onPressed: null,
             ),
           ),
@@ -108,7 +118,7 @@ class VoucherFilters extends StatelessWidget {
           // Dropdown Tags
           Expanded(
             child: DropdownButtonFormField<String>(
-              value: vouchersStore.tagFilter,
+              initialValue: vouchersStore.tagFilter,
               decoration: InputDecoration(
                 filled: true,
                 fillColor: const Color(0xFFF3F4F6),
@@ -119,14 +129,14 @@ class VoucherFilters extends StatelessWidget {
               ),
               hint: const DsText(text: 'Tags', variant: DsTextVariant.small),
               items: [
-                DropdownMenuItem(
+                const DropdownMenuItem(
                   value: null,
                   child: DsText(text: 'Todas', variant: DsTextVariant.small),
                 ),
                 ...sortedTags.map((tag) => DropdownMenuItem(
-                  value: tag,
-                  child: DsText(text: tag, variant: DsTextVariant.small),
-                )),
+                      value: tag,
+                      child: DsText(text: tag, variant: DsTextVariant.small),
+                    )),
               ],
               onChanged: null,
             ),

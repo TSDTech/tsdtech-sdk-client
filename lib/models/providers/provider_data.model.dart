@@ -24,6 +24,7 @@ class ProviderData {
     this.updatedAt,
   });
 
-  factory ProviderData.fromJson(Map<String, dynamic> json) => _$ProviderDataFromJson(json);
+  factory ProviderData.fromJson(Map<String, dynamic> json) =>
+      _$ProviderDataFromJson(json);
   Map<String, dynamic> toJson() => _$ProviderDataToJson(this);
 }

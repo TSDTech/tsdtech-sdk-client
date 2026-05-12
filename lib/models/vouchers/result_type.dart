@@ -52,13 +52,15 @@ extension ResultTypeX on ResultType {
   static ResultType fromStatus(String? status) {
     if (status == null || status.isEmpty) return ResultType.unknown;
     final s = status.toUpperCase();
-    if (['FINISHED', 'CONCLUDED', 'COMPLETED', 'APPROVED', 'SUCCESS'].contains(s)) {
+    if (['FINISHED', 'CONCLUDED', 'COMPLETED', 'APPROVED', 'SUCCESS']
+        .contains(s)) {
       return ResultType.approved;
     }
     if (['REJECTED', 'DENIED', 'FAILED'].contains(s)) {
       return ResultType.rejected;
     }
-    if (['PENDING', 'IN_PROGRESS', 'WAITING', 'PROCESSING', 'SCHEDULED'].contains(s)) {
+    if (['PENDING', 'IN_PROGRESS', 'WAITING', 'PROCESSING', 'SCHEDULED']
+        .contains(s)) {
       return ResultType.pending;
     }
     return ResultType.unknown;

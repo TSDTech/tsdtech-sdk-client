@@ -22,6 +22,7 @@ class ServiceTypeModel {
     this.updatedAt,
   });
 
-  factory ServiceTypeModel.fromJson(Map<String, dynamic> json) => _$ServiceTypeModelFromJson(json);
+  factory ServiceTypeModel.fromJson(Map<String, dynamic> json) =>
+      _$ServiceTypeModelFromJson(json);
   Map<String, dynamic> toJson() => _$ServiceTypeModelToJson(this);
 }

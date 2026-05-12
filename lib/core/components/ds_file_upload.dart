@@ -1,6 +1,6 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:voucherize/core/components/ds_circular_progress_indicator.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_circular_progress_indicator.dart';
 
 enum DsFileUploadState { idle, uploading, uploaded }
 
@@ -9,7 +9,7 @@ class DsFileUpload extends StatelessWidget {
   static const int _bytesPerKB = 1024;
   static const int _kbThreshold = 1000;
   static const String _maxSizeErrorMessage =
-      "Arquivo muito grande. Tamanho máximo: 10MB";
+      'Arquivo muito grande. Tamanho máximo: 10MB';
 
   final String title;
   final String description;

@@ -5,27 +5,57 @@
 # IDEs (https://dart.dev/tools#ides-and-editors). The analyzer can also be
 # invoked from the command line by running `flutter analyze`.
 
-# The following line activates a set of recommended lints for Flutter apps,
-# packages, and plugins designed to encourage good coding practices.
 analyzer:
   errors:
     constant_identifier_names: ignore
-include: package:flutter_lints/flutter.yaml
+    todo: ignore
+    library_private_types_in_public_api: ignore  # MobX gerado
+    unawaited_futures: ignore                    # Futures intentional em callbacks
+    deprecated_member_use: ignore                # APIs deprecated do Flutter
+    avoid_print: ignore                          # print em produção
+    non_constant_identifier_names: ignore         # Variáveis de widget
+    unused_field: ignore                         # Campo intencionalmente em polling
+
+include: package:lints/recommended.yaml
 
 linter:
-  # The lint rules applied to this project can be customized in the
-  # section below to disable rules from the `package:flutter_lints/flutter.yaml`
-  # included above or to enable additional rules. A list of all available lints
-  # and their documentation is published at https://dart.dev/lints.
-  #
-  # Instead of disabling a lint rule for the entire project in the
-  # section below, it can also be suppressed for a single line of code
-  # or a specific dart file by using the `// ignore: name_of_lint` and
-  # `// ignore_for_file: name_of_lint` syntax on the line or in the file
-  # producing the lint.
   rules:
-    # avoid_print: false  # Uncomment to disable the `avoid_print` rule
-    # prefer_single_quotes: true  # Uncomment to enable the `prefer_single_quotes` rule
-
-# Additional information about this file can be found at
-# https://dart.dev/guides/language/analysis-options
+    always_declare_return_types: true
+    avoid_empty_else: true
+    avoid_print: true
+    avoid_relative_lib_imports: true
+    avoid_returning_null_for_void: true
+    avoid_types_as_parameter_names: true
+    await_only_futures: true
+    camel_case_extensions: true
+    camel_case_types: true
+    constant_identifier_names: false
+    curly_braces_in_flow_control_structures: true
+    empty_catches: true
+    empty_constructor_bodies: true
+    library_names: true
+    library_prefixes: true
+    no_duplicate_case_values: true
+    null_closures: true
+    prefer_const_constructors: true
+    prefer_const_declarations: true
+    prefer_contains: true
+    prefer_final_fields: true
+    prefer_final_locals: true
+    prefer_if_null_operators: true
+    prefer_interpolation_to_compose_strings: true
+    prefer_is_empty: true
+    prefer_is_not_empty: true
+    prefer_single_quotes: true
+    prefer_spread_collections: true
+    recursive_getters: true
+    slash_for_doc_comments: true
+    type_init_formals: true
+    unawaited_futures: true
+    unnecessary_const: true
+    unnecessary_new: true
+    unnecessary_null_in_if_null_operators: true
+    unnecessary_this: true
+    unrelated_type_equality_checks: true
+    use_function_type_syntax_for_parameters: true
+    use_rethrow_when_possible: true

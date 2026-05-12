@@ -28,7 +28,7 @@ class DsRadioOption<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     final isSelected = groupValue == value;
 
-    Widget radioButton = Radio<T>(
+    final Widget radioButton = Radio<T>(
       value: value,
       groupValue: groupValue,
       onChanged: onChanged,
@@ -81,7 +81,7 @@ class DsRadioOption<T> extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 14,
                       color: isSelected
-                          ? activeColor.withOpacity(0.8)
+                          ? activeColor.withValues(alpha: 0.8)
                           : Colors.grey[600],
                       fontFamily: 'Open Sans',
                     ),
@@ -105,7 +105,7 @@ class DsRadioOption<T> extends StatelessWidget {
             width: isSelected ? 2 : 1,
           ),
           borderRadius: BorderRadius.circular(8),
-          color: isSelected ? activeColor.withOpacity(0.1) : Colors.white,
+          color: isSelected ? activeColor.withValues(alpha: 0.1) : Colors.white,
         ),
         child: content,
       );

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:voucherize/core/components/ds_text.dart';
-import 'package:voucherize/core/components/ds_status_bar.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_text.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_status_bar.dart';
 
 class DsTransferTitleContainer extends StatelessWidget {
   final List<String> statusLabels;

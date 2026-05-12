@@ -1,6 +1,6 @@
-import 'package:voucherize/core/constants/constants.dart';
-import 'package:voucherize/core/local_storage/administrator/administrator_id.prefs.dart';
-import 'package:voucherize/core/services/intra-api/md-administrators/administrators_service.dart';
+import 'package:tsdtech_client_sdk/core/constants/constants.dart';
+import 'package:tsdtech_client_sdk/core/local_storage/administrator/administrator_id.prefs.dart';
+import 'package:tsdtech_client_sdk/core/services/intra-api/md-administrators/administrators_service.dart';
 
 /// Attempts to resolve the application's administrator by the configured
 /// `Constants.fullDomain`. If resolved, persists both the resolved fullDomain

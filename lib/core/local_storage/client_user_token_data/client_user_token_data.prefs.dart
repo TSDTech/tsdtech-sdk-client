@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:voucherize/core/local_storage/shared_prefs_helper.dart';
-import 'package:voucherize/models/auth/client-user-token-data.model.dart';
+import 'package:tsdtech_client_sdk/core/local_storage/shared_prefs_helper.dart';
+import 'package:tsdtech_client_sdk/models/auth/client-user-token-data.model.dart';
 
 class ClientUserTokenDataPrefs {
   static const _key = 'client_user_token_data';
@@ -24,6 +24,7 @@ class ClientUserTokenDataPrefs {
     await SharedPrefsHelper.prefs.setString(_key, _encode(data.toJson()));
   }
 
-  static Map<String, dynamic> _decode(String raw) => Map<String, dynamic>.from(jsonDecode(raw) as Map);
+  static Map<String, dynamic> _decode(String raw) =>
+      Map<String, dynamic>.from(jsonDecode(raw) as Map);
   static String _encode(Map<String, dynamic> json) => jsonEncode(json);
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:voucherize/core/components/ds_text.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_text.dart';
 
 class DsDropdown<T> extends StatelessWidget {
   final String label;

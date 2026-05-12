@@ -1,10 +1,9 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:voucherize/core/components/ds_circular_progress_indicator.dart';
-
+import 'package:tsdtech_client_sdk/core/components/ds_circular_progress_indicator.dart';
 
 enum FileUploadState { idle, uploading, uploaded }
-  
+
 class FileUploadCards extends StatefulWidget {
   final String title;
   final String description;
@@ -37,7 +36,8 @@ class _FileUploadCardsState extends State<FileUploadCards> {
   void initState() {
     super.initState();
     _selectedFile = widget.initialFile;
-    _state = _selectedFile != null ? FileUploadState.uploaded : FileUploadState.idle;
+    _state =
+        _selectedFile != null ? FileUploadState.uploaded : FileUploadState.idle;
   }
 
   @override
@@ -46,14 +46,16 @@ class _FileUploadCardsState extends State<FileUploadCards> {
     if (widget.initialFile != oldWidget.initialFile) {
       setState(() {
         _selectedFile = widget.initialFile;
-        _state = _selectedFile != null ? FileUploadState.uploaded : FileUploadState.idle;
+        _state = _selectedFile != null
+            ? FileUploadState.uploaded
+            : FileUploadState.idle;
       });
     }
   }
 
   Future<void> pickFile() async {
     setState(() => _state = FileUploadState.uploading);
-    
+
     try {
       final result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
@@ -62,9 +64,10 @@ class _FileUploadCardsState extends State<FileUploadCards> {
 
       if (result != null && result.files.isNotEmpty) {
         final file = result.files.first;
-        
-        if (file.size > 1 * 1024 * 1024) { // 1MB
-          throw Exception("Tamanho máximo excedido (1MB)");
+
+        if (file.size > 1 * 1024 * 1024) {
+          // 1MB
+          throw Exception('Tamanho máximo excedido (1MB)');
         }
 
         setState(() {
@@ -93,26 +96,27 @@ class _FileUploadCardsState extends State<FileUploadCards> {
 
   String _getFileDescription() {
     if (_selectedFile == null) return widget.description;
-    
+
     final file = _selectedFile!;
     final extension = file.extension?.toUpperCase() ?? '';
     final sizeInKB = file.size / 1024;
-    
+
     if (sizeInKB < 1000) {
-      return '${extension} • ${sizeInKB.toStringAsFixed(1)} KB';
+      return '$extension • ${sizeInKB.toStringAsFixed(1)} KB';
     } else {
-      return '${extension} • ${(sizeInKB / 1024).toStringAsFixed(1)} MB';
+      return '$extension • ${(sizeInKB / 1024).toStringAsFixed(1)} MB';
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final titleText = _selectedFile != null ? _selectedFile!.name : widget.title;
+    final titleText =
+        _selectedFile != null ? _selectedFile!.name : widget.title;
     final descriptionText = _getFileDescription();
     final isUploading = _state == FileUploadState.uploading;
 
     Widget trailingButton;
-    
+
     if (_state == FileUploadState.uploaded) {
       trailingButton = IconButton(
         icon: const Icon(Icons.delete, color: Colors.red),
@@ -149,7 +153,7 @@ class _FileUploadCardsState extends State<FileUploadCards> {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
+            color: Colors.grey.withValues(alpha: 0.2),
             blurRadius: 6,
             offset: const Offset(0, 3),
           )
@@ -170,11 +174,8 @@ class _FileUploadCardsState extends State<FileUploadCards> {
                 Text(
                   descriptionText,
                   style: TextStyle(
-                    color: isUploading 
-                      ? Colors.blue 
-                      : Colors.grey.shade600,
-                    fontSize: 13
-                  ),
+                      color: isUploading ? Colors.blue : Colors.grey.shade600,
+                      fontSize: 13),
                 ),
               ],
             ),

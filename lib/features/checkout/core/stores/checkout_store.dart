@@ -1,13 +1,13 @@
 import 'package:mobx/mobx.dart';
 import 'package:get_it/get_it.dart';
-import 'package:voucherize/core/local_storage/client_user_token_data/client_user_token_data.prefs.dart';
-import 'package:voucherize/core/services/intra-api/md-checkout/checkouts_service.dart';
-import 'package:voucherize/features/cart/core/stores/cart_store.dart';
-import 'package:voucherize/models/checkouts/calculate_request.model.dart';
-import 'package:voucherize/models/checkouts/calculate_item.model.dart';
-import 'package:voucherize/models/checkouts/checkout_request.model.dart';
-import 'package:voucherize/models/checkouts/checkout_response.model.dart';
-import 'package:voucherize/models/value_result.dart';
+import 'package:tsdtech_client_sdk/core/local_storage/client_user_token_data/client_user_token_data.prefs.dart';
+import 'package:tsdtech_client_sdk/core/services/intra-api/md-checkout/checkouts_service.dart';
+import 'package:tsdtech_client_sdk/features/cart/core/stores/cart_store.dart';
+import 'package:tsdtech_client_sdk/models/checkouts/calculate_request.model.dart';
+import 'package:tsdtech_client_sdk/models/checkouts/calculate_item.model.dart';
+import 'package:tsdtech_client_sdk/models/checkouts/checkout_request.model.dart';
+import 'package:tsdtech_client_sdk/models/checkouts/checkout_response.model.dart';
+import 'package:tsdtech_client_sdk/models/value_result.dart';
 import '../models/payment_method.dart';
 
 part 'checkout_store.g.dart';
@@ -53,7 +53,7 @@ abstract class _CheckoutStoreBase with Store {
       (_) => cart.items,
       (_) => calculateTotal(),
     );
-    
+
     // Calculate initial total
     calculateTotal();
   }
@@ -82,15 +82,17 @@ abstract class _CheckoutStoreBase with Store {
     }
 
     // Convert CartItem to CalculateItem with only serviceId, price, and quantity
-    final calculateItems = cart.items.map((cartItem) => CalculateItem(
-      serviceId: cartItem.service.id ?? '',
-      value: cartItem.service.price ?? 0.0,
-      quantity: cartItem.quantity,
-    )).toList();
+    final calculateItems = cart.items
+        .map((cartItem) => CalculateItem(
+              serviceId: cartItem.service.id ?? '',
+              value: cartItem.service.price ?? 0.0,
+              quantity: cartItem.quantity,
+            ))
+        .toList();
 
     final request = CalculateRequest(cart: calculateItems);
     final result = await CheckoutsService.instance.calculateCart(request);
-    
+
     if (result.isSuccess && result.value != null) {
       _total = result.value!.totalValue;
     } else {
@@ -99,22 +101,26 @@ abstract class _CheckoutStoreBase with Store {
   }
 
   @action
-  Future<ValueResult<CheckoutResponse>> createCheckout({String? encryptedCard}) async {
+  Future<ValueResult<CheckoutResponse>> createCheckout(
+      {String? encryptedCard}) async {
     isProcessing = true;
     final paymentMethodString = _getPaymentMethodString(selectedPayment);
     final card = _buildCardPaymentData();
-    final installmentNumber = _parseInstallments(_cardPaymentInput?.installments);
+    final installmentNumber =
+        _parseInstallments(_cardPaymentInput?.installments);
     final billPayer = _buildBillPayerData();
     final billDueDate = _buildBillDueDateIso();
     final billInstructions = _buildBillInstructions();
-    
+
     // Convert CartItem to CalculateItem with only serviceId, value, and quantity
-    final cartItems = cart.items.map((cartItem) => CalculateItem(
-      serviceId: cartItem.service.id ?? '',
-      value: cartItem.service.price ?? 0.0,
-      quantity: cartItem.quantity,
-    )).toList();
-    
+    final cartItems = cart.items
+        .map((cartItem) => CalculateItem(
+              serviceId: cartItem.service.id ?? '',
+              value: cartItem.service.price ?? 0.0,
+              quantity: cartItem.quantity,
+            ))
+        .toList();
+
     final request = CheckoutRequest(
       cart: cartItems,
       paymentMethod: paymentMethodString,
@@ -196,9 +202,8 @@ abstract class _CheckoutStoreBase with Store {
 
     // Session data complements payer identity; address fields are temporary
     // placeholders while the checkout flow has no address form yet.
-    final composedAddressInfo = [cpf, email, phone]
-        .where((v) => v.isNotEmpty)
-        .join(' | ');
+    final composedAddressInfo =
+        [cpf, email, phone].where((v) => v.isNotEmpty).join(' | ');
 
     return BillPayerData(
       name: name.isNotEmpty ? name : 'Cliente',

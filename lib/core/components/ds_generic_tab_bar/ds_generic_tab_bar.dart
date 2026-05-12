@@ -1,6 +1,6 @@
 // core/components/ds_tab_bar.dart
 import 'package:flutter/material.dart';
-import 'package:voucherize/core/components/ds_generic_tab_bar/ds_tab_button.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_generic_tab_bar/ds_tab_button.dart';
 
 class DsGenericTabBar<T> extends StatelessWidget {
   final List<DsTab<T>> tabs;

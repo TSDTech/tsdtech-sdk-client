@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:voucherize/core/components/ds_text.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_text.dart';
 
 class DsBox extends StatelessWidget {
   final List<String> options;
@@ -23,10 +23,10 @@ class DsBox extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          DsText(
+          const DsText(
             text: 'Responsável pelo pagamento dos débitos:',
             variant: DsTextVariant.baseBold,
-            color: const Color.fromRGBO(31, 41, 55, 1),
+            color: Color.fromRGBO(31, 41, 55, 1),
             textAlign: TextAlign.left,
           ),
           const SizedBox(height: 16),

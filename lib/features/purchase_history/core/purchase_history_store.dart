@@ -1,10 +1,10 @@
 import 'package:mobx/mobx.dart';
 import 'package:dio/dio.dart';
-import 'package:voucherize/core/services/intra-api/md-orders/orders_service.dart';
-import 'package:voucherize/models/common/pagination.model.dart';
-import 'package:voucherize/models/orders/order.model.dart';
-import 'package:voucherize/models/common/paginated_list.model.dart';
-import 'package:voucherize/models/value_result.dart';
+import 'package:tsdtech_client_sdk/core/services/intra-api/md-orders/orders_service.dart';
+import 'package:tsdtech_client_sdk/models/common/pagination.model.dart';
+import 'package:tsdtech_client_sdk/models/orders/order.model.dart';
+import 'package:tsdtech_client_sdk/models/common/paginated_list.model.dart';
+import 'package:tsdtech_client_sdk/models/value_result.dart';
 
 part 'purchase_history_store.g.dart';
 
@@ -12,7 +12,8 @@ class PurchaseHistoryStore = _PurchaseHistoryStore with _$PurchaseHistoryStore;
 
 abstract class _PurchaseHistoryStore with Store {
   @observable
-  ObservableList<Map<String, dynamic>> purchases = ObservableList<Map<String, dynamic>>();
+  ObservableList<Map<String, dynamic>> purchases =
+      ObservableList<Map<String, dynamic>>();
 
   @observable
   bool isLoading = false;
@@ -48,14 +49,23 @@ abstract class _PurchaseHistoryStore with Store {
   List<Map<String, dynamic>> get filteredPurchases {
     return purchases.where((p) {
       // Pagamento
-      if (paymentFilter != 'Todos' && p['paymentMethod'] != paymentFilter) return false;
+      if (paymentFilter != 'Todos' && p['paymentMethod'] != paymentFilter) {
+        return false;
+      }
       // Status
-      if (statusFilter != 'Todos' && p['status'] != statusFilter) return false;
+      if (statusFilter != 'Todos' && p['status'] != statusFilter) {
+        return false;
+      }
       // Data
       if (startDate != null || endDate != null) {
-        DateTime purchaseDate = DateTime.tryParse(_parseDate(p['date'])) ?? DateTime(2000);
-        if (startDate != null && purchaseDate.isBefore(startDate!)) return false;
-        if (endDate != null && purchaseDate.isAfter(endDate!)) return false;
+        final DateTime purchaseDate =
+            DateTime.tryParse(_parseDate(p['date'])) ?? DateTime(2000);
+        if (startDate != null && purchaseDate.isBefore(startDate!)) {
+          return false;
+        }
+        if (endDate != null && purchaseDate.isAfter(endDate!)) {
+          return false;
+        }
       }
       return true;
     }).toList();
@@ -79,7 +89,7 @@ abstract class _PurchaseHistoryStore with Store {
       isLoading = true;
       errorMessage = null;
 
-  final pagination = Pagination(page: page, pageCount: pageSize);
+      final pagination = Pagination(page: page, pageCount: pageSize);
       final result = await OrdersService.instance.getAllOrders(
         pagination: pagination,
         client: true,
@@ -107,7 +117,9 @@ abstract class _PurchaseHistoryStore with Store {
           String statusLabel = (o.status ?? '').toLowerCase();
           if (statusLabel == 'pending' || statusLabel == 'pendente') {
             statusLabel = 'Pendente';
-          } else if (statusLabel == 'confirmed' || statusLabel == 'confirmado' || statusLabel == 'paid') {
+          } else if (statusLabel == 'confirmed' ||
+              statusLabel == 'confirmado' ||
+              statusLabel == 'paid') {
             statusLabel = 'Confirmado';
           } else if (statusLabel == 'cancelled' || statusLabel == 'cancelado') {
             statusLabel = 'Cancelado';
@@ -119,17 +131,22 @@ abstract class _PurchaseHistoryStore with Store {
 
           final payment = o.orderPaymentInfo;
           final paymentMethod = payment?.paymentMethod ?? '';
-          final amount = payment?.cartTotalValue != null ? 'R\$ ${payment!.cartTotalValue!.toStringAsFixed(2)}' : '';
+          final amount = payment?.cartTotalValue != null
+              ? 'R\$ ${payment!.cartTotalValue!.toStringAsFixed(2)}'
+              : '';
 
           purchases.add({
             'transactionId': o.hash ?? o.id,
             'date': formattedDate,
-            'serviceName': '—', // not provided by this endpoint in current model
+            'serviceName':
+                '—', // not provided by this endpoint in current model
             'serviceCode': '—',
             'paymentMethod': paymentMethod,
             'amount': amount,
             'status': statusLabel,
-            'actionLabel': statusLabel == 'Confirmado' ? 'Baixar comprovante' : 'Ver detalhes',
+            'actionLabel': statusLabel == 'Confirmado'
+                ? 'Baixar comprovante'
+                : 'Ver detalhes',
           });
         }
 
@@ -139,15 +156,19 @@ abstract class _PurchaseHistoryStore with Store {
         this.pageSize = pageSize;
       }
     } catch (e) {
-      if (e is DioError) {
+      if (e is DioException) {
         final status = e.response?.statusCode;
         final data = e.response?.data;
         String serverMessage = 'Ocorreu um erro desconhecido.';
         try {
-          if (data is Map && data['message'] != null) serverMessage = data['message'].toString();
-          else if (data is String) serverMessage = data;
+          if (data is Map && data['message'] != null) {
+            serverMessage = data['message'].toString();
+          } else if (data is String) {
+            serverMessage = data;
+          }
         } catch (_) {}
-        lastFetchResult = ValueResult.failure('HTTP ${status ?? '-'} - $serverMessage');
+        lastFetchResult =
+            ValueResult.failure('HTTP ${status ?? '-'} - $serverMessage');
         errorMessage = lastFetchResult?.error;
         // ignore: avoid_print
         print('loadOrdersFromApi DioError: status=$status, data=$data');

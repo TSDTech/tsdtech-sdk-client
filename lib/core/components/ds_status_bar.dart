@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:voucherize/core/components/ds_text.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_text.dart';
 
 class DsStatusBar extends StatefulWidget {
   final List<String> labels;
@@ -76,8 +76,9 @@ class _DsStatusBarState extends State<DsStatusBar> {
                     children: List.generate(itemCount, (index) {
                       final isActive = index == widget.currentIndex;
                       final isCompleted = index < widget.currentIndex;
-                      final dotColor =
-                          isActive || isCompleted ? primaryColor : inactiveColor;
+                      final dotColor = isActive || isCompleted
+                          ? primaryColor
+                          : inactiveColor;
                       final textColor = dotColor;
 
                       return SizedBox(
@@ -99,7 +100,8 @@ class _DsStatusBarState extends State<DsStatusBar> {
                               ),
                               const SizedBox(height: 4),
                               Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 4),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 4),
                                 child: DsText(
                                   text: widget.labels[index],
                                   variant: DsTextVariant.statusBar,

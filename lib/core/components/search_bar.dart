@@ -47,7 +47,7 @@ class _TransactionSearchBarState extends State<TransactionSearchBar> {
     _overlayEntry?.remove();
     _overlayEntry = null;
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return CompositedTransformTarget(

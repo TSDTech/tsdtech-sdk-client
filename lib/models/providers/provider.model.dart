@@ -5,7 +5,7 @@ import 'service_type.model.dart';
 part 'provider.model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class ProviderModel{
+class ProviderModel {
   final String? providerId;
   final String? serviceTypeId;
   final ProviderData? provider;
@@ -18,6 +18,7 @@ class ProviderModel{
     this.serviceType,
   });
 
-  factory ProviderModel.fromJson(Map<String, dynamic> json) => _$ProviderModelFromJson(json);
+  factory ProviderModel.fromJson(Map<String, dynamic> json) =>
+      _$ProviderModelFromJson(json);
   Map<String, dynamic> toJson() => _$ProviderModelToJson(this);
 }

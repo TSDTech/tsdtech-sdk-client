@@ -24,7 +24,7 @@ class DsIconBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget content = Container(
+    final Widget content = Container(
       height: height == double.infinity
           ? null
           : height, // Se for infinito, não define altura

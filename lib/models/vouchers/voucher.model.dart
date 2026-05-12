@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:voucherize/models/services/service.model.dart';
-import 'package:voucherize/models/auth/client-user-entity.model.dart';
+import 'package:tsdtech_client_sdk/models/services/service.model.dart';
+import 'package:tsdtech_client_sdk/models/auth/client-user-entity.model.dart';
 
 part 'voucher.model.g.dart';
 
@@ -8,8 +8,8 @@ part 'voucher.model.g.dart';
 class Voucher {
   final String id;
   final String serviceId;
-  final String? formId; 
-  final String code; 
+  final String? formId;
+  final String code;
   final String status;
   // optional fields (backend may not provide all)
   final String? orderId;
@@ -41,7 +41,8 @@ class Voucher {
     this.order,
   });
 
-  factory Voucher.fromJson(Map<String, dynamic> json) => _$VoucherFromJson(json);
+  factory Voucher.fromJson(Map<String, dynamic> json) =>
+      _$VoucherFromJson(json);
 
   Map<String, dynamic> toJson() => _$VoucherToJson(this);
 }

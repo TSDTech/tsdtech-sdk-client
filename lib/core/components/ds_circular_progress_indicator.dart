@@ -23,10 +23,11 @@ class DsCircularProgressIndicator extends StatelessWidget {
     return CircularProgressIndicator(
       value: value,
       backgroundColor: backgroundColor,
-      valueColor: valueColor ?? const AlwaysStoppedAnimation<Color>(Color(0xFF0057A8)),
+      valueColor:
+          valueColor ?? const AlwaysStoppedAnimation<Color>(Color(0xFF0057A8)),
       strokeWidth: strokeWidth,
       semanticsLabel: semanticsLabel,
       semanticsValue: semanticsValue,
     );
   }
-} 
+}

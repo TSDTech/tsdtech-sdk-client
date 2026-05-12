@@ -1,11 +1,11 @@
 import 'package:mobx/mobx.dart';
 import 'package:get_it/get_it.dart';
-import 'package:voucherize/core/services/intra-api/md-services/services/services_service.dart';
-import 'package:voucherize/core/services/intra-api/md-services/services/service_types_service.dart';
-import 'package:voucherize/models/services/service_type.model.dart';
-import 'package:voucherize/models/common/pagination.model.dart';
-import 'package:voucherize/core/local_storage/administrator/administrator_id.prefs.dart';
-import 'package:voucherize/models/services/service.model.dart';
+import 'package:tsdtech_client_sdk/core/services/intra-api/md-services/services/services_service.dart';
+import 'package:tsdtech_client_sdk/core/services/intra-api/md-services/services/service_types_service.dart';
+import 'package:tsdtech_client_sdk/models/services/service_type.model.dart';
+import 'package:tsdtech_client_sdk/models/common/pagination.model.dart';
+import 'package:tsdtech_client_sdk/core/local_storage/administrator/administrator_id.prefs.dart';
+import 'package:tsdtech_client_sdk/models/services/service.model.dart';
 
 part 'home_store.g.dart';
 
@@ -53,11 +53,13 @@ abstract class _HomeStore with Store {
       final sl = GetIt.instance;
       final svc = sl<ServicesService>();
       final typesSvc = sl<ServiceTypesService>();
-      var adminId = AdministratorIdPrefs.get();
+      final adminId = AdministratorIdPrefs.get();
       if (adminId == null || adminId.isEmpty) return;
 
       // load service types
-      final typesRes = await typesSvc.getPublicServiceTypes(pagination: Pagination(page: 1, pageCount: 50), administratorIds: [adminId]);
+      final typesRes = await typesSvc.getPublicServiceTypes(
+          pagination: Pagination(page: 1, pageCount: 50),
+          administratorIds: [adminId]);
       if (typesRes.isSuccess) {
         final pag = typesRes.value;
         if (pag != null) serviceTypes = pag.items;
@@ -66,7 +68,9 @@ abstract class _HomeStore with Store {
       // load services (filtered by selectedCategory/serviceType id if set and searchTerm)
       final result = await svc.getPublicServices(
         administratorIds: [adminId],
-        serviceTypeIds: selectedCategory != null && selectedCategory!.isNotEmpty ? [selectedCategory!] : null,
+        serviceTypeIds: selectedCategory != null && selectedCategory!.isNotEmpty
+            ? [selectedCategory!]
+            : null,
         searchTerm: searchQuery,
       );
 
@@ -91,5 +95,4 @@ abstract class _HomeStore with Store {
     // refresh services when category changes
     loadInitial();
   }
-
 }

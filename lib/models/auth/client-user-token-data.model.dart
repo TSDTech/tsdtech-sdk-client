@@ -30,7 +30,8 @@ class ClientUserTokenData {
     return currentTimeInSeconds >= expiresAt!;
   }
 
-  factory ClientUserTokenData.fromJson(Map<String, dynamic> json) => _$ClientUserTokenDataFromJson(json);
+  factory ClientUserTokenData.fromJson(Map<String, dynamic> json) =>
+      _$ClientUserTokenDataFromJson(json);
 
   Map<String, dynamic> toJson() => _$ClientUserTokenDataToJson(this);
 }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:voucherize/core/components/ds_text.dart';
-import 'package:voucherize/features/vouchers/core/stores/provider_request_store.dart';
-import 'package:voucherize/features/vouchers/core/stores/vouchers_store.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_text.dart';
+import 'package:tsdtech_client_sdk/features/vouchers/core/stores/provider_request_store.dart';
+import 'package:tsdtech_client_sdk/features/vouchers/core/stores/vouchers_store.dart';
 
 class VoucherTabs extends StatelessWidget {
   final VouchersStore voucherStore;
@@ -17,18 +17,17 @@ class VoucherTabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<String> labels = ['Disponíveis', 'Em Andamento', 'Concluídas'];
-    List<IconData> icons = [
+    final List<String> labels = ['Disponíveis', 'Em Andamento', 'Concluídas'];
+    final List<IconData> icons = [
       LucideIcons.ticket,
       Icons.event_available_outlined,
       Icons.check_circle_outline
     ];
 
     return Observer(builder: (_) {
-      final counts = [voucherStore.availableCount, providerStore.scheduledCount, providerStore.completedCount];
       return Row(
         children: List.generate(labels.length, (i) {
-          bool active = voucherStore.selectedTab == i;
+          final bool active = voucherStore.selectedTab == i;
           return Expanded(
             child: GestureDetector(
               onTap: () => voucherStore.setSelectedTab(i),
@@ -56,12 +55,24 @@ class VoucherTabs extends StatelessWidget {
                   children: [
                     Icon(icons[i],
                         size: 18,
-                        color: active ? (i == 0 ? const Color(0xFF10B981) : i == 1 ? const Color.fromRGBO(37, 99, 235, 1) : const Color.fromRGBO(55, 65, 81, 1)) : Colors.grey),
+                        color: active
+                            ? (i == 0
+                                ? const Color(0xFF10B981)
+                                : i == 1
+                                    ? const Color.fromRGBO(37, 99, 235, 1)
+                                    : const Color.fromRGBO(55, 65, 81, 1))
+                            : Colors.grey),
                     const SizedBox(width: 10),
                     DsText(
                       text: labels[i],
                       variant: DsTextVariant.normal,
-                      color: active ? (i == 0 ? const Color(0xFF10B981) : i == 1 ? const Color.fromRGBO(37, 99, 235, 1) : const Color.fromRGBO(55, 65, 81, 1)) : Colors.black54,
+                      color: active
+                          ? (i == 0
+                              ? const Color(0xFF10B981)
+                              : i == 1
+                                  ? const Color.fromRGBO(37, 99, 235, 1)
+                                  : const Color.fromRGBO(55, 65, 81, 1))
+                          : Colors.black54,
                     ),
                     const SizedBox(width: 6),
                     // Container(

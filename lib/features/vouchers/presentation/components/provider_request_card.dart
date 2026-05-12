@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:voucherize/core/components/ds_text.dart';
-import 'package:voucherize/models/vouchers/provider_request.model.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_text.dart';
+import 'package:tsdtech_client_sdk/models/vouchers/provider_request.model.dart';
 
 class ProviderRequestCard extends StatelessWidget {
   final ProviderRequest request;
@@ -51,15 +51,19 @@ class ProviderRequestCard extends StatelessWidget {
               variant: DsTextVariant.baseBold),
           const SizedBox(height: 6),
           DsText(
-              text: 'Código do Serviço: ${request.serviceId ?? request.voucherServiceId}', variant: DsTextVariant.small),
+              text:
+                  'Código do Serviço: ${request.serviceId ?? request.voucherServiceId}',
+              variant: DsTextVariant.small),
           const SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               DsText(
-                  text: 'ID da Solicitação: ${request.id}', variant: DsTextVariant.small),
+                  text: 'ID da Solicitação: ${request.id}',
+                  variant: DsTextVariant.small),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                 decoration: BoxDecoration(
                     color: statusBgColor,
                     borderRadius: BorderRadius.circular(8)),
@@ -70,7 +74,7 @@ class ProviderRequestCard extends StatelessWidget {
               )
             ],
           ),
-      const SizedBox(height: 12),
+          const SizedBox(height: 12),
           DsText(
             text: 'Data: ${_formatDate(request)}',
             variant: DsTextVariant.small,
@@ -80,17 +84,22 @@ class ProviderRequestCard extends StatelessWidget {
             text: request.service?.description ?? request.observacoes,
             variant: DsTextVariant.small,
           ),
-          if (request.provider != null && request.provider!['name'] != null) ...[
+          if (request.provider != null &&
+              request.provider!['name'] != null) ...[
             const SizedBox(height: 12),
             DsText(
               text: 'Vistoriador: ${request.provider!['name']}',
               variant: DsTextVariant.small,
             ),
           ],
-          if (request.plate.isNotEmpty || request.renavam.isNotEmpty || request.model.isNotEmpty || request.year.isNotEmpty) ...[
+          if (request.plate.isNotEmpty ||
+              request.renavam.isNotEmpty ||
+              request.model.isNotEmpty ||
+              request.year.isNotEmpty) ...[
             const SizedBox(height: 12),
             DsText(
-              text: 'Placa: ${request.plate} | RENAVAM: ${request.renavam} | Modelo: ${request.model} | Ano: ${request.year}',
+              text:
+                  'Placa: ${request.plate} | RENAVAM: ${request.renavam} | Modelo: ${request.model} | Ano: ${request.year}',
               variant: DsTextVariant.small,
             ),
           ],
@@ -108,7 +117,8 @@ class ProviderRequestCard extends StatelessWidget {
               if (st == 'FINISHED' || st == 'REJECTED' || st == 'COMPLETED')
                 TextButton(
                   onPressed: onViewDetails,
-                  child: const DsText(text: 'Ver detalhes', variant: DsTextVariant.small),
+                  child: const DsText(
+                      text: 'Ver detalhes', variant: DsTextVariant.small),
                 ),
             ],
           )
@@ -117,7 +127,6 @@ class ProviderRequestCard extends StatelessWidget {
     );
   }
 
-  
   String _formatDate(ProviderRequest r) {
     // Always show createdAt as the card date (created timestamp of provider request)
     final dateStr = r.createdAt;
@@ -131,6 +140,5 @@ class ProviderRequestCard extends StatelessWidget {
     } catch (_) {
       return '-';
     }
-    
   }
 }

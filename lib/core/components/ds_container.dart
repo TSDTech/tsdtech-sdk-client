@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:voucherize/core/components/ds_text.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_text.dart';
 
 class DsContainer extends StatelessWidget {
   final Widget? child;
@@ -57,7 +57,9 @@ class DsContainer extends StatelessWidget {
                 padding: EdgeInsets.zero,
                 constraints: const BoxConstraints(),
                 icon: Icon(
-                  minimized! ? LucideIcons.chevronRight : LucideIcons.chevronDown,
+                  minimized!
+                      ? LucideIcons.chevronRight
+                      : LucideIcons.chevronDown,
                   color: const Color.fromRGBO(0, 87, 168, 1),
                 ),
                 onPressed: onToggle,

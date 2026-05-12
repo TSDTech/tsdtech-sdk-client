@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:voucherize/models/vouchers/voucher.model.dart';
-import 'package:voucherize/models/services/service.model.dart';
-import 'package:voucherize/models/auth/client-user-entity.model.dart';
+import 'package:tsdtech_client_sdk/models/vouchers/voucher.model.dart';
+import 'package:tsdtech_client_sdk/models/services/service.model.dart';
+import 'package:tsdtech_client_sdk/models/auth/client-user-entity.model.dart';
 
 part 'provider_request.model.g.dart';
 
@@ -70,7 +70,8 @@ class ProviderRequest {
     this.observacoes = '',
   });
 
-  factory ProviderRequest.fromJson(Map<String, dynamic> json) => _$ProviderRequestFromJson(json);
+  factory ProviderRequest.fromJson(Map<String, dynamic> json) =>
+      _$ProviderRequestFromJson(json);
 
   Map<String, dynamic> toJson() => _$ProviderRequestToJson(this);
 }

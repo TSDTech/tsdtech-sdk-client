@@ -1,6 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:dio/dio.dart';
-import 'package:voucherize/main.module.dart';
+import 'package:tsdtech_client_sdk/main.module.dart';
 
 final GetIt sl = GetIt.instance;
 

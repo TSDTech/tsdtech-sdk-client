@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:voucherize/models/auth/client-user-entity.model.dart';
+import 'package:tsdtech_client_sdk/models/auth/client-user-entity.model.dart';
 
 part 'membership.model.g.dart';
 
@@ -17,7 +17,8 @@ class Membership {
     this.clientUser,
   });
 
-  factory Membership.fromJson(Map<String, dynamic> json) => _$MembershipFromJson(json);
+  factory Membership.fromJson(Map<String, dynamic> json) =>
+      _$MembershipFromJson(json);
 
   Map<String, dynamic> toJson() => _$MembershipToJson(this);
 }

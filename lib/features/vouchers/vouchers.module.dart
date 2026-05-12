@@ -1,9 +1,9 @@
 import 'package:get_it/get_it.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:voucherize/core/guards/auth.guard.dart';
-import 'package:voucherize/core/router/router.dart';
-import 'package:voucherize/core/utils/module.base.dart';
-import 'package:voucherize/features/vouchers/core/stores/provider_request_store.dart';
+import 'package:tsdtech_client_sdk/core/guards/auth.guard.dart';
+import 'package:tsdtech_client_sdk/core/router/router.dart';
+import 'package:tsdtech_client_sdk/core/utils/module.base.dart';
+import 'package:tsdtech_client_sdk/features/vouchers/core/stores/provider_request_store.dart';
 import 'core/stores/vouchers_store.dart';
 
 class VouchersModule extends ModuleBase {
@@ -20,13 +20,13 @@ class VouchersModule extends ModuleBase {
           page: MyVouchersFormRoute.page,
           meta: const {'requiresAuth': true},
           guards: [AuthGuard()],
-        ),  
+        ),
         AutoRoute(
           path: '/vouchers/request/qrcode',
-          page: ProviderRequestQRCodeRoute.page,  
+          page: ProviderRequestQRCodeRoute.page,
           meta: const {'requiresAuth': true},
           guards: [AuthGuard()],
-        ),  
+        ),
         AutoRoute(
           path: '/vouchers/request/form',
           page: ProviderRequestFormRoute.page,
@@ -47,7 +47,8 @@ class VouchersModule extends ModuleBase {
       sl.registerLazySingleton<VouchersStore>(() => VouchersStore());
     }
     if (!sl.isRegistered<ProviderRequestStore>()) {
-      sl.registerLazySingleton<ProviderRequestStore>(() => ProviderRequestStore());
+      sl.registerLazySingleton<ProviderRequestStore>(
+          () => ProviderRequestStore());
     }
   }
 }

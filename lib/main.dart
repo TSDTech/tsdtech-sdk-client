@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:voucherize/core/guards/auth.guard.dart';
-import 'package:voucherize/core/local_storage/shared_prefs_helper.dart';
-import 'package:voucherize/core/router/router.dart';
-import 'package:voucherize/core/service_locator.dart';
-import 'package:voucherize/core/utils/administrator_resolver.dart';
-import 'package:voucherize/core/components/loading_splash.dart';
+import 'package:tsdtech_client_sdk/core/guards/auth.guard.dart';
+import 'package:tsdtech_client_sdk/core/local_storage/shared_prefs_helper.dart';
+import 'package:tsdtech_client_sdk/core/router/router.dart';
+import 'package:tsdtech_client_sdk/core/service_locator.dart';
+import 'package:tsdtech_client_sdk/core/utils/administrator_resolver.dart';
+import 'package:tsdtech_client_sdk/core/components/loading_splash.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -59,7 +59,7 @@ class VoucherizeApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
-        scaffoldBackgroundColor: Color.fromRGBO(243, 243, 243, 1),
+        scaffoldBackgroundColor: const Color.fromRGBO(243, 243, 243, 1),
         fontFamily: GoogleFonts.inter().fontFamily,
         textTheme: GoogleFonts.interTextTheme(ThemeData.light().textTheme),
       ),

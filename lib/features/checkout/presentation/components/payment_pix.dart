@@ -3,13 +3,13 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:voucherize/core/router/router.dart';
-import 'package:voucherize/core/services/intra-api/md-checkout/checkouts_service.dart';
-import 'package:voucherize/features/cart/core/stores/cart_store.dart';
-import 'package:voucherize/features/checkout/core/stores/checkout_store.dart';
-import 'package:voucherize/models/checkouts/calculate_item.model.dart';
-import 'package:voucherize/models/checkouts/checkout_request.model.dart';
-import 'package:voucherize/models/checkouts/pix_data.model.dart';
+import 'package:tsdtech_client_sdk/core/router/router.dart';
+import 'package:tsdtech_client_sdk/core/services/intra-api/md-checkout/checkouts_service.dart';
+import 'package:tsdtech_client_sdk/features/cart/core/stores/cart_store.dart';
+import 'package:tsdtech_client_sdk/features/checkout/core/stores/checkout_store.dart';
+import 'package:tsdtech_client_sdk/models/checkouts/calculate_item.model.dart';
+import 'package:tsdtech_client_sdk/models/checkouts/checkout_request.model.dart';
+import 'package:tsdtech_client_sdk/models/checkouts/pix_data.model.dart';
 
 class PaymentPix extends StatefulWidget {
   const PaymentPix({super.key});
@@ -90,7 +90,6 @@ class _PaymentPixState extends State<PaymentPix> {
           _paymentId = paymentId;
           _isLoading = false;
           _error = null;
-          _isPolling = true;
         });
         _startPolling();
       } else {
@@ -159,15 +158,15 @@ class _PaymentPixState extends State<PaymentPix> {
 
     return Container(
       padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: Colors.white),
+      decoration: const BoxDecoration(color: Colors.white),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(Icons.smartphone, size: 20, color: _grayText),
-              const SizedBox(width: 8),
+              SizedBox(width: 8),
               Text(
                 'Aponte a câmera do seu celular',
                 style: TextStyle(
@@ -195,7 +194,7 @@ class _PaymentPixState extends State<PaymentPix> {
                 child: Text(
                   _error!,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 14, color: _grayText),
+                  style: const TextStyle(fontSize: 14, color: _grayText),
                 ),
               ),
             )
@@ -213,7 +212,14 @@ class _PaymentPixState extends State<PaymentPix> {
                   version: QrVersions.auto,
                   size: 140,
                   backgroundColor: Colors.white,
-                  foregroundColor: Colors.black,
+                  eyeStyle: const QrEyeStyle(
+                    eyeShape: QrEyeShape.square,
+                    color: Colors.black,
+                  ),
+                  dataModuleStyle: const QrDataModuleStyle(
+                    dataModuleShape: QrDataModuleShape.square,
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ),
@@ -231,7 +237,7 @@ class _PaymentPixState extends State<PaymentPix> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
+              const Text(
                 'Valor no Pix:',
                 style: TextStyle(
                   fontSize: 14,
@@ -242,7 +248,7 @@ class _PaymentPixState extends State<PaymentPix> {
               const SizedBox(width: 4),
               Text(
                 totalFormatted,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                   color: _greenValue,

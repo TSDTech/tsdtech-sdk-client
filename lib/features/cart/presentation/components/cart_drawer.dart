@@ -2,12 +2,12 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:voucherize/features/cart/core/stores/cart_store.dart';
-import 'package:voucherize/core/components/ds_text.dart';
+import 'package:tsdtech_client_sdk/features/cart/core/stores/cart_store.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_text.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:voucherize/core/router/router.dart';
-import 'package:voucherize/features/cart/presentation/components/cart_empty_dialog.dart';
+import 'package:tsdtech_client_sdk/core/router/router.dart';
+import 'package:tsdtech_client_sdk/features/cart/presentation/components/cart_empty_dialog.dart';
 
 final _sl = GetIt.instance;
 
@@ -234,8 +234,7 @@ class _CartDrawerState extends State<CartDrawer> {
                                               const DsText(
                                                   text: 'Por unidade',
                                                   variant: DsTextVariant.small,
-                                                  color:
-                                                      Color(0xFF6B7280)),
+                                                  color: Color(0xFF6B7280)),
                                               const SizedBox(height: 8),
                                               IconButton(
                                                   onPressed: () {

@@ -85,8 +85,8 @@ class _DsTooltipState extends State<DsTooltip> {
     _openAbove = spaceAbove > spaceBelow;
 
     // Largura/altura máximas garantidamente dentro da tela
-    double horizAvail = (_openToLeft ? spaceLeft : spaceRight).toDouble();
-    double vertAvail = (_openAbove ? spaceAbove : spaceBelow).toDouble();
+    final double horizAvail = (_openToLeft ? spaceLeft : spaceRight).toDouble();
+    final double vertAvail = (_openAbove ? spaceAbove : spaceBelow).toDouble();
 
     // Nunca excede o maxWidth desejado e respeita mínimo usável
     _maxWidthThisShow = math.max(120, math.min(widget.maxWidth, horizAvail));
@@ -183,7 +183,7 @@ class _DsTooltipState extends State<DsTooltip> {
                     boxShadow: const [
                       BoxShadow(blurRadius: 10, color: Colors.black26)
                     ],
-                    border: Border.all(color: _blue.withOpacity(.12)),
+                    border: Border.all(color: _blue.withValues(alpha: .12)),
                   ),
                   child: DefaultTextStyle(
                     style: Theme.of(context)

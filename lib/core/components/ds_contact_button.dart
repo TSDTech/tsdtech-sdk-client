@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:voucherize/core/components/ds_text.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_text.dart';
 
 class DsContactButton extends StatelessWidget {
   final IconData icon;
@@ -38,7 +38,7 @@ class DsContactButton extends StatelessWidget {
                   width: 50,
                   height: 50,
                   decoration: BoxDecoration(
-                    color: color.withOpacity(0.1),
+                    color: color.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(25),
                   ),
                   child: Icon(
@@ -78,4 +78,4 @@ class DsContactButton extends StatelessWidget {
       ),
     );
   }
-} 
+}

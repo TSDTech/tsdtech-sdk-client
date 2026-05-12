@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:voucherize/core/components/ds_text.dart';
-import 'package:voucherize/features/purchase_history/core/purchase_history_store.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_text.dart';
+import 'package:tsdtech_client_sdk/features/purchase_history/core/purchase_history_store.dart';
 
 class PurchaseHistoryFilter extends StatelessWidget {
   final PurchaseHistoryStore store;
@@ -45,7 +45,7 @@ class PurchaseHistoryFilter extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
-            boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 8)],
+            boxShadow: [const BoxShadow(color: Colors.black12, blurRadius: 8)],
             border: Border.all(color: const Color(0xFFE5E7EB)),
           ),
           child: Row(
@@ -57,14 +57,16 @@ class PurchaseHistoryFilter extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const DsText(text: 'Data início', variant: DsTextVariant.small),
+                    const DsText(
+                        text: 'Data início', variant: DsTextVariant.small),
                     const SizedBox(height: 8),
                     GestureDetector(
                       onTap: () => _pickStartDate(context),
                       child: InputDecorator(
                         decoration: InputDecoration(
                           hintText: 'Data inic.',
-                          prefixIcon: const Icon(Icons.calendar_today_outlined, color: Colors.grey),
+                          prefixIcon: const Icon(Icons.calendar_today_outlined,
+                              color: Colors.grey),
                           filled: true,
                           fillColor: const Color(0xFFF3F4F6),
                           border: OutlineInputBorder(
@@ -73,7 +75,9 @@ class PurchaseHistoryFilter extends StatelessWidget {
                           ),
                         ),
                         child: DsText(
-                          text: store.startDate != null ? store.startDate!.toString().substring(0, 10) : '',
+                          text: store.startDate != null
+                              ? store.startDate!.toString().substring(0, 10)
+                              : '',
                           variant: DsTextVariant.small,
                         ),
                       ),
@@ -88,14 +92,16 @@ class PurchaseHistoryFilter extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const DsText(text: 'Data fim', variant: DsTextVariant.small),
+                    const DsText(
+                        text: 'Data fim', variant: DsTextVariant.small),
                     const SizedBox(height: 8),
                     GestureDetector(
                       onTap: () => _pickEndDate(context),
                       child: InputDecorator(
                         decoration: InputDecoration(
                           hintText: 'Data fim',
-                          prefixIcon: const Icon(Icons.calendar_today_outlined, color: Colors.grey),
+                          prefixIcon: const Icon(Icons.calendar_today_outlined,
+                              color: Colors.grey),
                           filled: true,
                           fillColor: const Color(0xFFF3F4F6),
                           border: OutlineInputBorder(
@@ -104,7 +110,9 @@ class PurchaseHistoryFilter extends StatelessWidget {
                           ),
                         ),
                         child: DsText(
-                          text: store.endDate != null ? store.endDate!.toString().substring(0, 10) : '',
+                          text: store.endDate != null
+                              ? store.endDate!.toString().substring(0, 10)
+                              : '',
                           variant: DsTextVariant.small,
                         ),
                       ),
@@ -119,10 +127,12 @@ class PurchaseHistoryFilter extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const DsText(text: 'Tipo de pagamento', variant: DsTextVariant.small),
+                    const DsText(
+                        text: 'Tipo de pagamento',
+                        variant: DsTextVariant.small),
                     const SizedBox(height: 8),
                     DropdownButtonFormField<String>(
-                      value: store.paymentFilter,
+                      initialValue: store.paymentFilter,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: const Color(0xFFF3F4F6),
@@ -134,7 +144,8 @@ class PurchaseHistoryFilter extends StatelessWidget {
                       items: paymentMethods
                           .map((m) => DropdownMenuItem(
                                 value: m,
-                                child: DsText(text: m, variant: DsTextVariant.small),
+                                child: DsText(
+                                    text: m, variant: DsTextVariant.small),
                               ))
                           .toList(),
                       onChanged: (v) {
@@ -151,10 +162,12 @@ class PurchaseHistoryFilter extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const DsText(text: 'Status do pagamento', variant: DsTextVariant.small),
+                    const DsText(
+                        text: 'Status do pagamento',
+                        variant: DsTextVariant.small),
                     const SizedBox(height: 8),
                     DropdownButtonFormField<String>(
-                      value: store.statusFilter,
+                      initialValue: store.statusFilter,
                       decoration: InputDecoration(
                         filled: true,
                         fillColor: const Color(0xFFF3F4F6),
@@ -166,7 +179,8 @@ class PurchaseHistoryFilter extends StatelessWidget {
                       items: statusOptions
                           .map((s) => DropdownMenuItem(
                                 value: s,
-                                child: DsText(text: s, variant: DsTextVariant.small),
+                                child: DsText(
+                                    text: s, variant: DsTextVariant.small),
                               ))
                           .toList(),
                       onChanged: (v) {
@@ -182,7 +196,8 @@ class PurchaseHistoryFilter extends StatelessWidget {
                 width: 140,
                 child: OutlinedButton(
                   onPressed: () => store.clearFilters(),
-                  child: const DsText(text: 'Limpar filtros', variant: DsTextVariant.baseBold),
+                  child: const DsText(
+                      text: 'Limpar filtros', variant: DsTextVariant.baseBold),
                 ),
               ),
             ],

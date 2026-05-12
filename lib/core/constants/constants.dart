@@ -1,4 +1,4 @@
-import 'package:voucherize/core/constants/platform/platform_origin.dart';
+import 'package:tsdtech_client_sdk/core/constants/platform/platform_origin.dart';
 
 class Constants {
   static const String stage =

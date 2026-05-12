@@ -1,15 +1,60 @@
-import 'package:voucherize/core/services/intra-api/intra.api.dart';
-import 'package:voucherize/core/constants/constants.dart';
-import 'package:voucherize/models/value_result.dart';
-import 'package:voucherize/models/common/paginated_list.model.dart';
-import 'package:voucherize/models/common/pagination.model.dart';
-import 'package:voucherize/models/services/service_type.model.dart';
+import 'package:tsdtech_client_sdk/core/services/intra-api/intra.api.dart';
+import 'package:tsdtech_client_sdk/core/constants/constants.dart';
+import 'package:tsdtech_client_sdk/models/value_result.dart';
+import 'package:tsdtech_client_sdk/models/common/paginated_list.model.dart';
+import 'package:tsdtech_client_sdk/models/common/pagination.model.dart';
+import 'package:tsdtech_client_sdk/models/services/service_type.model.dart';
 
+/// Service for managing service types.
+///
+/// This service provides methods for retrieving service type definitions
+/// that categorize services in the TsdTech platform.
+///
+/// ## Usage
+/// ```dart
+/// final serviceTypesService = ServiceTypesService.instance;
+///
+/// // List public service types
+/// final types = await serviceTypesService.getPublicServiceTypes(
+///   pagination: Pagination(page: 1, pageCount: 20),
+///   names: ['consultation', 'installation'],
+/// );
+///
+/// // Search service types
+/// final search = await serviceTypesService.getPublicServiceTypes(
+///   searchTerm: 'plumbing',
+///   administrator: true,
+/// );
+/// ```
+///
+/// ## Singleton Pattern
+/// Access the service via [ServiceTypesService.instance].
 class ServiceTypesService extends IntraApi {
+  /// Singleton instance of [ServiceTypesService].
   static final ServiceTypesService instance = ServiceTypesService();
 
+  /// Creates a [ServiceTypesService] instance with the base URL from [Constants].
   ServiceTypesService() : super(Constants.getBaseUrl());
 
+  /// Retrieves a list of public service types with optional filtering.
+  ///
+  /// - [pagination]: Optional pagination parameters (page, pageCount)
+  /// - [ids]: Filter by service type IDs (optional)
+  /// - [names]: Filter by service type names (optional)
+  /// - [administratorIds]: Filter by administrator IDs (optional)
+  /// - [searchTerm]: Search by name (optional)
+  /// - [administrator]: Include administrator details (optional)
+  /// - [providers]: Include provider details (optional)
+  /// - Returns: [ValueResult] containing a [PaginatedList] of [ServiceType] objects
+  ///
+  /// ## Example
+  /// ```dart
+  /// final result = await serviceTypesService.getPublicServiceTypes(
+  ///   searchTerm: 'maintenance',
+  ///   administrator: true,
+  ///   providers: true,
+  /// );
+  /// ```
   Future<ValueResult<PaginatedList<ServiceType>>> getPublicServiceTypes({
     Pagination? pagination,
     List<String>? ids,
@@ -25,7 +70,8 @@ class ServiceTypesService extends IntraApi {
         'pageSize': pagination?.pageCount ?? 10,
         if (ids != null && ids.isNotEmpty) 'ids': ids,
         if (names != null && names.isNotEmpty) 'names': names,
-        if (administratorIds != null && administratorIds.isNotEmpty) 'administratorIds': administratorIds,
+        if (administratorIds != null && administratorIds.isNotEmpty)
+          'administratorIds': administratorIds,
         if (searchTerm != null) 'searchTerm': searchTerm,
         if (administrator != null) 'administrator': administrator,
         if (providers != null) 'providers': providers,
@@ -35,7 +81,7 @@ class ServiceTypesService extends IntraApi {
       final response = await get(path, queryParameters: queryParams);
 
       final paginated = PaginatedList<ServiceType>.fromJson(
-        response.data,
+        response.data as Map<String, dynamic>,
         (item) => ServiceType.fromJson(item as Map<String, dynamic>),
       );
 

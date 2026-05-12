@@ -26,6 +26,7 @@ class ServiceForm {
   });
 
   /// The API can return either the form directly or an envelope { id, form: { ... } }.
-   factory ServiceForm.fromJson(Map<String, dynamic> json) => _$ServiceFormFromJson(json);
+  factory ServiceForm.fromJson(Map<String, dynamic> json) =>
+      _$ServiceFormFromJson(json);
   Map<String, dynamic> toJson() => _$ServiceFormToJson(this);
 }

@@ -24,7 +24,8 @@ class SignupRequestClient {
     required this.administratorId,
   });
 
-  factory SignupRequestClient.fromJson(Map<String, dynamic> json) => _$SignupRequestClientFromJson(json);
+  factory SignupRequestClient.fromJson(Map<String, dynamic> json) =>
+      _$SignupRequestClientFromJson(json);
 
   Map<String, dynamic> toJson() => _$SignupRequestClientToJson(this);
 }

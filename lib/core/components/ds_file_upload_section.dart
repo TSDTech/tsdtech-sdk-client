@@ -1,7 +1,7 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:voucherize/core/components/ds_card_container.dart';
-import 'package:voucherize/core/components/ds_file_upload.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_card_container.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_file_upload.dart';
 
 /// Seção de upload de arquivo com título e descrição
 class DsFileUploadSection extends StatelessWidget {

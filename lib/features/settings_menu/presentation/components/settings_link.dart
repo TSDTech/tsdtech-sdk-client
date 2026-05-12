@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:voucherize/core/components/ds_text.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_text.dart';
 
 class SettingsLink extends StatelessWidget {
   final String label;

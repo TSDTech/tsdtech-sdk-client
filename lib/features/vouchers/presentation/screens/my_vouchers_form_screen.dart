@@ -1,19 +1,19 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:voucherize/core/components/ds_text.dart';
-import 'package:voucherize/core/components/nav_header.dart';
-import 'package:voucherize/core/router/router.dart';
+import 'package:tsdtech_client_sdk/core/components/ds_text.dart';
+import 'package:tsdtech_client_sdk/core/components/nav_header.dart';
+import 'package:tsdtech_client_sdk/core/router/router.dart';
 import 'package:get_it/get_it.dart';
-import 'package:voucherize/features/vouchers/core/stores/provider_request_store.dart';
-import 'package:voucherize/features/vouchers/core/stores/vouchers_store.dart';
-import 'package:voucherize/features/vouchers/presentation/components/confirm_voucher_modal.dart';
-import 'package:voucherize/features/vouchers/presentation/components/dynamic_form.dart';
-import 'package:voucherize/core/services/intra-api/md-services/services/services_service.dart';
-import 'package:voucherize/models/providers/provider.model.dart';
-import 'package:voucherize/models/value_result.dart';
-import 'package:voucherize/models/common/paginated_list.model.dart';
-import 'package:voucherize/models/forms/service_form.model.dart';
-import 'package:voucherize/models/forms/service_form_field.model.dart';
+import 'package:tsdtech_client_sdk/features/vouchers/core/stores/provider_request_store.dart';
+import 'package:tsdtech_client_sdk/features/vouchers/core/stores/vouchers_store.dart';
+import 'package:tsdtech_client_sdk/features/vouchers/presentation/components/confirm_voucher_modal.dart';
+import 'package:tsdtech_client_sdk/features/vouchers/presentation/components/dynamic_form.dart';
+import 'package:tsdtech_client_sdk/core/services/intra-api/md-services/services/services_service.dart';
+import 'package:tsdtech_client_sdk/models/providers/provider.model.dart';
+import 'package:tsdtech_client_sdk/models/value_result.dart';
+import 'package:tsdtech_client_sdk/models/common/paginated_list.model.dart';
+import 'package:tsdtech_client_sdk/models/forms/service_form.model.dart';
+import 'package:tsdtech_client_sdk/models/forms/service_form_field.model.dart';
 
 // Custom SnackBar para sucesso/erro
 void showTopSnackBar(BuildContext context,
@@ -34,7 +34,7 @@ void showTopSnackBar(BuildContext context,
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.7)),
+        border: Border.all(color: color.withValues(alpha: 0.7)),
       ),
       child: Row(
         children: [
@@ -64,7 +64,10 @@ class MyVouchersFormScreen extends StatelessWidget {
   final String formId;
   final String administratorId;
   const MyVouchersFormScreen(
-      {super.key, required this.serviceId, required this.formId, required this.administratorId});
+      {super.key,
+      required this.serviceId,
+      required this.formId,
+      required this.administratorId});
 
   Widget _buildDynamicForm(Map<String, dynamic> formSchema, VouchersStore store,
       BuildContext context,
@@ -84,10 +87,11 @@ class MyVouchersFormScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  final store = GetIt.instance<VouchersStore>();
-  final providerRequestStore = GetIt.instance<ProviderRequestStore>();
-  final _dynamicFormKey = GlobalKey<DynamicFormState>();
-    final formFuture = ServicesService.instance.getServiceFormModel(formId: formId);
+    final store = GetIt.instance<VouchersStore>();
+    final providerRequestStore = GetIt.instance<ProviderRequestStore>();
+    final dynamicFormKey = GlobalKey<DynamicFormState>();
+    final formFuture =
+        ServicesService.instance.getServiceFormModel(formId: formId);
     store.resetFormValues();
     return Scaffold(
       appBar: const NavHeader(),
@@ -102,7 +106,9 @@ class MyVouchersFormScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
-                boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 8)],
+                boxShadow: [
+                  const BoxShadow(color: Colors.black12, blurRadius: 8)
+                ],
               ),
               child: Builder(builder: (ctx) {
                 final availableHeight = MediaQuery.of(ctx).size.height -
@@ -141,7 +147,7 @@ class MyVouchersFormScreen extends StatelessWidget {
                           },
                         ),
                         const SizedBox(width: 8),
-                        Expanded(
+                        const Expanded(
                             child: DsText(
                                 text: 'Agendar Serviço',
                                 variant: DsTextVariant.titleVoucher)),
@@ -176,52 +182,88 @@ class MyVouchersFormScreen extends StatelessWidget {
                                 FutureBuilder<ValueResult<ServiceForm>>(
                                   future: formFuture,
                                   builder: (ctx, snap) {
-                                    if (snap.connectionState != ConnectionState.done) {
-                                      return DsText(text: 'Carregando descrição...', variant: DsTextVariant.small);
+                                    if (snap.connectionState !=
+                                        ConnectionState.done) {
+                                      return const DsText(
+                                          text: 'Carregando descrição...',
+                                          variant: DsTextVariant.small);
                                     }
                                     final res = snap.data;
-                                    if (res == null || res.isError || res.value == null) {
-                                      return DsText(text: 'Descrição: ${voucherObj?.service?.description ?? ''}', variant: DsTextVariant.small);
+                                    if (res == null ||
+                                        res.isError ||
+                                        res.value == null) {
+                                      return DsText(
+                                          text:
+                                              'Descrição: ${voucherObj?.service?.description ?? ''}',
+                                          variant: DsTextVariant.small);
                                     }
                                     final model = res.value!;
-                                    return DsText(text: 'Descrição: ${model.description ?? voucherObj?.service?.description ?? ''}', variant: DsTextVariant.small);
+                                    return DsText(
+                                        text:
+                                            'Descrição: ${model.description ?? voucherObj?.service?.description ?? ''}',
+                                        variant: DsTextVariant.small);
                                   },
                                 ),
                                 const SizedBox(height: 12),
                                 // Providers dropdown: delegate fetching to the VouchersStore
-                                FutureBuilder<ValueResult<PaginatedList<ProviderModel>>>(
-                                  future: store.fetchProvidersForService(serviceId),
+                                FutureBuilder<
+                                    ValueResult<PaginatedList<ProviderModel>>>(
+                                  future:
+                                      store.fetchProvidersForService(serviceId),
                                   builder: (ctx, snap) {
-                                    if (snap.connectionState != ConnectionState.done) {
-                                      return DsText(text: 'Carregando prestadores...', variant: DsTextVariant.small);
+                                    if (snap.connectionState !=
+                                        ConnectionState.done) {
+                                      return const DsText(
+                                          text: 'Carregando prestadores...',
+                                          variant: DsTextVariant.small);
                                     }
                                     if (snap.hasError) {
-                                      return DsText(text: 'Erro ao carregar prestadores', variant: DsTextVariant.small);
+                                      return const DsText(
+                                          text: 'Erro ao carregar prestadores',
+                                          variant: DsTextVariant.small);
                                     }
                                     final res = snap.data;
-                                    if (res == null || res.isError || res.value == null) {
-                                      return DsText(text: 'Nenhum prestador disponível', variant: DsTextVariant.small);
+                                    if (res == null ||
+                                        res.isError ||
+                                        res.value == null) {
+                                      return const DsText(
+                                          text: 'Nenhum prestador disponível',
+                                          variant: DsTextVariant.small);
                                     }
                                     final page = res.value!;
-                                    final providers = page.items.whereType<ProviderModel>().toList();
+                                    final providers = page.items
+                                        .whereType<ProviderModel>()
+                                        .toList();
                                     if (providers.isEmpty) {
-                                      return DsText(text: 'Nenhum prestador disponível', variant: DsTextVariant.small);
+                                      return const DsText(
+                                          text: 'Nenhum prestador disponível',
+                                          variant: DsTextVariant.small);
                                     }
 
-                                    final selected = store.formValues['providerId'];
+                                    final selected =
+                                        store.formValues['providerId'];
                                     return DropdownButtonFormField<String>(
-                                      value: selected,
+                                      initialValue: selected,
                                       items: providers.map((p) {
-                                        final id = p.provider?.id ?? p.providerId ?? '';
-                                        final label = p.provider?.name ?? p.serviceType?.name ?? id;
-                                        return DropdownMenuItem(value: id, child: Text(label));
+                                        final id = p.provider?.id ??
+                                            p.providerId ??
+                                            '';
+                                        final label = p.provider?.name ??
+                                            p.serviceType?.name ??
+                                            id;
+                                        return DropdownMenuItem(
+                                            value: id, child: Text(label));
                                       }).toList(),
-                                      onChanged: (v) => store.setFormValue('providerId', v ?? ''),
+                                      onChanged: (v) => store.setFormValue(
+                                          'providerId', v ?? ''),
                                       decoration: InputDecoration(
                                         hintText: 'Selecione o prestador',
                                         filled: true,
                                         fillColor: const Color(0xFFF3F4F6),
-                                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide.none),
+                                        border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            borderSide: BorderSide.none),
                                       ),
                                     );
                                   },
@@ -230,7 +272,7 @@ class MyVouchersFormScreen extends StatelessWidget {
                                 ElevatedButton.icon(
                                   onPressed: () async {
                                     // validate and collect payload from the dynamic form on the right
-                                    final payload = _dynamicFormKey.currentState
+                                    final payload = dynamicFormKey.currentState
                                         ?.validateAndCollect();
                                     if (payload == null) {
                                       showTopSnackBar(context,
@@ -240,8 +282,10 @@ class MyVouchersFormScreen extends StatelessWidget {
                                       return;
                                     }
 
-                                    final selectedProvider = store.formValues['providerId'];
-                                    if (selectedProvider == null || selectedProvider.isEmpty) {
+                                    final selectedProvider =
+                                        store.formValues['providerId'];
+                                    if (selectedProvider == null ||
+                                        selectedProvider.isEmpty) {
                                       showTopSnackBar(context,
                                           success: false,
                                           message: 'Selecione um prestador.');
@@ -258,7 +302,12 @@ class MyVouchersFormScreen extends StatelessWidget {
                                             : serviceId;
                                     // open confirmation modal — submission will happen inside the modal when the user confirms
                                     showConfirmVoucherModal(
-                                        context, store, voucherServiceId, administratorId, providerSelectedId, voucherId,
+                                        context,
+                                        store,
+                                        voucherServiceId,
+                                        administratorId,
+                                        providerSelectedId,
+                                        voucherId,
                                         payload: payload);
                                   },
                                   icon: const Icon(Icons.calendar_today),
@@ -291,30 +340,30 @@ class MyVouchersFormScreen extends StatelessWidget {
                           // Right form column (scrollable)
                           Flexible(
                             flex: 6,
-                child: FutureBuilder<ValueResult<ServiceForm>>(
-                  future: formFuture,
+                            child: FutureBuilder<ValueResult<ServiceForm>>(
+                              future: formFuture,
                               builder: (context, snapshot) {
-                if (snapshot.connectionState !=
-                  ConnectionState.done) {
+                                if (snapshot.connectionState !=
+                                    ConnectionState.done) {
                                   return const Center(
                                       child: CircularProgressIndicator());
                                 }
                                 if (snapshot.hasError) {
-                                  return Center(
+                                  return const Center(
                                       child: DsText(
                                           text: 'Erro ao carregar formulário',
                                           variant: DsTextVariant.small));
                                 }
                                 final result = snapshot.data;
                                 if (result == null || result.isError) {
-                                  return Center(
+                                  return const Center(
                                       child: DsText(
                                           text: 'Erro ao carregar formulário',
                                           variant: DsTextVariant.small));
                                 }
                                 final model = result.value;
                                 if (model == null) {
-                                  return Center(
+                                  return const Center(
                                       child: DsText(
                                           text: 'Formulário não disponível',
                                           variant: DsTextVariant.small));
@@ -338,7 +387,7 @@ class MyVouchersFormScreen extends StatelessWidget {
                                 return SingleChildScrollView(
                                     child: _buildDynamicForm(
                                         schema, store, context,
-                                        formKey: _dynamicFormKey));
+                                        formKey: dynamicFormKey));
                               },
                             ),
                           ),

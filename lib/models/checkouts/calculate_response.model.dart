@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:voucherize/models/checkouts/calculate_item.model.dart';
+import 'package:tsdtech_client_sdk/models/checkouts/calculate_item.model.dart';
 
 part 'calculate_response.model.g.dart';
 
@@ -10,6 +10,7 @@ class CalculateResponse {
 
   CalculateResponse({required this.totalValue, this.cart});
 
-  factory CalculateResponse.fromJson(Map<String, dynamic> json) => _$CalculateResponseFromJson(json);
+  factory CalculateResponse.fromJson(Map<String, dynamic> json) =>
+      _$CalculateResponseFromJson(json);
   Map<String, dynamic> toJson() => _$CalculateResponseToJson(this);
 }

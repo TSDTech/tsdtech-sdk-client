@@ -14,11 +14,11 @@ part of 'router.dart';
 /// [CheckoutScreen]
 class CheckoutRoute extends PageRouteInfo<CheckoutRouteArgs> {
   CheckoutRoute({Key? key, List<PageRouteInfo>? children})
-    : super(
-        CheckoutRoute.name,
-        args: CheckoutRouteArgs(key: key),
-        initialChildren: children,
-      );
+      : super(
+          CheckoutRoute.name,
+          args: CheckoutRouteArgs(key: key),
+          initialChildren: children,
+        );
 
   static const String name = 'CheckoutRoute';
 
@@ -48,7 +48,7 @@ class CheckoutRouteArgs {
 /// [EmptyRouterPage]
 class EmptyRouterRoute extends PageRouteInfo<void> {
   const EmptyRouterRoute({List<PageRouteInfo>? children})
-    : super(EmptyRouterRoute.name, initialChildren: children);
+      : super(EmptyRouterRoute.name, initialChildren: children);
 
   static const String name = 'EmptyRouterRoute';
 
@@ -64,7 +64,7 @@ class EmptyRouterRoute extends PageRouteInfo<void> {
 /// [ForgotPasswordScreen]
 class ForgotPasswordRoute extends PageRouteInfo<void> {
   const ForgotPasswordRoute({List<PageRouteInfo>? children})
-    : super(ForgotPasswordRoute.name, initialChildren: children);
+      : super(ForgotPasswordRoute.name, initialChildren: children);
 
   static const String name = 'ForgotPasswordRoute';
 
@@ -80,7 +80,7 @@ class ForgotPasswordRoute extends PageRouteInfo<void> {
 /// [HomeScreen]
 class HomeRoute extends PageRouteInfo<void> {
   const HomeRoute({List<PageRouteInfo>? children})
-    : super(HomeRoute.name, initialChildren: children);
+      : super(HomeRoute.name, initialChildren: children);
 
   static const String name = 'HomeRoute';
 
@@ -96,12 +96,12 @@ class HomeRoute extends PageRouteInfo<void> {
 /// [LoginScreen]
 class LoginRoute extends PageRouteInfo<LoginRouteArgs> {
   LoginRoute({Key? key, String? termsToken, List<PageRouteInfo>? children})
-    : super(
-        LoginRoute.name,
-        args: LoginRouteArgs(key: key, termsToken: termsToken),
-        rawQueryParams: {'termsToken': termsToken},
-        initialChildren: children,
-      );
+      : super(
+          LoginRoute.name,
+          args: LoginRouteArgs(key: key, termsToken: termsToken),
+          rawQueryParams: {'termsToken': termsToken},
+          initialChildren: children,
+        );
 
   static const String name = 'LoginRoute';
 
@@ -141,15 +141,15 @@ class MyVouchersFormRoute extends PageRouteInfo<MyVouchersFormRouteArgs> {
     required String administratorId,
     List<PageRouteInfo>? children,
   }) : super(
-         MyVouchersFormRoute.name,
-         args: MyVouchersFormRouteArgs(
-           key: key,
-           serviceId: serviceId,
-           formId: formId,
-           administratorId: administratorId,
-         ),
-         initialChildren: children,
-       );
+          MyVouchersFormRoute.name,
+          args: MyVouchersFormRouteArgs(
+            key: key,
+            serviceId: serviceId,
+            formId: formId,
+            administratorId: administratorId,
+          ),
+          initialChildren: children,
+        );
 
   static const String name = 'MyVouchersFormRoute';
 
@@ -193,7 +193,7 @@ class MyVouchersFormRouteArgs {
 /// [MyVouchersScreen]
 class MyVouchersRoute extends PageRouteInfo<void> {
   const MyVouchersRoute({List<PageRouteInfo>? children})
-    : super(MyVouchersRoute.name, initialChildren: children);
+      : super(MyVouchersRoute.name, initialChildren: children);
 
   static const String name = 'MyVouchersRoute';
 
@@ -209,7 +209,7 @@ class MyVouchersRoute extends PageRouteInfo<void> {
 /// [ProfileMenuScreen]
 class ProfileMenuRoute extends PageRouteInfo<void> {
   const ProfileMenuRoute({List<PageRouteInfo>? children})
-    : super(ProfileMenuRoute.name, initialChildren: children);
+      : super(ProfileMenuRoute.name, initialChildren: children);
 
   static const String name = 'ProfileMenuRoute';
 
@@ -230,13 +230,13 @@ class ProviderRequestFinishedRoute
     required String providerRequestId,
     List<PageRouteInfo>? children,
   }) : super(
-         ProviderRequestFinishedRoute.name,
-         args: ProviderRequestFinishedRouteArgs(
-           key: key,
-           providerRequestId: providerRequestId,
-         ),
-         initialChildren: children,
-       );
+          ProviderRequestFinishedRoute.name,
+          args: ProviderRequestFinishedRouteArgs(
+            key: key,
+            providerRequestId: providerRequestId,
+          ),
+          initialChildren: children,
+        );
 
   static const String name = 'ProviderRequestFinishedRoute';
 
@@ -279,15 +279,15 @@ class ProviderRequestFormRoute
     required String administratorId,
     List<PageRouteInfo>? children,
   }) : super(
-         ProviderRequestFormRoute.name,
-         args: ProviderRequestFormRouteArgs(
-           key: key,
-           providerRequestId: providerRequestId,
-           serviceId: serviceId,
-           administratorId: administratorId,
-         ),
-         initialChildren: children,
-       );
+          ProviderRequestFormRoute.name,
+          args: ProviderRequestFormRouteArgs(
+            key: key,
+            providerRequestId: providerRequestId,
+            serviceId: serviceId,
+            administratorId: administratorId,
+          ),
+          initialChildren: children,
+        );
 
   static const String name = 'ProviderRequestFormRoute';
 
@@ -338,15 +338,15 @@ class ProviderRequestQRCodeRoute
     required String administratorId,
     List<PageRouteInfo>? children,
   }) : super(
-         ProviderRequestQRCodeRoute.name,
-         args: ProviderRequestQRCodeRouteArgs(
-           key: key,
-           providerRequestId: providerRequestId,
-           serviceId: serviceId,
-           administratorId: administratorId,
-         ),
-         initialChildren: children,
-       );
+          ProviderRequestQRCodeRoute.name,
+          args: ProviderRequestQRCodeRouteArgs(
+            key: key,
+            providerRequestId: providerRequestId,
+            serviceId: serviceId,
+            administratorId: administratorId,
+          ),
+          initialChildren: children,
+        );
 
   static const String name = 'ProviderRequestQRCodeRoute';
 
@@ -390,7 +390,7 @@ class ProviderRequestQRCodeRouteArgs {
 /// [PurchaseHistoryScreen]
 class PurchaseHistoryRoute extends PageRouteInfo<void> {
   const PurchaseHistoryRoute({List<PageRouteInfo>? children})
-    : super(PurchaseHistoryRoute.name, initialChildren: children);
+      : super(PurchaseHistoryRoute.name, initialChildren: children);
 
   static const String name = 'PurchaseHistoryRoute';
 
@@ -406,7 +406,7 @@ class PurchaseHistoryRoute extends PageRouteInfo<void> {
 /// [SettingsMenuScreen]
 class SettingsMenuRoute extends PageRouteInfo<void> {
   const SettingsMenuRoute({List<PageRouteInfo>? children})
-    : super(SettingsMenuRoute.name, initialChildren: children);
+      : super(SettingsMenuRoute.name, initialChildren: children);
 
   static const String name = 'SettingsMenuRoute';
 
@@ -422,7 +422,7 @@ class SettingsMenuRoute extends PageRouteInfo<void> {
 /// [SignupPersonScreen]
 class SignupPersonRoute extends PageRouteInfo<void> {
   const SignupPersonRoute({List<PageRouteInfo>? children})
-    : super(SignupPersonRoute.name, initialChildren: children);
+      : super(SignupPersonRoute.name, initialChildren: children);
 
   static const String name = 'SignupPersonRoute';
 
@@ -444,15 +444,15 @@ class VoucherQRCodeRoute extends PageRouteInfo<VoucherQRCodeRouteArgs> {
     required String code,
     List<PageRouteInfo>? children,
   }) : super(
-         VoucherQRCodeRoute.name,
-         args: VoucherQRCodeRouteArgs(
-           key: key,
-           voucherId: voucherId,
-           serviceId: serviceId,
-           code: code,
-         ),
-         initialChildren: children,
-       );
+          VoucherQRCodeRoute.name,
+          args: VoucherQRCodeRouteArgs(
+            key: key,
+            voucherId: voucherId,
+            serviceId: serviceId,
+            code: code,
+          ),
+          initialChildren: children,
+        );
 
   static const String name = 'VoucherQRCodeRoute';
 

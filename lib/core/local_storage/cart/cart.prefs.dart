@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:voucherize/core/local_storage/shared_prefs_helper.dart';
-import 'package:voucherize/models/cart/cart_item.model.dart';
+import 'package:tsdtech_client_sdk/core/local_storage/shared_prefs_helper.dart';
+import 'package:tsdtech_client_sdk/models/cart/cart_item.model.dart';
 
 class CartPrefs {
   static const _key = 'cart_data';
@@ -24,7 +24,9 @@ class CartPrefs {
       }
       final items = decoded['items'] as List<dynamic>?;
       if (items == null) return null;
-      return items.map((e) => CartItem.fromJson(Map<String, dynamic>.from(e as Map))).toList();
+      return items
+          .map((e) => CartItem.fromJson(Map<String, dynamic>.from(e as Map)))
+          .toList();
     } catch (_) {
       return null;
     }

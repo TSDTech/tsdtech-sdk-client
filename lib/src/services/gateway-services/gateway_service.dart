@@ -21,7 +21,8 @@ class GatewayService {
     }
   }
 
-  Future<ValueResult<PaymentStatusResponse>> payWithCard(CardPaymentRequest request) async {
+  Future<ValueResult<PaymentStatusResponse>> payWithCard(
+      CardPaymentRequest request) async {
     try {
       final response = await _client.dio.post(
         '/payments/card',
@@ -36,15 +37,18 @@ class GatewayService {
     }
   }
 
-  Future<ValueResult<PaymentStatusResponse>> getPaymentStatus(String depositRequestId) async {
+  Future<ValueResult<PaymentStatusResponse>> getPaymentStatus(
+      String depositRequestId) async {
     try {
-      final response = await _client.dio.get('/payments/status/$depositRequestId');
+      final response =
+          await _client.dio.get('/payments/status/$depositRequestId');
       final data = PaymentStatusResponse.fromJson(response.data);
       return ValueResult.success(data);
     } on DioException catch (e) {
       return _parseGatewayError<PaymentStatusResponse>(e);
     } catch (e) {
-      return ValueResult.failure('Erro inesperado ao consultar status do pagamento.');
+      return ValueResult.failure(
+          'Erro inesperado ao consultar status do pagamento.');
     }
   }
 
@@ -56,7 +60,7 @@ class GatewayService {
   ) async {
     try {
       final encryptedCard = CardEncryptor.encrypt(cardData, pemPublicKey);
-      
+
       final request = CardPaymentRequest(
         depositRequestId: depositRequestId,
         encryptedCardData: encryptedCard,
@@ -65,7 +69,8 @@ class GatewayService {
 
       return await payWithCard(request);
     } catch (e) {
-      return ValueResult.failure('Erro inesperado ao criptografar ou processar o pagamento com cartão.');
+      return ValueResult.failure(
+          'Erro inesperado ao criptografar ou processar o pagamento com cartão.');
     }
   }
 
@@ -73,12 +78,13 @@ class GatewayService {
     try {
       final data = error.response?.data;
       if (data != null && data is Map<String, dynamic>) {
-        final message = data['message'] ?? data['error'] ?? 'Erro no gateway de pagamento.';
+        final message =
+            data['message'] ?? data['error'] ?? 'Erro no gateway de pagamento.';
         return ValueResult.failure(message.toString());
       }
-    } catch (_) {
-    }
-    
-    return ValueResult.failure(error.message ?? 'Erro de comunicação com o gateway.');
+    } catch (_) {}
+
+    return ValueResult.failure(
+        error.message ?? 'Erro de comunicação com o gateway.');
   }
 }

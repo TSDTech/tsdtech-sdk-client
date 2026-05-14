@@ -7,7 +7,8 @@ import 'package:tsdtech_client_sdk/src/models/gateway-models/gateway_dtos.dart';
 import 'package:tsdtech_client_sdk/src/utils/card-utils/card_encryptor.dart';
 
 class MockInterceptor extends Interceptor {
-  final void Function(RequestOptions options, RequestInterceptorHandler handler) onRequestHandler;
+  final void Function(RequestOptions options, RequestInterceptorHandler handler)
+      onRequestHandler;
 
   MockInterceptor(this.onRequestHandler);
 
@@ -26,7 +27,8 @@ void main() {
     service = GatewayService(client);
   });
 
-  test('fetchPublicKey returns PublicKeyResponse with pemPublicKey and keyId', () async {
+  test('fetchPublicKey returns PublicKeyResponse with pemPublicKey and keyId',
+      () async {
     client.dio.interceptors.add(MockInterceptor((options, handler) {
       if (options.path == '/public-keys') {
         handler.resolve(Response(
@@ -68,7 +70,8 @@ void main() {
 
   test('getPaymentStatus returns PaymentStatusResponse processing', () async {
     client.dio.interceptors.add(MockInterceptor((options, handler) {
-      if (options.path == '/payments/status/req_789' && options.method == 'GET') {
+      if (options.path == '/payments/status/req_789' &&
+          options.method == 'GET') {
         handler.resolve(Response(
           requestOptions: options,
           statusCode: 200,
@@ -84,12 +87,13 @@ void main() {
     expect(result.value?.status, 'processing');
   });
 
-  test('payWithEncryptedCard executes the complete flow: encrypt + pay', () async {
+  test('payWithEncryptedCard executes the complete flow: encrypt + pay',
+      () async {
     client.dio.interceptors.add(MockInterceptor((options, handler) {
       if (options.path == '/payments/card' && options.method == 'POST') {
         // Validation that the data was encrypted by CardEncryptor mock ('encrypted_payload_mock')
         expect(options.data['encryptedCardData'], 'encrypted_payload_mock');
-        
+
         handler.resolve(Response(
           requestOptions: options,
           statusCode: 200,
@@ -118,7 +122,8 @@ void main() {
     expect(result.value?.status, 'approved');
   });
 
-  test('returns ValueResult.failure with message from gateway on error', () async {
+  test('returns ValueResult.failure with message from gateway on error',
+      () async {
     client.dio.interceptors.add(MockInterceptor((options, handler) {
       if (options.path == '/payments/card') {
         handler.reject(DioException(
@@ -143,7 +148,8 @@ void main() {
     expect(result.error, 'Cartão expirado ou bloqueado no gateway.');
   });
 
-  test('returns ValueResult.failure with friendly error message on timeout', () async {
+  test('returns ValueResult.failure with friendly error message on timeout',
+      () async {
     client.dio.interceptors.add(MockInterceptor((options, handler) {
       if (options.path == '/public-keys') {
         handler.reject(DioException(

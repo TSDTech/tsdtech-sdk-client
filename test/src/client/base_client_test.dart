@@ -53,8 +53,11 @@ void main() {
     });
 
     test('timeout errors mapped to friendly message', () async {
-      final requestOptions = RequestOptions(path: 'https://example.com/timeout');
-      final dioEx = DioException(requestOptions: requestOptions, type: DioExceptionType.connectionTimeout);
+      final requestOptions =
+          RequestOptions(path: 'https://example.com/timeout');
+      final dioEx = DioException(
+          requestOptions: requestOptions,
+          type: DioExceptionType.connectionTimeout);
       adapter.whenThrow('GET', '/timeout', dioEx);
 
       try {

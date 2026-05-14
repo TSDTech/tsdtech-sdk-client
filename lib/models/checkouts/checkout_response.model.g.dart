@@ -17,6 +17,9 @@ CheckoutResponse _$CheckoutResponseFromJson(Map<String, dynamic> json) =>
           ? null
           : BillData.fromJson(json['bill'] as Map<String, dynamic>),
       status: json['status'] as String?,
+      depositRequestId: json['depositRequestId'] as String?,
+      gatewayBaseUrl: json['gatewayBaseUrl'] as String?,
+      publicKeyUrl: json['publicKeyUrl'] as String?,
     );
 
 Map<String, dynamic> _$CheckoutResponseToJson(CheckoutResponse instance) =>
@@ -26,4 +29,7 @@ Map<String, dynamic> _$CheckoutResponseToJson(CheckoutResponse instance) =>
       'pix': instance.pix?.toJson(),
       'bill': instance.bill?.toJson(),
       'status': instance.status,
+      'depositRequestId': instance.depositRequestId,
+      'gatewayBaseUrl': instance.gatewayBaseUrl,
+      'publicKeyUrl': instance.publicKeyUrl,
     };

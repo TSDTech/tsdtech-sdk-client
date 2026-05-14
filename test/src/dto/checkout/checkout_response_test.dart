@@ -1,29 +1,64 @@
 import 'package:test/test.dart';
 import 'package:tsdtech_client_sdk/models/checkouts/checkout_response.model.dart';
-import 'package:tsdtech_client_sdk/models/checkouts/pix_data.model.dart';
-import 'package:tsdtech_client_sdk/models/checkouts/bill_data.model.dart';
 
 void main() {
-  group('CheckoutResponse JSON', () {
-    test('toJson/fromJson round-trip with pix and bill', () {
-      final pix = PixData(qrCode: 'qr', copyPasteCode: 'paste');
-      final bill = BillData(
-        pinbankSlipId: 'pid',
-        base64Path: 'b64',
-        digitableLine: 'dig',
-        barCode: 'bar',
-        digitalAccountPinbankId: 'acc',
-      );
+  group('CheckoutResponse DTO', () {
+    test('parses depositRequestId when present', () {
+      final json = {
+        'paymentMethod': 'card',
+        'paymentId': 'pay_123',
+        'status': 'pending',
+        'depositRequestId': 'dep_123',
+        'gatewayBaseUrl': 'https://gateway.example',
+        'publicKeyUrl': 'https://gateway.example/pub'
+      };
 
-      final res = CheckoutResponse(paymentMethod: 'pix', paymentId: 'p1', pix: pix, bill: bill, status: 'pending');
-      final json = res.toJson();
-      final parsed = CheckoutResponse.fromJson(json);
+      final resp = CheckoutResponse.fromJson(json);
 
-      expect(parsed.paymentMethod, res.paymentMethod);
-      expect(parsed.paymentId, res.paymentId);
-      expect(parsed.pix?.qrCode, res.pix?.qrCode);
-      expect(parsed.bill?.digitableLine, res.bill?.digitableLine);
-      expect(parsed.status, res.status);
+      expect(resp.paymentMethod, 'card');
+      expect(resp.depositRequestId, 'dep_123');
+      expect(resp.pix, isNull);
+      expect(resp.bill, isNull);
+    });
+
+    test('parses pix payload without depositRequestId', () {
+      final json = {
+        'paymentMethod': 'pix',
+        'paymentId': 'pix_123',
+        'status': 'pending',
+        'pix': {'qrCode': 'QR', 'copyPasteCode': 'COPY'}
+      };
+
+      final resp = CheckoutResponse.fromJson(json);
+
+      expect(resp.paymentMethod, 'pix');
+      expect(resp.depositRequestId, isNull);
+      expect(resp.pix, isNotNull);
+      expect(resp.pix?.qrCode, 'QR');
+      expect(resp.pix?.copyPasteCode, 'COPY');
+    });
+
+    test('parses bill payload without depositRequestId', () {
+      final json = {
+        'paymentMethod': 'bill',
+        'paymentId': 'bill_123',
+        'status': 'pending',
+        'bill': {
+          'pinbankSlipId': 'pb_1',
+          'base64Path': 'data:application/pdf;base64,AAA',
+          'digitableLine': '123',
+          'barCode': '456',
+          'digitalAccountPinbankId': 'da_1'
+        }
+      };
+
+      final resp = CheckoutResponse.fromJson(json);
+
+      expect(resp.paymentMethod, 'bill');
+      expect(resp.depositRequestId, isNull);
+      expect(resp.bill, isNotNull);
+      expect(resp.bill?.pinbankSlipId, 'pb_1');
+      expect(resp.bill?.digitableLine, '123');
     });
   });
 }

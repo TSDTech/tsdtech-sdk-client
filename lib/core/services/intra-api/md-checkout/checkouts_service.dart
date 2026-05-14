@@ -97,6 +97,21 @@ class CheckoutsService extends IntraApi {
 
   /// Creates a new checkout with the provided [request].
   ///
+  /// This method sends the checkout request to the backend SPA and returns a
+  /// `CheckoutResponse`. The response supports multiple payment flows:
+  ///
+  /// - Card (two-step): the response may include `depositRequestId`. In this
+  ///   flow the checkout creation only initiates the deposit; the client must
+  ///   complete the card authorization/confirmation using the `GatewayService`
+  ///   and the returned `depositRequestId`.
+  /// - PIX or Bill (one-step): the response will contain `pix` or `bill`
+  ///   payloads with payment instructions that can be consumed immediately.
+  ///
+  /// Important: do NOT add gateway interaction methods here — `GatewayService`
+  /// is responsible for handling gateway-specific flows (card deposits,
+  /// redirects, etc.). This service only creates the checkout and returns the
+  /// server response which may contain `depositRequestId`, `pix` or `bill`.
+  ///
   /// - [request]: The [CheckoutRequest] containing order details and payment info
   /// - Returns: [ValueResult] containing the [CheckoutResponse] with confirmation
   ///
@@ -106,7 +121,9 @@ class CheckoutsService extends IntraApi {
   ///   CheckoutRequest(items: items, paymentMethodId: 'pix'),
   /// );
   /// if (result.isSuccess) {
-  ///   print('Checkout created: ${result.value.paymentId}');
+  ///   final resp = result.value;
+  ///   // Card (two-step): check `resp.depositRequestId` and use GatewayService
+  ///   // PIX/Bill: check `resp.pix` / `resp.bill` for payment instructions
   /// }
   /// ```
   Future<ValueResult<CheckoutResponse>> createCheckout(

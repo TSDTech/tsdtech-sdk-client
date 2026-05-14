@@ -17,6 +17,7 @@ CheckoutRequest _$CheckoutRequestFromJson(Map<String, dynamic> json) =>
       card: json['card'] == null
           ? null
           : CardPaymentData.fromJson(json['card'] as Map<String, dynamic>),
+      depositRequestId: json['depositRequestId'] as String?,
       billPayer: json['billPayer'] == null
           ? null
           : BillPayerData.fromJson(json['billPayer'] as Map<String, dynamic>),
@@ -32,6 +33,7 @@ Map<String, dynamic> _$CheckoutRequestToJson(CheckoutRequest instance) =>
       'totalValue': instance.totalValue,
       'encryptedCard': instance.encryptedCard,
       'card': instance.card?.toJson(),
+      'depositRequestId': instance.depositRequestId,
       'billPayer': instance.billPayer?.toJson(),
       'billDueDate': instance.billDueDate,
       'billInstructions': instance.billInstructions,

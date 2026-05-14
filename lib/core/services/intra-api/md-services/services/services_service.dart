@@ -6,7 +6,6 @@ import 'package:tsdtech_client_sdk/models/common/pagination.model.dart';
 import 'package:tsdtech_client_sdk/models/services/service.model.dart';
 import 'package:tsdtech_client_sdk/models/forms/service_form.model.dart';
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 
 /// Service for managing services and service forms.
 ///
@@ -126,11 +125,6 @@ class ServicesService extends IntraApi {
       const path = '/service-forms/client';
       final response = await get(path, queryParameters: queryParams);
       final data = response.data;
-
-      try {
-        debugPrint(
-            'ServicesService.getServiceFormModel raw response: ${response.data}');
-      } catch (_) {}
 
       if (data is List && data.isNotEmpty) {
         final first = data.first as Map<String, dynamic>;

@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
+import 'package:meta/meta.dart';
 import 'package:tsdtech_client_sdk/core/services/base.api.dart';
 
 /// Base class for intra-service API communication.

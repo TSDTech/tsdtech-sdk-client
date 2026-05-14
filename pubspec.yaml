@@ -1,5 +1,5 @@
 name: tsdtech_client_sdk
-description: SDK Dart/Flutter para integração com a plataforma TsdTech de vouchers e pagamentos.
+description: SDK Dart para integração com a plataforma TsdTech de pagamentos.
 publish_to: 'none'
 repository: https://github.com/tsdtech/tsdtech-client-sdk
 homepage: https://github.com/tsdtech/tsdtech-client-sdk
@@ -15,11 +15,6 @@ environment:
   sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
-  flutter:
-    sdk: flutter
-  cupertino_icons: ^1.0.2
-  mobx: ^2.2.0
-  flutter_mobx: ^2.0.6+5
   dio: ^5.3.3
   get_it: ^9.2.1
   shared_preferences: ^2.5.3
@@ -50,6 +45,10 @@ dependencies:
   barcode_widget: ^2.0.4
   encrypt: ^5.0.3
   pointycastle: ^3.9.1
+  path: ^1.9.1
+  platform: ^3.1.5
+  meta: ^1.12.0
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:
@@ -61,24 +60,5 @@ dev_dependencies:
   test: ^1.25.0
   mockito: ^5.4.0
   coverage: ^1.1.0
-
-flutter:
-  uses-material-design: true
-  fonts:
-    - family: Segoe UI Symbol
-      fonts:
-        - asset: assets/Segoe UI Symbol.ttf
-    - family: Open Sans
-      fonts:
-        - asset: assets/Open Sans Light.ttf
-          weight: 300
-        - asset: assets/Open Sans Regular.ttf
-          weight: 400
-        - asset: assets/Open Sans Semibold.ttf
-          weight: 600
-        - asset: assets/Open Sans Bold.ttf
-          weight: 700
-
-  assets:
-    - assets/
-    - config.json
+  build_runner: ^2.4.15
+  json_serializable: ^6.9.0

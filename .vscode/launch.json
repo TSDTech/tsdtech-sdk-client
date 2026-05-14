@@ -5,22 +5,28 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "voucherize-client-front",
+      "name": "Pagamento Web (Chrome)",
       "request": "launch",
       "type": "dart",
+      "program": "lib/main.dart",
+      "deviceId": "chrome",
       "args": ["--web-port", "8081"]
     },
     {
-      "name": "voucherize-client-front (profile mode)",
+      "name": "Pagamento Web (Chrome, profile)",
       "request": "launch",
       "type": "dart",
+      "program": "lib/main.dart",
+      "deviceId": "chrome",
       "flutterMode": "profile",
       "args": ["--web-port", "8081"]
     },
     {
-      "name": "voucherize-client-front (release mode)",
+      "name": "Pagamento Web (Chrome, release)",
       "request": "launch",
       "type": "dart",
+      "program": "lib/main.dart",
+      "deviceId": "chrome",
       "flutterMode": "release",
       "args": ["--web-port", "8081"]
     }

@@ -1,19 +1,50 @@
-/// TSDTech Client SDK - HTTP Client for TSDTech Platform
-///
-/// This is a pure Dart SDK for integrating with the TSDTech payment platform.
-/// It provides HTTP clients and services for payment operations.
-///
-/// ## Usage
-/// ```dart
-/// import 'package:tsdtech_client_sdk/tsdtech_sdk_client.dart';
-///
-/// // Configure the base URL
-/// Constants.setBaseUrl('https://api.seu-servidor.com');
-///
-/// // Use services
-/// final checkoutService = CheckoutsService.instance;
-/// final result = await checkoutService.createCheckout(request);
-/// ```
-library tsdtech_client_sdk;
+import 'package:flutter/material.dart';
 
-export 'tsdtech_sdk_client.dart';
+import 'ui/payment_screen.dart';
+
+void main() {
+	runApp(const PaymentStarterApp());
+}
+
+class PaymentStarterApp extends StatelessWidget {
+	const PaymentStarterApp({super.key});
+
+	@override
+	Widget build(BuildContext context) {
+		final colorScheme = ColorScheme.fromSeed(
+			seedColor: const Color(0xFF0F766E),
+			surface: const Color(0xFFF5F7FB),
+		);
+
+		return MaterialApp(
+			debugShowCheckedModeBanner: false,
+			title: 'Pagamento',
+			theme: ThemeData(
+				colorScheme: colorScheme,
+				scaffoldBackgroundColor: const Color(0xFFF5F7FB),
+				useMaterial3: true,
+				inputDecorationTheme: InputDecorationTheme(
+					filled: true,
+					fillColor: Colors.white,
+					contentPadding: const EdgeInsets.symmetric(
+						horizontal: 16,
+						vertical: 16,
+					),
+					border: OutlineInputBorder(
+						borderRadius: BorderRadius.circular(16),
+						borderSide: BorderSide(color: Colors.grey.shade300),
+					),
+					enabledBorder: OutlineInputBorder(
+						borderRadius: BorderRadius.circular(16),
+						borderSide: BorderSide(color: Colors.grey.shade300),
+					),
+					focusedBorder: OutlineInputBorder(
+						borderRadius: BorderRadius.circular(16),
+						borderSide: BorderSide(color: colorScheme.primary, width: 1.2),
+					),
+				),
+			),
+			home: const PaymentScreen(),
+		);
+	}
+}

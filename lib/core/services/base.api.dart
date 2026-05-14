@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:meta/meta.dart';
 
 /// Static HTTP client base class using Dio for making API requests.
 ///

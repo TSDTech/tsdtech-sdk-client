@@ -1,5 +1,4 @@
 import 'package:tsdtech_client_sdk/core/services/intra-api/intra.api.dart';
-import 'package:tsdtech_client_sdk/models/auth/client-user-token-data.model.dart';
 import 'package:tsdtech_client_sdk/models/auth/login-response-client.model.dart';
 import 'package:tsdtech_client_sdk/models/value_result.dart';
 import 'package:tsdtech_client_sdk/models/auth/signup-request-client.model.dart';

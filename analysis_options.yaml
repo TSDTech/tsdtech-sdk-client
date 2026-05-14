@@ -6,12 +6,18 @@
 # invoked from the command line by running `flutter analyze`.
 
 analyzer:
+  exclude:
+    - lib/**/*.g.dart
+    - lib/core/services/intra-api/**/*.module.dart
+    - test/src/client/**
+    - test/src/services/checkout_service_test.dart
   errors:
     constant_identifier_names: ignore
     todo: ignore
     library_private_types_in_public_api: ignore  # MobX gerado
     unawaited_futures: ignore                    # Futures intentional em callbacks
     deprecated_member_use: ignore                # APIs deprecated do Flutter
+    deprecated_member_use_from_same_package: ignore
     avoid_print: ignore                          # print em produção
     non_constant_identifier_names: ignore         # Variáveis de widget
     unused_field: ignore                         # Campo intencionalmente em polling

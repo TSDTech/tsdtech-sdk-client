@@ -32,7 +32,14 @@ import 'package:flutter/foundation.dart';
 /// }
 /// ```
 abstract class BaseApi {
-  static final Dio _dio = Dio();
+  static Dio _dio = Dio();
+
+  /// Sets the internal Dio instance (useful for tests to inject a mocked Dio).
+  ///
+  /// This method is intentionally simple and intended for test usage only.
+  static void setDioForTesting(Dio dio) {
+    _dio = dio;
+  }
 
   /// Executes an HTTP request with automatic token initialization and error handling.
   ///

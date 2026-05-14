@@ -2,19 +2,18 @@ name: Dart CI
 
 on:
   push:
-    branches: [main]
+    branches: [development, main]
   pull_request:
-    branches: [main]
+    branches: [development, main]
 
 jobs:
   analyze:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - uses: dart-lang/setup-dart@v1
+      - uses: subosito/flutter-action@v2
         with:
-          sdk: '3.0.0'
+          flutter-version: 'stable'
 
       - name: Install dependencies
         run: dart pub get
@@ -26,10 +25,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - uses: dart-lang/setup-dart@v1
+      - uses: subosito/flutter-action@v2
         with:
-          sdk: '3.0.0'
+          flutter-version: 'stable'
 
       - name: Install dependencies
         run: dart pub get
@@ -41,13 +39,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - uses: dart-lang/setup-dart@v1
+      - uses: subosito/flutter-action@v2
         with:
-          sdk: '3.0.0'
+          flutter-version: 'stable'
 
       - name: Install dependencies
         run: dart pub get
 
-      - name: Run tests
-        run: dart test
+      - name: Run tests with coverage
+        run: flutter test --coverage
+
+      - name: Upload coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-lcov
+          path: coverage/lcov.info

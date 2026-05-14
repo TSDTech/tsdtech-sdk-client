@@ -6,6 +6,9 @@
 // Core helpers
 export 'models/value_result.dart';
 
+// Crypto
+export 'src/crypto/card_encryptor.dart';
+
 // Checkouts (DTOs and related models)
 export 'models/checkouts/checkout_request.model.dart';
 export 'models/checkouts/checkout_response.model.dart';

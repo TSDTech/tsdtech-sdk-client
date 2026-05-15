@@ -11,6 +11,31 @@ import 'payment_types.dart';
 import 'views/card_payment_view.dart';
 import 'views/pix_payment_view.dart';
 
+class CheckoutWidgetController {
+  CheckoutWidgetController({
+    PaymentMethodType initialMethod = PaymentMethodType.pix,
+  }) : selectedMethod = ValueNotifier(initialMethod);
+
+  final ValueNotifier<PaymentMethodType> selectedMethod;
+  final ValueNotifier<bool> isLoading = ValueNotifier(false);
+  final ValueNotifier<bool> hasGeneratedPix = ValueNotifier(false);
+
+  Future<void> Function()? _submitPayment;
+
+  Future<void> submitPayment() async {
+    final submitPayment = _submitPayment;
+    if (submitPayment != null) {
+      await submitPayment();
+    }
+  }
+
+  void dispose() {
+    selectedMethod.dispose();
+    isLoading.dispose();
+    hasGeneratedPix.dispose();
+  }
+}
+
 class CheckoutWidget extends StatefulWidget {
   final List<CartItem> items;
   final String administratorId;
@@ -22,6 +47,8 @@ class CheckoutWidget extends StatefulWidget {
   final bool showCard;
   final Widget? loadingWidget;
   final Widget? errorWidget;
+  final bool showSubmitButton;
+  final CheckoutWidgetController? controller;
 
   const CheckoutWidget({
     super.key,
@@ -35,6 +62,8 @@ class CheckoutWidget extends StatefulWidget {
     this.showCard = true,
     this.loadingWidget,
     this.errorWidget,
+    this.showSubmitButton = true,
+    this.controller,
   });
 
   @override
@@ -66,10 +95,21 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
         ? PaymentMethodType.pix
         : PaymentMethodType.card;
     _selectedMethod = ValueNotifier(initialMethod);
+    _syncControllerState();
+  }
+
+  @override
+  void didUpdateWidget(covariant CheckoutWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.controller != widget.controller) {
+      oldWidget.controller?._submitPayment = null;
+      _syncControllerState();
+    }
   }
 
   @override
   void dispose() {
+    widget.controller?._submitPayment = null;
     _pixPollingTimer?.cancel();
     _selectedMethod.dispose();
     _isLoading.dispose();
@@ -83,6 +123,18 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
 
   void _notifyStatus(PaymentStatus status) {
     widget.onStatusChange?.call(status);
+  }
+
+  void _syncControllerState() {
+    final controller = widget.controller;
+    if (controller == null) {
+      return;
+    }
+
+    controller._submitPayment = _processPayment;
+    controller.selectedMethod.value = _selectedMethod.value;
+    controller.isLoading.value = _isLoading.value;
+    controller.hasGeneratedPix.value = _pixQrCode != null;
   }
 
   List<CalculateItem> _buildCalculateItems() {
@@ -120,6 +172,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
     }
 
     _isLoading.value = true;
+    _syncControllerState();
     _errorMessage.value = null;
     _notifyStatus(PaymentStatus.processing);
 
@@ -152,6 +205,8 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
         if (_paymentId != null) {
           _startPixPolling(_paymentId!);
         }
+        setState(() {});
+        _syncControllerState();
       } else if (_selectedMethod.value == PaymentMethodType.card) {
         _handleSuccess(
           response.paymentId ?? response.depositRequestId ?? 'card_${DateTime.now().millisecondsSinceEpoch}',
@@ -162,6 +217,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
       _showError(error.toString());
     } finally {
       _isLoading.value = false;
+      _syncControllerState();
     }
   }
 
@@ -187,6 +243,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
     _errorMessage.value = message;
     widget.onError?.call(message);
     _notifyStatus(PaymentStatus.failed);
+    _syncControllerState();
   }
 
   void _startPixPolling(String paymentId) {
@@ -259,6 +316,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                         _pixQrCode = null;
                         _pixCopyPasteCode = null;
                         _pixPollingTimer?.cancel();
+                        _syncControllerState();
                         setState(() {});
                       },
                       showPix: widget.showPix,
@@ -284,7 +342,8 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                     const SizedBox(height: 24),
                     
                     // Oculta o botão se o PIX já foi gerado
-                    if (!(method == PaymentMethodType.pix && _pixQrCode != null))
+                    if (widget.showSubmitButton &&
+                        !(method == PaymentMethodType.pix && _pixQrCode != null))
                       ElevatedButton(
                         onPressed: _processPayment,
                         style: ElevatedButton.styleFrom(

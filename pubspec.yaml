@@ -45,10 +45,7 @@ dependencies:
   barcode_widget: ^2.0.4
   encrypt: ^5.0.3
   pointycastle: ^3.9.1
-  path: ^1.9.1
-  platform: ^3.1.5
   meta: ^1.12.0
-  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:
@@ -60,5 +57,3 @@ dev_dependencies:
   test: ^1.25.0
   mockito: ^5.4.0
   coverage: ^1.1.0
-  build_runner: ^2.4.15
-  json_serializable: ^6.9.0

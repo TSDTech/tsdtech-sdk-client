@@ -1,0 +1,19 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'public_key_response.g.dart';
+
+@JsonSerializable()
+class PublicKeyResponse {
+  final String pemPublicKey;
+  final String keyId;
+  final DateTime? expiresAt;
+
+  PublicKeyResponse({
+    required this.pemPublicKey,
+    required this.keyId,
+    this.expiresAt,
+  });
+
+  factory PublicKeyResponse.fromJson(Map<String, dynamic> json) => _$PublicKeyResponseFromJson(json);
+  Map<String, dynamic> toJson() => _$PublicKeyResponseToJson(this);
+}

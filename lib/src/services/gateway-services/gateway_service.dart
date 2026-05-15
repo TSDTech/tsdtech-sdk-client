@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
 import '../../../models/value_result.dart';
 import '../../client/gateway-client/gateway_client.dart';
-import '../../models/gateway-models/gateway_dtos.dart';
+import '../../dto/gateway/public_key_response.dart';
+import '../../dto/gateway/card_payment_request.dart';
+import '../../dto/gateway/payment_status_response.dart';
 import '../../utils/card-utils/card_encryptor.dart';
 
 class GatewayService {
@@ -63,7 +65,7 @@ class GatewayService {
 
       final request = CardPaymentRequest(
         depositRequestId: depositRequestId,
-        encryptedCardData: encryptedCard,
+        encryptedCard: encryptedCard,
         keyId: keyId,
       );
 

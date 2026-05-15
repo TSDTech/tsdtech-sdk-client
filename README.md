@@ -1,18 +1,18 @@
-# TsdTech Client SDK
+# TSDTech Client SDK
 
 [![Pub Version](https://img.shields.io/pub/v/tsdtech_client_sdk)](https://pub.dev/packages/tsdtech_client_sdk)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Dart CI](https://github.com/tsdtech/tsdtech-client-sdk/actions/workflows/dart.yml/badge.svg)](https://github.com/tsdtech/tsdtech-client-sdk/actions/workflows/dart.yml)
 
-SDK Dart/Flutter para integração com a plataforma TsdTech de vouchers e pagamentos.
+SDK Dart puro para integração com a plataforma TSDTech de pagamentos.
 
 ## ✨ Features
 
+- **Checkout**: Pagamentos via cartão (com criptografia), PIX e boleto
 - **Autenticação**: Login e cadastro de usuários clientes
 - **Vouchers**: Listagem e gerenciamento de vouchers
-- **Checkout**: Pagamentos via cartão e PIX
-- **Pedidos**: Gestão completa de pedidos
-- **Tipos**: Suporte a múltiplos tipos de serviços e assinaturas
+- **Serviços**: Listagem de serviços e formulários
+- **Pedidos**: Gestão de pedidos
 
 ## 📦 Instalação
 
@@ -28,8 +28,7 @@ dependencies:
 ### Configuração Inicial
 
 ```dart
-import 'package:tsdtech_client_sdk/core/constants/constants.dart';
-import 'package:tsdtech_client_sdk/core/services/intra-api/md-authorizers/client-users/auth_service.dart';
+import 'package:tsdtech_client_sdk/tsdtech_sdk_client.dart';
 
 // Configure o base URL antes de usar os serviços
 Constants.setBaseUrl('https://api.seu-servidor.com');
@@ -44,11 +43,14 @@ final authService = AuthServiceClientUser.instance;
 final result = await authService.login(
   email: 'usuario@exemplo.com',
   password: 'sua-senha',
+  administratorId: 'admin-123',
 );
 
 result.fold(
   (loginResponse) {
     print('Login bem-sucedido: ${loginResponse.token}');
+    // Configure o token para requisições autenticadas
+    BaseApi.setToken(loginResponse.token);
   },
   (error) {
     print('Erro no login: $error');
@@ -61,26 +63,77 @@ final signupResult = await authService.signup(
     email: 'novo@exemplo.com',
     password: 'sua-senha',
     name: 'Nome do Usuário',
-    // outros campos...
   ),
+  administratorId: 'admin-123',
 );
 ```
 
-### Checkout com Cartão
+### Checkout com PIX
 
 ```dart
-import 'package:tsdtech_client_sdk/core/services/intra-api/md-checkout/checkouts_service.dart';
-import 'package:tsdtech_client_sdk/models/checkouts/checkout_request.model.dart';
+import 'package:tsdtech_client_sdk/tsdtech_sdk_client.dart';
 
 final checkoutService = CheckoutsService.instance;
 
-// Listar meios de pagamento disponíveis
-final methodsResult = await checkoutService.getPaymentMethods();
-if (methodsResult.isSuccess) {
-  print('Métodos: ${methodsResult.value}');
-}
+// Criar checkout PIX
+final result = await checkoutService.createCheckout(
+  CheckoutRequest(
+    items: [/* seus itens */],
+    paymentMethodId: 'pix',
+  ),
+);
 
-// Calcular carrinho
+if (result.isSuccess) {
+  final pixData = result.value.pix;
+  // Exiba o QR code PIX para o usuário
+  print('PIX QR Code: ${pixData?.qrCode}');
+  print('PIX Copia e Cola: ${pixData?.qrCodeText}');
+
+  // Verifique o status do pagamento
+  final statusResult = await checkoutService.getPixStatus(result.value.paymentId);
+  print('Status PIX: ${statusResult.value}');
+}
+```
+
+### Checkout com Cartão (2-step)
+
+```dart
+// 1. Criar checkout para obter depositRequestId
+final checkoutResult = await checkoutService.createCheckout(
+  CheckoutRequest(
+    items: [/* seus itens */],
+    paymentMethodId: 'card',
+  ),
+);
+
+if (checkoutResult.isSuccess) {
+  final depositRequestId = checkoutResult.value.depositRequestId;
+  
+  // 2. Usar GatewayClient para criptografar e enviar dados do cartão
+  // (Implementação depende de GatewayClient - ver task OPA2-470)
+}
+```
+
+### Checkout com Boleto
+
+```dart
+final result = await checkoutService.createCheckout(
+  CheckoutRequest(
+    items: [/* seus itens */],
+    paymentMethodId: 'bill',
+  ),
+);
+
+if (result.isSuccess) {
+  final billData = result.value.bill;
+  print('Linha digitável: ${billData?.digitableLine}');
+  print('URL do boleto: ${billData?.url}');
+}
+```
+
+### Calcular Carrinho
+
+```dart
 final calculateResult = await checkoutService.calculateCart(
   CalculateRequest(
     items: [/* seus itens */],
@@ -88,59 +141,21 @@ final calculateResult = await checkoutService.calculateCart(
   ),
 );
 
-// Criar checkout
-final checkoutResult = await checkoutService.createCheckout(
-  CheckoutRequest(
-    items: [/* seus itens */],
-    paymentMethodId: 'card-id',
-    // outros parâmetros...
-  ),
-);
-```
-
-### Checkout PIX
-
-```dart
-final pixResult = await checkoutService.createCheckout(
-  CheckoutRequest(
-    items: [/* seus itens */],
-    paymentMethodId: 'pix',
-  ),
-);
-
-if (pixResult.isSuccess) {
-  final paymentId = pixResult.value.paymentId;
-  // Exiba o QR code PIX para o usuário
-
-  // Verifique o status do pagamento
-  final statusResult = await checkoutService.getPixStatus(paymentId);
-  print('Status PIX: ${statusResult.value}');
+if (calculateResult.isSuccess) {
+  print('Total: ${calculateResult.value.total}');
+  print('Subtotal: ${calculateResult.value.subtotal}');
 }
 ```
 
-### Listagem de Vouchers
+### Listar Meios de Pagamento
 
 ```dart
-import 'package:tsdtech_client_sdk/core/services/intra-api/md-vouchers/vouchers_service.dart';
-import 'package:tsdtech_client_sdk/models/common/pagination.model.dart';
-
-final vouchersService = VouchersService.instance;
-
-final result = await vouchersService.getVouchersClient(
-  pagination: Pagination(page: 1, pageCount: 20),
-  status: 'active',
-);
-
-result.fold(
-  (paginatedList) {
-    for (final voucher in paginatedList.items) {
-      print('Voucher: ${voucher.id} - ${voucher.status}');
-    }
-  },
-  (error) {
-    print('Erro ao buscar vouchers: $error');
-  },
-);
+final methodsResult = await checkoutService.getPaymentMethods();
+if (methodsResult.isSuccess) {
+  for (final method in methodsResult.value) {
+    print('${method.id}: ${method.name}');
+  }
+}
 ```
 
 ## 🔧 Estrutura do SDK
@@ -149,38 +164,78 @@ result.fold(
 lib/
 ├── core/
 │   ├── constants/
-│   │   └── constants.dart
-│   ├── local_storage/
-│   │   └── (auth tokens, preferences)
+│   │   └── constants.dart          # Configurações e URLs
 │   └── services/
-│       ├── base.api.dart          # Cliente HTTP base (Dio)
+│       ├── base.api.dart           # Cliente HTTP base (Dio)
 │       └── intra-api/
-│           ├── intra.api.dart     # Classe base para serviços
+│           ├── intra.api.dart      # Classe base para serviços
+│           ├── md-checkout/        # Serviço de checkout/pagamentos
+│           ├── md-authorizers/     # Auth, Memberships, ApiKeys
 │           ├── md-vouchers/        # Serviço de vouchers
-│           ├── md-checkout/       # Serviço de checkout/pagamentos
-│           ├── md-authorizers/    # Auth, Memberships, ApiKeys
-│           ├── md-orders/         # Serviço de pedidos
-│           ├── md-clients/        # Serviço de clientes
-│           ├── md-administrators/ # Serviço de administradores
-│           ├── md-services/       # Serviços e tipos de serviço
-│           └── md-providers/      # Requests de providers
-└── models/
-    ├── value_result.dart         # Result type
-    ├── checkouts/                # Models de checkout
-    ├── vouchers/                 # Models de voucher
-    ├── auth/                     # Models de autenticação
-    └── common/                    # Paginacao, etc.
+│           ├── md-services/        # Serviços e tipos de serviço
+│           ├── md-orders/          # Serviço de pedidos
+│           ├── md-clients/         # Serviço de clientes
+│           └── ...                 # Outros módulos
+├── models/
+│   ├── value_result.dart          # Result type
+│   ├── checkouts/                 # Models de checkout
+│   ├── vouchers/                  # Models de voucher
+│   ├── auth/                      # Models de autenticação
+│   └── common/                    # Paginação, etc.
+└── tsdtech_sdk_client.dart        # Barrel file principal
 ```
 
 ## 📚 API Reference
 
-Documentação completa disponível em: [https://tsdtech.github.io/tsdtech-client-sdk](https://tsdtech.github.io/tsdtech-client-sdk)
+### Services Principais
 
-## ⚠️ Notas
+| Service | Descrição | Métodos Principais |
+|---------|-----------|-------------------|
+| `CheckoutsService` | Pagamentos | `createCheckout()`, `calculateCart()`, `getPaymentMethods()`, `getPixStatus()` |
+| `AuthServiceClientUser` | Autenticação | `login()`, `signup()` |
+| `VouchersService` | Vouchers | `getVouchersClient()`, `getVoucherById()` |
+| `ServicesService` | Serviços | `getPublicServices()`, `getServiceFormModel()`, `submitServiceForm()` |
+| `OrdersService` | Pedidos | `getOrders()`, `getOrderById()` |
 
-- O SDK requer que `administratorId` esteja configurado em `AdministratorIdPrefs` antes de realizar login/signup
-- Tokens de autenticação são automaticamente gerenciados pelo `BaseApi`
-- O SDK converte exceções de rede em `ValueResult.failure()` com mensagens amigáveis
+### Token Management
+
+```dart
+// Definir token para requisições autenticadas
+BaseApi.setToken('seu-jwt-token');
+
+// Remover token
+BaseApi.resetToken();
+
+// Habilitar modo debug (logs)
+BaseApi.setDebugMode(true);
+```
+
+### ValueResult
+
+Todas as operações do SDK retornam `ValueResult<T>`:
+
+```dart
+final result = await service.someOperation();
+
+// Usando fold
+result.fold(
+  (value) => print('Sucesso: $value'),
+  (error) => print('Erro: $error'),
+);
+
+// Usando isSuccess/isFailure
+if (result.isSuccess) {
+  print(result.value);
+} else {
+  print(result.error);
+}
+```
+
+## ⚠️ Notas Importantes
+
+- **SDK Dart Puro**: Este SDK não depende do Flutter e pode ser usado em qualquer projeto Dart
+- **Gerenciamento de Token**: O SDK não armazena tokens automaticamente. Use `BaseApi.setToken()` após login
+- **Debug Mode**: Use `BaseApi.setDebugMode(true)` para habilitar logs de debug
 
 ## 📄 License
 

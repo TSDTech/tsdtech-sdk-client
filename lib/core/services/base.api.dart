@@ -1,6 +1,5 @@
-import 'package:tsdtech_client_sdk/core/local_storage/auth_token/auth_token.prefs.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
+import 'package:meta/meta.dart';
 
 /// Static HTTP client base class using Dio for making API requests.
 ///
@@ -15,9 +14,8 @@ import 'package:flutter/foundation.dart';
 /// ```
 ///
 /// ## Token Management
-/// Tokens are automatically loaded from [AuthTokenPrefs] and injected
-/// as Bearer tokens in the Authorization header. Use [setToken] to
-/// manually set a token or [resetToken] to clear it.
+/// Tokens can be set via [setToken] to be automatically injected as Bearer
+/// tokens in the Authorization header. Use [resetToken] to clear it.
 ///
 /// ## Error Handling
 /// Connection timeouts and service unavailability are caught and converted
@@ -26,13 +24,19 @@ import 'package:flutter/foundation.dart';
 /// Example:
 /// ```dart
 /// try {
-///   final response = await BaseApi.get('/protected-endpoint');
+///   response = await BaseApi.get('/protected-endpoint');
 /// } on Exception catch (e) {
 ///   print('Service unavailable: $e');
 /// }
 /// ```
 abstract class BaseApi {
   static Dio _dio = Dio();
+  static bool _debugMode = false;
+
+  /// Sets whether to enable debug logging.
+  static void setDebugMode(bool enabled) {
+    _debugMode = enabled;
+  }
 
   /// Sets the internal Dio instance (useful for tests to inject a mocked Dio).
   ///
@@ -41,25 +45,27 @@ abstract class BaseApi {
     _dio = dio;
   }
 
-  /// Executes an HTTP request with automatic token initialization and error handling.
+  static void _debugLog(String message) {
+    if (_debugMode) {
+      // ignore: avoid_print
+      print(message);
+    }
+  }
+
+  /// Executes an HTTP request with automatic error handling.
   ///
-  /// - Initializes the auth token from [AuthTokenPrefs] before the request
   /// - Catches [DioException] for service unavailability (timeouts, connection errors)
   /// - Throws a user-friendly [Exception] when service is unavailable
   /// - Re-throws other [DioException] errors for calling code to handle
   static Future<Response<dynamic>> _executeRequest(
     Future<Response<dynamic>> Function() requestFunction,
   ) async {
-    _initializeToken();
     try {
       return await requestFunction();
     } on DioException catch (e) {
-      if (kDebugMode) {
-        debugPrint('[BaseApi] DioError: ${e.type} ${e.message}');
-        if (e.response != null) {
-          debugPrint(
-              '[BaseApi] response: ${e.response?.statusCode} ${e.response?.data}');
-        }
+      _debugLog('[BaseApi] DioError: ${e.type} ${e.message}');
+      if (e.response != null) {
+        _debugLog('[BaseApi] response: ${e.response?.statusCode} ${e.response?.data}');
       }
       if (_isServiceUnavailable(e)) {
         throw Exception(
@@ -158,20 +164,11 @@ abstract class BaseApi {
         e.type == DioExceptionType.connectionError;
   }
 
-  /// Initializes the auth token from [AuthTokenPrefs] and sets it via [setToken].
-  ///
-  /// - Returns: The token string if present, otherwise null
-  static String? _initializeToken() {
-    final String? token = AuthTokenPrefs.get();
-    setToken(token);
-    return token;
-  }
-
   /// Sets the Bearer token for all subsequent requests.
   ///
   /// - [token]: The token to set, or null to reset
   /// If null is passed, [resetToken] is called instead.
-  static void setToken(String? token) async {
+  static void setToken(String? token) {
     if (token == null) {
       resetToken();
       return;

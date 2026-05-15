@@ -3,7 +3,10 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:tsdtech_client_sdk/src/client/gateway-client/gateway_client.dart';
 import 'package:tsdtech_client_sdk/src/services/gateway-services/gateway_service.dart';
-import 'package:tsdtech_client_sdk/src/models/gateway-models/gateway_dtos.dart';
+import 'package:tsdtech_client_sdk/src/dto/gateway/public_key_response.dart';
+import 'package:tsdtech_client_sdk/src/dto/gateway/card_payment_request.dart';
+import 'package:tsdtech_client_sdk/src/dto/gateway/payment_status_response.dart';
+import 'package:tsdtech_client_sdk/src/dto/gateway/gateway_payment_status.dart';
 import 'package:tsdtech_client_sdk/src/utils/card-utils/card_encryptor.dart';
 
 class MockInterceptor extends Interceptor {
@@ -34,7 +37,7 @@ void main() {
         handler.resolve(Response(
           requestOptions: options,
           statusCode: 200,
-          data: {'keyId': 'key_123', 'publicKey': 'pem_value'},
+          data: {'keyId': 'key_123', 'pemPublicKey': 'pem_value'},
         ));
       }
     }));
@@ -43,7 +46,7 @@ void main() {
 
     expect(result.isSuccess, true);
     expect(result.value?.keyId, 'key_123');
-    expect(result.value?.publicKey, 'pem_value');
+    expect(result.value?.pemPublicKey, 'pem_value');
   });
 
   test('payWithCard returns PaymentStatusResponse approved', () async {
@@ -59,13 +62,13 @@ void main() {
 
     final result = await service.payWithCard(CardPaymentRequest(
       depositRequestId: 'req_456',
-      encryptedCardData: 'encrypted_data',
+      encryptedCard: 'encrypted_data',
       keyId: 'key_123',
     ));
 
     expect(result.isSuccess, true);
     expect(result.value?.depositRequestId, 'req_456');
-    expect(result.value?.status, 'approved');
+    expect(result.value?.status, GatewayPaymentStatus.approved);
   });
 
   test('getPaymentStatus returns PaymentStatusResponse processing', () async {
@@ -84,7 +87,7 @@ void main() {
 
     expect(result.isSuccess, true);
     expect(result.value?.depositRequestId, 'req_789');
-    expect(result.value?.status, 'processing');
+    expect(result.value?.status, GatewayPaymentStatus.processing);
   });
 
   test('payWithEncryptedCard executes the complete flow: encrypt + pay',
@@ -92,7 +95,7 @@ void main() {
     client.dio.interceptors.add(MockInterceptor((options, handler) {
       if (options.path == '/payments/card' && options.method == 'POST') {
         // Validation that the data was encrypted by CardEncryptor mock ('encrypted_payload_mock')
-        expect(options.data['encryptedCardData'], 'encrypted_payload_mock');
+        expect(options.data['encryptedCard'], 'encrypted_payload_mock');
 
         handler.resolve(Response(
           requestOptions: options,
@@ -119,7 +122,7 @@ void main() {
 
     expect(result.isSuccess, true);
     expect(result.value?.depositRequestId, 'req_abc');
-    expect(result.value?.status, 'approved');
+    expect(result.value?.status, GatewayPaymentStatus.approved);
   });
 
   test('returns ValueResult.failure with message from gateway on error',
@@ -140,7 +143,7 @@ void main() {
 
     final result = await service.payWithCard(CardPaymentRequest(
       depositRequestId: 'req_err',
-      encryptedCardData: 'data',
+      encryptedCard: 'data',
       keyId: 'key_123',
     ));
 

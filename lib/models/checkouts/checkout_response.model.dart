@@ -1,6 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:tsdtech_client_sdk/models/checkouts/pix_data.model.dart';
-import 'package:tsdtech_client_sdk/models/checkouts/bill_data.model.dart';
 
 part 'checkout_response.model.g.dart';
 
@@ -9,7 +8,6 @@ class CheckoutResponse {
   final String paymentMethod;
   final String? paymentId;
   final PixData? pix;
-  final BillData? bill;
   final String? status;
   final String? depositRequestId;
   final String? gatewayBaseUrl;
@@ -19,7 +17,6 @@ class CheckoutResponse {
       {required this.paymentMethod,
       this.paymentId,
       this.pix,
-      this.bill,
       this.status,
       this.depositRequestId,
       this.gatewayBaseUrl,

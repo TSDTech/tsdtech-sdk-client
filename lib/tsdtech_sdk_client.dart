@@ -3,6 +3,8 @@
 // Exports main DTOs and models so consumers can import a single
 // package entrypoint instead of deeper `models/...` paths.
 
+export 'tsdtech_sdk_ui.dart';
+
 // Core helpers
 export 'models/value_result.dart';
 
@@ -18,7 +20,6 @@ export 'src/crypto/card_encryptor.dart';
 export 'models/checkouts/checkout_request.model.dart';
 export 'models/checkouts/checkout_response.model.dart';
 export 'models/checkouts/pix_data.model.dart';
-export 'models/checkouts/bill_data.model.dart';
 export 'models/checkouts/payment_method.model.dart';
 export 'models/checkouts/calculate_item.model.dart';
 export 'models/checkouts/calculate_request.model.dart';

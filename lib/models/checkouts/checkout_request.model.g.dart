@@ -18,11 +18,6 @@ CheckoutRequest _$CheckoutRequestFromJson(Map<String, dynamic> json) =>
           ? null
           : CardPaymentData.fromJson(json['card'] as Map<String, dynamic>),
       depositRequestId: json['depositRequestId'] as String?,
-      billPayer: json['billPayer'] == null
-          ? null
-          : BillPayerData.fromJson(json['billPayer'] as Map<String, dynamic>),
-      billDueDate: json['billDueDate'] as String?,
-      billInstructions: json['billInstructions'] as String?,
       installmentNumber: (json['installmentNumber'] as num?)?.toInt(),
     );
 
@@ -34,9 +29,6 @@ Map<String, dynamic> _$CheckoutRequestToJson(CheckoutRequest instance) =>
       'encryptedCard': instance.encryptedCard,
       'card': instance.card?.toJson(),
       'depositRequestId': instance.depositRequestId,
-      'billPayer': instance.billPayer?.toJson(),
-      'billDueDate': instance.billDueDate,
-      'billInstructions': instance.billInstructions,
       'installmentNumber': instance.installmentNumber,
     };
 
@@ -56,24 +48,4 @@ Map<String, dynamic> _$CardPaymentDataToJson(CardPaymentData instance) =>
       'cardExpiryDate': instance.cardExpiryDate,
       'securityCode': instance.securityCode,
       'preAuthorizedTransaction': instance.preAuthorizedTransaction,
-    };
-
-BillPayerData _$BillPayerDataFromJson(Map<String, dynamic> json) =>
-    BillPayerData(
-      name: json['name'] as String,
-      address: json['address'] as String,
-      neighborhood: json['neighborhood'] as String,
-      city: json['city'] as String,
-      zipCode: json['zipCode'] as String,
-      state: json['state'] as String,
-    );
-
-Map<String, dynamic> _$BillPayerDataToJson(BillPayerData instance) =>
-    <String, dynamic>{
-      'name': instance.name,
-      'address': instance.address,
-      'neighborhood': instance.neighborhood,
-      'city': instance.city,
-      'zipCode': instance.zipCode,
-      'state': instance.state,
     };

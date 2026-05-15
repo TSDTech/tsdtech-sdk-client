@@ -1,4 +1,4 @@
-enum PaymentMethodType { pix, card, bill }
+enum PaymentMethodType { pix, card }
 
 enum PaymentStatus { processing, waitingPayment, success, failed }
 
@@ -7,8 +7,6 @@ class PaymentResult {
   final PaymentMethodType method;
   final PaymentStatus status;
   final String? pixQrCode;
-  final String? billBarcode;
-  final String? billUrl;
   final String? depositRequestId;
   final String? message;
 
@@ -17,8 +15,6 @@ class PaymentResult {
     required this.method,
     required this.status,
     this.pixQrCode,
-    this.billBarcode,
-    this.billUrl,
     this.depositRequestId,
     this.message,
   });

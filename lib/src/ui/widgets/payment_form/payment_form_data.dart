@@ -12,5 +12,4 @@ class PaymentFormData {
 
   bool get isCard => method == PaymentFormMethod.card;
   bool get isPix => method == PaymentFormMethod.pix;
-  bool get isBill => method == PaymentFormMethod.bill;
 }

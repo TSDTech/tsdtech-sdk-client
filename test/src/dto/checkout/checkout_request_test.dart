@@ -23,41 +23,12 @@ void main() {
       expect(parsed.preAuthorizedTransaction, card.preAuthorizedTransaction);
     });
 
-    test('BillPayerData toJson/fromJson round-trip', () {
-      final payer = BillPayerData(
-        name: 'John',
-        address: 'Some street',
-        neighborhood: 'Center',
-        city: 'City',
-        zipCode: '00000',
-        state: 'ST',
-      );
-
-      final json = payer.toJson();
-      final parsed = BillPayerData.fromJson(json);
-
-      expect(parsed.name, payer.name);
-      expect(parsed.address, payer.address);
-      expect(parsed.neighborhood, payer.neighborhood);
-      expect(parsed.city, payer.city);
-      expect(parsed.zipCode, payer.zipCode);
-      expect(parsed.state, payer.state);
-    });
-
     test('toJson/fromJson round-trip with encryptedCard and card data', () {
       final card = CardPaymentData(
         cardHolderName: 'John Doe',
         cardNumber: '4111111111111111',
         cardExpiryDate: '12/30',
         securityCode: '123',
-      );
-      final payer = BillPayerData(
-        name: 'John',
-        address: 'Some street',
-        neighborhood: 'Center',
-        city: 'City',
-        zipCode: '00000',
-        state: 'ST',
       );
 
       final req = CheckoutRequest(
@@ -66,9 +37,6 @@ void main() {
         totalValue: 10.0,
         encryptedCard: 'encrypted',
         card: card,
-        billPayer: payer,
-        billDueDate: '2026-05-14',
-        billInstructions: 'Pay by date',
         installmentNumber: 1,
       );
 
@@ -79,7 +47,6 @@ void main() {
       expect(parsed.totalValue, req.totalValue);
       expect(parsed.encryptedCard, req.encryptedCard);
       expect(parsed.card?.cardHolderName, req.card?.cardHolderName);
-      expect(parsed.billPayer?.name, req.billPayer?.name);
       expect(parsed.installmentNumber, req.installmentNumber);
     });
 

@@ -1,21 +1,15 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:tsdtech_client_sdk/src/components/checkout_states.dart';
 import 'package:tsdtech_client_sdk/src/components/payment_types.dart';
-
-// Imports internos (ajuste conforme seu projeto)
 import '../../core/services/intra-api/md-checkout/checkouts_service.dart';
 import '../../models/cart/cart_item.model.dart';
 import '../../models/checkouts/calculate_item.model.dart';
 import '../../models/checkouts/checkout_request.model.dart';
 import '../crypto/card_encryptor.dart';
 import '../components/payment_method_selector.dart';
-
-// Novas Views
 import 'views/card_payment_view.dart';
 import 'views/pix_payment_view.dart';
-import 'views/bill_payment_view.dart';
 
 class CheckoutWidget extends StatefulWidget {
   final List<CartItem> items;
@@ -26,7 +20,6 @@ class CheckoutWidget extends StatefulWidget {
   final void Function(PaymentStatus)? onStatusChange;
   final bool showPix;
   final bool showCard;
-  final bool showBill;
   final Widget? loadingWidget;
   final Widget? errorWidget;
 
@@ -40,7 +33,6 @@ class CheckoutWidget extends StatefulWidget {
     this.onStatusChange,
     this.showPix = true,
     this.showCard = true,
-    this.showBill = true,
     this.loadingWidget,
     this.errorWidget,
   });
@@ -64,8 +56,6 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
   // Estados dos pagamentos dinâmicos
   String? _pixQrCode;
   String? _pixCopyPasteCode;
-  String? _billBarcode;
-  String? _billDigitableLine;
   String? _paymentId;
   Timer? _pixPollingTimer;
 
@@ -74,7 +64,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
     super.initState();
     final initialMethod = widget.showPix
         ? PaymentMethodType.pix
-        : (widget.showCard ? PaymentMethodType.card : PaymentMethodType.bill);
+        : PaymentMethodType.card;
     _selectedMethod = ValueNotifier(initialMethod);
   }
 
@@ -117,8 +107,6 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
         return 'pix';
       case PaymentMethodType.card:
         return 'card';
-      case PaymentMethodType.bill:
-        return 'bill';
     }
   }
 
@@ -159,8 +147,6 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
         _paymentId = response.paymentId;
         _pixQrCode = response.pix?.qrCode;
         _pixCopyPasteCode = response.pix?.copyPasteCode;
-        _billBarcode = null;
-        _billDigitableLine = null;
         _notifyStatus(PaymentStatus.waitingPayment);
         
         if (_paymentId != null) {
@@ -170,17 +156,6 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
         _handleSuccess(
           response.paymentId ?? response.depositRequestId ?? 'card_${DateTime.now().millisecondsSinceEpoch}',
           depositRequestId: response.depositRequestId,
-        );
-      } else if (_selectedMethod.value == PaymentMethodType.bill) {
-        _billBarcode = response.bill?.barCode;
-        _billDigitableLine = response.bill?.digitableLine;
-        _pixQrCode = null;
-        _pixCopyPasteCode = null;
-        _notifyStatus(PaymentStatus.success);
-        _handleSuccess(
-          response.paymentId ?? 'bill_${DateTime.now().millisecondsSinceEpoch}',
-          billBarcode: _billBarcode,
-          message: 'Boleto gerado com sucesso.',
         );
       }
     } catch (error) {
@@ -235,8 +210,6 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
   void _handleSuccess(
     String transactionId, {
     String? pixQrCode,
-    String? billBarcode,
-    String? billUrl,
     String? depositRequestId,
     String? message,
   }) {
@@ -246,8 +219,6 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
       method: _selectedMethod.value,
       status: PaymentStatus.success,
       pixQrCode: pixQrCode,
-      billBarcode: billBarcode,
-      billUrl: billUrl,
       depositRequestId: depositRequestId,
       message: message,
     ));
@@ -287,14 +258,11 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                         // Resetamos as variáveis visuais de conclusão ao trocar de método
                         _pixQrCode = null;
                         _pixCopyPasteCode = null;
-                        _billBarcode = null;
-                        _billDigitableLine = null;
                         _pixPollingTimer?.cancel();
                         setState(() {});
                       },
                       showPix: widget.showPix,
                       showCard: widget.showCard,
-                      showBill: widget.showBill,
                     ),
                     const SizedBox(height: 24),
                     
@@ -311,17 +279,12 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                           expiryController: _expiryController,
                           securityCodeController: _securityCodeController,
                         ),
-                      PaymentMethodType.bill => BillPaymentView(
-                          barcode: _billBarcode,
-                          digitableLine: _billDigitableLine,
-                        ),
                     },
 
                     const SizedBox(height: 24),
                     
-                    // Oculta o botão se o PIX/Boleto já foram gerados
-                    if (!((method == PaymentMethodType.pix && _pixQrCode != null) || 
-                          (method == PaymentMethodType.bill && _billDigitableLine != null)))
+                    // Oculta o botão se o PIX já foi gerado
+                    if (!(method == PaymentMethodType.pix && _pixQrCode != null))
                       ElevatedButton(
                         onPressed: _processPayment,
                         style: ElevatedButton.styleFrom(

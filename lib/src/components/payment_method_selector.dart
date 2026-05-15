@@ -6,7 +6,6 @@ class PaymentMethodSelector extends StatelessWidget {
   final ValueChanged<PaymentMethodType> onChanged;
   final bool showPix;
   final bool showCard;
-  final bool showBill;
 
   const PaymentMethodSelector({
     super.key,
@@ -14,7 +13,6 @@ class PaymentMethodSelector extends StatelessWidget {
     required this.onChanged,
     this.showPix = true,
     this.showCard = true,
-    this.showBill = true,
   });
 
   @override
@@ -24,8 +22,6 @@ class PaymentMethodSelector extends StatelessWidget {
         if (showPix) _buildOption(PaymentMethodType.pix, 'PIX', Icons.qr_code),
         if (showCard)
           _buildOption(PaymentMethodType.card, 'Cartão', Icons.credit_card),
-        if (showBill)
-          _buildOption(PaymentMethodType.bill, 'Boleto', Icons.receipt),
       ],
     );
   }

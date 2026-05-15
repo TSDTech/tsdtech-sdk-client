@@ -1,15 +1,12 @@
-/// TSDTech SDK UI — drop-in Flutter widgets for payment integration.
-///
-/// Import this single library to access all public widgets, screens,
-/// configuration helpers, and theme utilities:
-///
-/// ```dart
-/// import 'package:tsdtech_sdk_ui/tsdtech_sdk_ui.dart';
-/// ```
 library tsdtech_sdk_ui;
 
-// Config
 export 'src/config/tsdtech_ui_config.dart';
-
-// Theme
 export 'src/theme/theme.dart';
+export 'src/components/card_form/card_brand.dart';
+export 'src/components/card_form/card_form_data.dart';
+export 'src/components/card_form/card_form_controller.dart';
+export 'src/components/card_form/card_form_fields.dart';
+export 'src/components/card_form/card_form.dart';
+export 'src/components/bill/bill_display.dart';
+export 'src/components/pix_display/pix_display.dart';
+export 'src/widgets/payment_form/payment_form.dart';

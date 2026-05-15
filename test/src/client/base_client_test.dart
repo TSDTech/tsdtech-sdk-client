@@ -42,9 +42,12 @@ void main() {
       expect(dio.options.headers.containsKey('Authorization'), isFalse);
     });
 
-    test('Timeout errors são mapeados para a mensagem correta (Serviço indisponível)', () async {
-      final requestOptions = RequestOptions(path: 'https://example.com/timeout');
-      final dioEx = DioException(requestOptions: requestOptions, type: DioExceptionType.connectionTimeout);
+    test('timeout errors mapped to friendly message', () async {
+      final requestOptions =
+          RequestOptions(path: 'https://example.com/timeout');
+      final dioEx = DioException(
+          requestOptions: requestOptions,
+          type: DioExceptionType.connectionTimeout);
       adapter.whenThrow('GET', '/timeout', dioEx);
 
       try {

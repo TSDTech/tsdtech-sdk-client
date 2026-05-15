@@ -50,7 +50,7 @@ void main() {
       expect(result.value!.totalValue, 123.45);
     });
 
-    test('createCheckout retorna CheckoutResponse contendo paymentId e status', () async {
+    test('createCheckout returns CheckoutResponse', () async {
       final responseJson = {
         'paymentMethod': 'pix',
         'paymentId': 'p1',
@@ -58,8 +58,8 @@ void main() {
       };
       adapter.when('POST', '/checkouts/client', responseJson);
 
-      // Usando array vazio de cart como definido no teste
-      final request = CheckoutRequest(cart: [], paymentMethod: 'pix', totalValue: 10.0);
+      final request =
+          CheckoutRequest(cart: [], paymentMethod: 'pix', totalValue: 10.0);
       final result = await CheckoutsService.instance.createCheckout(request);
 
       expect(result.isSuccess, isTrue);
@@ -67,8 +67,9 @@ void main() {
       expect(result.value!.status, 'pending');
     });
 
-    test('getPixStatus retorna string do status da transação', () async {
-      adapter.when('GET', '/checkouts/client/pix/status/p1', {'status': 'completed'});
+    test('getPixStatus returns status string', () async {
+      adapter.when(
+          'GET', '/checkouts/client/pix/status/p1', {'status': 'completed'});
 
       final result = await CheckoutsService.instance.getPixStatus('p1');
 
@@ -76,18 +77,19 @@ void main() {
       expect(result.value, 'completed');
     });
 
-    test('Erro na API devolve ValueResult.failure mapeado', () async {
-      final requestOptions = RequestOptions(path: 'https://example.com/checkouts/client/methods');
+    test('API error results in ValueResult.failure', () async {
+      final requestOptions =
+          RequestOptions(path: 'https://example.com/checkouts/client/methods');
       final response = Response(
           requestOptions: requestOptions,
-          data: {'error': {'message': 'api error mock'}},
+          data: {
+            'error': {'message': 'api error'}
+          },
           statusCode: 400);
-      
       final ex = DioException(
           requestOptions: requestOptions,
           response: response,
           type: DioExceptionType.badResponse);
-          
       adapter.whenThrow('GET', '/checkouts/client/methods', ex);
 
       final result = await CheckoutsService.instance.getPaymentMethods();

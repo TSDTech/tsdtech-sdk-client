@@ -24,7 +24,8 @@ class MockHttpClientAdapter implements HttpClientAdapter {
   }
 
   @override
-  Future<ResponseBody> fetch(RequestOptions options, Stream<dynamic>? requestStream, Future<void>? cancelFuture) async {
+  Future<ResponseBody> fetch(RequestOptions options,
+      Stream<dynamic>? requestStream, Future<void>? cancelFuture) async {
     requests.add(options);
     final method = options.method.toUpperCase();
     final path = options.path;
@@ -50,12 +51,15 @@ class MockHttpClientAdapter implements HttpClientAdapter {
         final entry = _responses[key]!;
         final bodyString = jsonEncode(entry['data']);
         return ResponseBody.fromString(bodyString, entry['status'] as int,
-            headers: {Headers.contentTypeHeader: [Headers.jsonContentType]});
+            headers: {
+              Headers.contentTypeHeader: [Headers.jsonContentType]
+            });
       }
     }
 
-    return ResponseBody.fromString('', 404,
-        headers: {Headers.contentTypeHeader: [Headers.jsonContentType]});
+    return ResponseBody.fromString('', 404, headers: {
+      Headers.contentTypeHeader: [Headers.jsonContentType]
+    });
   }
 
   @override

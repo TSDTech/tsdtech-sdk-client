@@ -10,7 +10,7 @@ class CheckoutRequest {
   final double totalValue;
   @deprecated
   final String? encryptedCard;
-  @deprecated 
+  @deprecated
   final CardPaymentData? card;
   final String? depositRequestId;
   final BillPayerData? billPayer;

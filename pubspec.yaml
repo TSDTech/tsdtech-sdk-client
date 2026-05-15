@@ -57,3 +57,24 @@ dev_dependencies:
   test: ^1.25.0
   mockito: ^5.4.0
   coverage: ^1.1.0
+
+flutter:
+  uses-material-design: true
+  fonts:
+    - family: Segoe UI Symbol
+      fonts:
+        - asset: assets/Segoe UI Symbol.ttf
+    - family: Open Sans
+      fonts:
+        - asset: assets/Open Sans Light.ttf
+          weight: 300
+        - asset: assets/Open Sans Regular.ttf
+          weight: 400
+        - asset: assets/Open Sans Semibold.ttf
+          weight: 600
+        - asset: assets/Open Sans Bold.ttf
+          weight: 700
+
+  assets:
+    - assets/
+    - config.json

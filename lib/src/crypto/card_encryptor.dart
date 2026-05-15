@@ -8,7 +8,8 @@ class CardEncryptor {
   // Utiliza o padrão exigido para PCI: RSA/ECB/OAEPWithSHA-256AndMGF1Padding.
   // Retorna o ciphertext em Base64.
   static String encrypt(String pemPublicKey, CardPaymentData cardData) {
-    if (pemPublicKey.trim().isEmpty) {
+    final normalizedPem = pemPublicKey.trim();
+    if (normalizedPem.isEmpty) {
       throw const FormatException('A chave pública PEM não pode estar vazia.');
     }
 
@@ -17,7 +18,7 @@ class CardEncryptor {
     try {
       final parser = RSAKeyParser();
       // O cast é necessário pois o parser pode retornar RSAPrivateKey dependendo do PEM
-      publicKey = parser.parse(pemPublicKey) as RSAPublicKey;
+      publicKey = parser.parse(normalizedPem) as RSAPublicKey;
     } catch (e) {
       throw FormatException('Falha ao fazer parse da chave pública PEM. Formato inválido. Detalhes: $e');
     }

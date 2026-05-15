@@ -25,7 +25,6 @@ dependencies:
   auto_route: ^11.1.0
   auto_route_generator: ^10.5.0
   file_picker: ^11.0.2
-  intl: ^0.20.2
   flutter_localizations:
     sdk: flutter
   mask_text_input_formatter: ^2.9.0
@@ -45,10 +44,10 @@ dependencies:
   barcode_widget: ^2.0.4
   encrypt: ^5.0.3
   pointycastle: ^3.9.1
-  path: ^1.9.1
-  platform: ^3.1.5
   meta: ^1.12.0
   intl: ^0.20.2
+  flutter:
+    sdk: flutter
 
 dev_dependencies:
   flutter_test:
@@ -60,5 +59,3 @@ dev_dependencies:
   test: ^1.25.0
   mockito: ^5.4.0
   coverage: ^1.1.0
-  build_runner: ^2.4.15
-  json_serializable: ^6.9.0

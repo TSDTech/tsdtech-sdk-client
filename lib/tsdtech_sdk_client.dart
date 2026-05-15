@@ -1,7 +1,7 @@
-/// Public barrel file for the `tsdtech_client_sdk` package.
-///
-/// Exports main DTOs and models so consumers can import a single
-/// package entrypoint instead of deeper `models/...` paths.
+// Public barrel file for the `tsdtech_client_sdk` package.
+//
+// Exports main DTOs and models so consumers can import a single
+// package entrypoint instead of deeper `models/...` paths.
 
 // Core helpers
 export 'models/value_result.dart';
@@ -23,6 +23,14 @@ export 'models/checkouts/payment_method.model.dart';
 export 'models/checkouts/calculate_item.model.dart';
 export 'models/checkouts/calculate_request.model.dart';
 export 'models/checkouts/calculate_response.model.dart';
+export 'models/cart/cart_item.model.dart';
+
+// Components
+export 'src/components/payment_types.dart';
+export 'src/components/payment_method_selector.dart';
+export 'src/components/checkout_states.dart';
+export 'src/components/checkout_success_state.dart';
+export 'src/widgets/checkout_widget.dart';
 
 // Checkout service
 export 'core/services/intra-api/md-checkout/checkouts_service.dart';

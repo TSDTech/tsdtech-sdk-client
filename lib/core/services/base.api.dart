@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:meta/meta.dart';
+import 'package:tsdtech_client_sdk/core/local_storage/shared_prefs_helper.dart';
 
 /// Static HTTP client base class using Dio for making API requests.
 ///
@@ -65,7 +65,8 @@ abstract class BaseApi {
     } on DioException catch (e) {
       _debugLog('[BaseApi] DioError: ${e.type} ${e.message}');
       if (e.response != null) {
-        _debugLog('[BaseApi] response: ${e.response?.statusCode} ${e.response?.data}');
+        _debugLog(
+            '[BaseApi] response: ${e.response?.statusCode} ${e.response?.data}');
       }
       if (_isServiceUnavailable(e)) {
         throw Exception(
@@ -81,6 +82,20 @@ abstract class BaseApi {
   /// - [queryParameters]: Optional map of query parameters
   /// - [headers]: Optional map of additional headers
   /// - Returns: A [Future] containing the [Response]
+  static Map<String, dynamic>? _mergeHeaders(Map<String, dynamic>? headers) {
+    final merged = <String, dynamic>{};
+    if (headers != null) {
+      merged.addAll(headers);
+    }
+
+    final token = SharedPrefsHelper.authToken;
+    if (token != null && !merged.containsKey('Authorization')) {
+      merged['Authorization'] = 'Bearer $token';
+    }
+
+    return merged.isEmpty ? null : merged;
+  }
+
   static Future<Response<dynamic>> get(
     String path, {
     Map<String, dynamic>? queryParameters,
@@ -89,7 +104,7 @@ abstract class BaseApi {
     return _executeRequest(() => _dio.get(
           path,
           queryParameters: queryParameters,
-          options: headers != null ? Options(headers: headers) : null,
+          options: Options(headers: _mergeHeaders(headers)),
         ));
   }
 
@@ -104,7 +119,7 @@ abstract class BaseApi {
     return _executeRequest(() => _dio.post(
           path,
           data: data,
-          options: headers != null ? Options(headers: headers) : null,
+          options: Options(headers: _mergeHeaders(headers)),
         ));
   }
 
@@ -119,7 +134,7 @@ abstract class BaseApi {
     return _executeRequest(() => _dio.put(
           path,
           data: data,
-          options: headers != null ? Options(headers: headers) : null,
+          options: Options(headers: _mergeHeaders(headers)),
         ));
   }
 
@@ -134,7 +149,7 @@ abstract class BaseApi {
     return _executeRequest(() => _dio.patch(
           path,
           data: data,
-          options: headers != null ? Options(headers: headers) : null,
+          options: Options(headers: _mergeHeaders(headers)),
         ));
   }
 
@@ -149,7 +164,7 @@ abstract class BaseApi {
     return _executeRequest(() => _dio.delete(
           path,
           data: data,
-          options: headers != null ? Options(headers: headers) : null,
+          options: Options(headers: _mergeHeaders(headers)),
         ));
   }
 

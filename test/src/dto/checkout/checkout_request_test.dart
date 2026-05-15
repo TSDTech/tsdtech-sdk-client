@@ -20,8 +20,7 @@ void main() {
       expect(parsed.cardNumber, card.cardNumber);
       expect(parsed.cardExpiryDate, card.cardExpiryDate);
       expect(parsed.securityCode, card.securityCode);
-      expect(
-          parsed.preAuthorizedTransaction, card.preAuthorizedTransaction);
+      expect(parsed.preAuthorizedTransaction, card.preAuthorizedTransaction);
     });
 
     test('BillPayerData toJson/fromJson round-trip', () {
@@ -85,7 +84,8 @@ void main() {
     });
 
     test('toJson/fromJson round-trip without encryptedCard', () {
-      final req = CheckoutRequest(cart: [], paymentMethod: 'pix', totalValue: 0.0);
+      final req =
+          CheckoutRequest(cart: [], paymentMethod: 'pix', totalValue: 0.0);
       final json = req.toJson();
       final parsed = CheckoutRequest.fromJson(json);
       expect(parsed.paymentMethod, 'pix');

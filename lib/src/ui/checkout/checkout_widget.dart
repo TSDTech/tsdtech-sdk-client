@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:tsdtech_client_sdk/src/components/checkout_states.dart';
-import 'package:tsdtech_client_sdk/src/components/payment_types.dart';
-import '../../core/services/intra-api/md-checkout/checkouts_service.dart';
-import '../../models/cart/cart_item.model.dart';
-import '../../models/checkouts/calculate_item.model.dart';
-import '../../models/checkouts/checkout_request.model.dart';
-import '../crypto/card_encryptor.dart';
-import '../components/payment_method_selector.dart';
+import '../../../core/services/intra-api/md-checkout/checkouts_service.dart';
+import '../../../models/cart/cart_item.model.dart';
+import '../../../models/checkouts/calculate_item.model.dart';
+import '../../../models/checkouts/checkout_request.model.dart';
+import '../../crypto/card_encryptor.dart';
+import 'checkout_states.dart';
+import 'payment_method_selector.dart';
+import 'payment_types.dart';
 import 'views/card_payment_view.dart';
 import 'views/pix_payment_view.dart';
 

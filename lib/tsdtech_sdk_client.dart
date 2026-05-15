@@ -3,6 +3,8 @@
 // Exports main DTOs and models so consumers can import a single
 // package entrypoint instead of deeper `models/...` paths.
 
+export 'tsdtech_sdk_ui.dart';
+
 // Core helpers
 export 'models/value_result.dart';
 

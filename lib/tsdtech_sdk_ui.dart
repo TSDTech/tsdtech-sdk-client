@@ -1,6 +1,7 @@
 library tsdtech_sdk_ui;
 
 export 'src/ui/config/tsdtech_ui_config.dart';
+export 'src/navigation/tsdtech_ui.dart';
 export 'src/ui/checkout/checkout.dart';
 export 'src/ui/theme/theme.dart';
 export 'src/ui/components/card_form/card_brand.dart';

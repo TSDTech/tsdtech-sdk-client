@@ -16,17 +16,65 @@ environment:
 
 dependencies:
   dio: ^5.3.3
-  http: ^1.4.0
-  json_annotation: ^4.9.0
-  universal_io: ^2.2.2
-  path: ^1.9.1
-  platform: ^3.1.5
-  meta: ^1.12.0
+  get_it: ^9.2.1
+  shared_preferences: ^2.5.3
+  shared_preferences_web: ^2.0.0
+  url_launcher: ^6.3.1
+  flutter_svg: ^2.1.0
+  pin_code_fields: ^9.3.0
+  auto_route: ^11.1.0
+  auto_route_generator: ^10.5.0
+  file_picker: ^11.0.2
   intl: ^0.20.2
+  flutter_localizations:
+    sdk: flutter
+  mask_text_input_formatter: ^2.9.0
+  path: ^1.9.1
+  http: ^1.4.0
+  lucide_icons: ^0.257.0
+  hugeicons: ^1.1.7
+  json_annotation: ^4.9.0
+  google_fonts: ^8.1.0
+  lucide_icons_flutter: ^3.0.6
+  geolocator: ^14.0.2
+  shimmer: ^3.0.0
+  onesignal_flutter: ^5.2.5
+  platform: ^3.1.5
+  universal_io: ^2.2.2
+  qr_flutter: ^4.1.0
+  barcode_widget: ^2.0.4
+  encrypt: ^5.0.3
+  pointycastle: ^3.9.1
+  meta: ^1.12.0
 
 dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  build_runner: ^2.4.15
+  mobx_codegen: ^2.3.0
+  json_serializable: ^6.9.0
   test: ^1.25.0
   mockito: ^5.4.0
   coverage: ^1.1.0
-  build_runner: ^2.4.15
-  json_serializable: ^6.9.0
+
+flutter:
+  uses-material-design: true
+  fonts:
+    - family: Segoe UI Symbol
+      fonts:
+        - asset: assets/Segoe UI Symbol.ttf
+    - family: Open Sans
+      fonts:
+        - asset: assets/Open Sans Light.ttf
+          weight: 300
+        - asset: assets/Open Sans Regular.ttf
+          weight: 400
+        - asset: assets/Open Sans Semibold.ttf
+          weight: 600
+        - asset: assets/Open Sans Bold.ttf
+          weight: 700
+
+  assets:
+    - assets/
+    - config.json

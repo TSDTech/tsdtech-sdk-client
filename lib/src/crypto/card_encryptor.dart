@@ -17,6 +17,7 @@ class CardEncryptor {
 
     try {
       final parser = RSAKeyParser();
+      // O cast é necessário pois o parser pode retornar RSAPrivateKey dependendo do PEM
       publicKey = parser.parse(normalizedPem) as RSAPublicKey;
     } catch (e) {
       throw FormatException('Falha ao fazer parse da chave pública PEM. Formato inválido. Detalhes: $e');

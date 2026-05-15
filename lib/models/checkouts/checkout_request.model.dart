@@ -8,8 +8,11 @@ class CheckoutRequest {
   final List<CalculateItem> cart;
   final String paymentMethod;
   final double totalValue;
+  @deprecated
   final String? encryptedCard;
+  @deprecated 
   final CardPaymentData? card;
+  final String? depositRequestId;
   final BillPayerData? billPayer;
   final String? billDueDate;
   final String? billInstructions;
@@ -21,6 +24,7 @@ class CheckoutRequest {
     required this.totalValue,
     this.encryptedCard,
     this.card,
+    this.depositRequestId,
     this.billPayer,
     this.billDueDate,
     this.billInstructions,

@@ -11,13 +11,19 @@ class CheckoutResponse {
   final PixData? pix;
   final BillData? bill;
   final String? status;
+  final String? depositRequestId;
+  final String? gatewayBaseUrl;
+  final String? publicKeyUrl;
 
   CheckoutResponse(
       {required this.paymentMethod,
       this.paymentId,
       this.pix,
       this.bill,
-      this.status});
+      this.status,
+      this.depositRequestId,
+      this.gatewayBaseUrl,
+      this.publicKeyUrl});
 
   factory CheckoutResponse.fromJson(Map<String, dynamic> json) =>
       _$CheckoutResponseFromJson(json);

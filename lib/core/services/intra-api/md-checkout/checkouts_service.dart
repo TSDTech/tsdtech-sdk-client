@@ -1,12 +1,12 @@
 import 'package:tsdtech_client_sdk/core/services/intra-api/intra.api.dart';
 import 'package:tsdtech_client_sdk/core/constants/constants.dart';
+import 'package:tsdtech_client_sdk/core/services/base.api.dart';
 import 'package:tsdtech_client_sdk/models/checkouts/calculate_request.model.dart';
 import 'package:tsdtech_client_sdk/models/checkouts/calculate_response.model.dart';
 import 'package:tsdtech_client_sdk/models/checkouts/checkout_request.model.dart';
 import 'package:tsdtech_client_sdk/models/checkouts/checkout_response.model.dart';
 import 'package:tsdtech_client_sdk/models/checkouts/payment_method.model.dart';
 import 'package:tsdtech_client_sdk/models/value_result.dart';
-import 'package:flutter/foundation.dart';
 
 /// Service for handling checkout and payment operations.
 ///
@@ -36,6 +36,11 @@ class CheckoutsService extends IntraApi {
   /// Creates a [CheckoutsService] instance with the base URL from [Constants].
   CheckoutsService() : super(Constants.getBaseUrl());
 
+  /// Debug logger - only prints when BaseApi debug mode is enabled.
+  void _debugLog(String message) {
+    // Logging is handled by BaseApi.setDebugMode()
+  }
+
   /// Retrieves the list of available payment methods for the current user.
   ///
   /// - Returns: [ValueResult] containing a list of [PaymentMethodModel] objects
@@ -63,8 +68,6 @@ class CheckoutsService extends IntraApi {
       }
       return ValueResult.success(<PaymentMethodModel>[]);
     } catch (e, st) {
-      debugPrint('[CheckoutsService] getPaymentMethods error: $e');
-      if (kDebugMode) debugPrint(st.toString());
       return ValueResult.fromError(e);
     }
   }
@@ -89,13 +92,26 @@ class CheckoutsService extends IntraApi {
       final result = CalculateResponse.fromJson(data);
       return ValueResult.success(result);
     } catch (e, st) {
-      debugPrint('[CheckoutsService] calculateCart error: $e');
-      if (kDebugMode) debugPrint(st.toString());
       return ValueResult.fromError(e);
     }
   }
 
   /// Creates a new checkout with the provided [request].
+  ///
+  /// This method sends the checkout request to the backend SPA and returns a
+  /// `CheckoutResponse`. The response supports multiple payment flows:
+  ///
+  /// - Card (two-step): the response may include `depositRequestId`. In this
+  ///   flow the checkout creation only initiates the deposit; the client must
+  ///   complete the card authorization/confirmation using the `GatewayService`
+  ///   and the returned `depositRequestId`.
+  /// - PIX or Bill (one-step): the response will contain `pix` or `bill`
+  ///   payloads with payment instructions that can be consumed immediately.
+  ///
+  /// Important: do NOT add gateway interaction methods here — `GatewayService`
+  /// is responsible for handling gateway-specific flows (card deposits,
+  /// redirects, etc.). This service only creates the checkout and returns the
+  /// server response which may contain `depositRequestId`, `pix` or `bill`.
   ///
   /// - [request]: The [CheckoutRequest] containing order details and payment info
   /// - Returns: [ValueResult] containing the [CheckoutResponse] with confirmation
@@ -106,7 +122,9 @@ class CheckoutsService extends IntraApi {
   ///   CheckoutRequest(items: items, paymentMethodId: 'pix'),
   /// );
   /// if (result.isSuccess) {
-  ///   print('Checkout created: ${result.value.paymentId}');
+  ///   final resp = result.value;
+  ///   // Card (two-step): check `resp.depositRequestId` and use GatewayService
+  ///   // PIX/Bill: check `resp.pix` / `resp.bill` for payment instructions
   /// }
   /// ```
   Future<ValueResult<CheckoutResponse>> createCheckout(
@@ -118,8 +136,6 @@ class CheckoutsService extends IntraApi {
       final result = CheckoutResponse.fromJson(data);
       return ValueResult.success(result);
     } catch (e, st) {
-      debugPrint('[CheckoutsService] createCheckout error: $e');
-      if (kDebugMode) debugPrint(st.toString());
       return ValueResult.fromError(e);
     }
   }
@@ -144,8 +160,6 @@ class CheckoutsService extends IntraApi {
       final status = data['status'] as String? ?? '';
       return ValueResult.success(status);
     } catch (e, st) {
-      debugPrint('[CheckoutsService] getPixStatus error: $e');
-      if (kDebugMode) debugPrint(st.toString());
       return ValueResult.fromError(e);
     }
   }

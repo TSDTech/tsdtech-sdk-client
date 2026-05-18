@@ -124,6 +124,38 @@ mixin _$CardFormStore on CardFormStoreBase, Store {
     });
   }
 
+  late final _$formVersionAtom =
+      Atom(name: 'CardFormStoreBase.formVersion', context: context);
+
+  @override
+  int get formVersion {
+    _$formVersionAtom.reportRead();
+    return super.formVersion;
+  }
+
+  @override
+  set formVersion(int value) {
+    _$formVersionAtom.reportWrite(value, super.formVersion, () {
+      super.formVersion = value;
+    });
+  }
+
+  late final _$cvvFieldVersionAtom =
+      Atom(name: 'CardFormStoreBase.cvvFieldVersion', context: context);
+
+  @override
+  int get cvvFieldVersion {
+    _$cvvFieldVersionAtom.reportRead();
+    return super.cvvFieldVersion;
+  }
+
+  @override
+  set cvvFieldVersion(int value) {
+    _$cvvFieldVersionAtom.reportWrite(value, super.cvvFieldVersion, () {
+      super.cvvFieldVersion = value;
+    });
+  }
+
   late final _$CardFormStoreBaseActionController =
       ActionController(name: 'CardFormStoreBase', context: context);
 
@@ -166,6 +198,17 @@ mixin _$CardFormStore on CardFormStoreBase, Store {
         name: 'CardFormStoreBase.updateCvv');
     try {
       return super.updateCvv(value);
+    } finally {
+      _$CardFormStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void clearCvv() {
+    final _$actionInfo = _$CardFormStoreBaseActionController.startAction(
+        name: 'CardFormStoreBase.clearCvv');
+    try {
+      return super.clearCvv();
     } finally {
       _$CardFormStoreBaseActionController.endAction(_$actionInfo);
     }
@@ -216,6 +259,17 @@ mixin _$CardFormStore on CardFormStoreBase, Store {
   }
 
   @override
+  void resetForm() {
+    final _$actionInfo = _$CardFormStoreBaseActionController.startAction(
+        name: 'CardFormStoreBase.resetForm');
+    try {
+      return super.resetForm();
+    } finally {
+      _$CardFormStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 cardNumber: ${cardNumber},
@@ -224,6 +278,8 @@ expiryDate: ${expiryDate},
 cvv: ${cvv},
 taxId: ${taxId},
 brand: ${brand},
+formVersion: ${formVersion},
+cvvFieldVersion: ${cvvFieldVersion},
 data: ${data},
 isAmex: ${isAmex},
 isEmpty: ${isEmpty}

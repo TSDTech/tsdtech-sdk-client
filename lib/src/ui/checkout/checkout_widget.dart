@@ -14,9 +14,8 @@ import 'views/card_payment_view.dart';
 import 'views/pix_payment_view.dart';
 
 class CheckoutWidgetController {
-  CheckoutWidgetController({
-    PaymentMethodType initialMethod = PaymentMethodType.pix,
-  }) : selectedMethod = ValueNotifier(initialMethod);
+  CheckoutWidgetController()
+      : selectedMethod = ValueNotifier(PaymentMethodType.pix);
 
   final ValueNotifier<PaymentMethodType> selectedMethod;
   final ValueNotifier<bool> isLoading = ValueNotifier(false);

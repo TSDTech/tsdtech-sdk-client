@@ -150,8 +150,143 @@ mixin _$CheckoutStore on CheckoutStoreBase, Store {
     });
   }
 
+  late final _$cardHolderNameAtom =
+      Atom(name: 'CheckoutStoreBase.cardHolderName', context: context);
+
+  @override
+  String get cardHolderName {
+    _$cardHolderNameAtom.reportRead();
+    return super.cardHolderName;
+  }
+
+  @override
+  set cardHolderName(String value) {
+    _$cardHolderNameAtom.reportWrite(value, super.cardHolderName, () {
+      super.cardHolderName = value;
+    });
+  }
+
+  late final _$cardNumberAtom =
+      Atom(name: 'CheckoutStoreBase.cardNumber', context: context);
+
+  @override
+  String get cardNumber {
+    _$cardNumberAtom.reportRead();
+    return super.cardNumber;
+  }
+
+  @override
+  set cardNumber(String value) {
+    _$cardNumberAtom.reportWrite(value, super.cardNumber, () {
+      super.cardNumber = value;
+    });
+  }
+
+  late final _$expiryDateAtom =
+      Atom(name: 'CheckoutStoreBase.expiryDate', context: context);
+
+  @override
+  String get expiryDate {
+    _$expiryDateAtom.reportRead();
+    return super.expiryDate;
+  }
+
+  @override
+  set expiryDate(String value) {
+    _$expiryDateAtom.reportWrite(value, super.expiryDate, () {
+      super.expiryDate = value;
+    });
+  }
+
+  late final _$securityCodeAtom =
+      Atom(name: 'CheckoutStoreBase.securityCode', context: context);
+
+  @override
+  String get securityCode {
+    _$securityCodeAtom.reportRead();
+    return super.securityCode;
+  }
+
+  @override
+  set securityCode(String value) {
+    _$securityCodeAtom.reportWrite(value, super.securityCode, () {
+      super.securityCode = value;
+    });
+  }
+
+  late final _$cardFormVersionAtom =
+      Atom(name: 'CheckoutStoreBase.cardFormVersion', context: context);
+
+  @override
+  int get cardFormVersion {
+    _$cardFormVersionAtom.reportRead();
+    return super.cardFormVersion;
+  }
+
+  @override
+  set cardFormVersion(int value) {
+    _$cardFormVersionAtom.reportWrite(value, super.cardFormVersion, () {
+      super.cardFormVersion = value;
+    });
+  }
+
   late final _$CheckoutStoreBaseActionController =
       ActionController(name: 'CheckoutStoreBase', context: context);
+
+  @override
+  void updateCardHolderName(String value) {
+    final _$actionInfo = _$CheckoutStoreBaseActionController.startAction(
+        name: 'CheckoutStoreBase.updateCardHolderName');
+    try {
+      return super.updateCardHolderName(value);
+    } finally {
+      _$CheckoutStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void updateCardNumber(String value) {
+    final _$actionInfo = _$CheckoutStoreBaseActionController.startAction(
+        name: 'CheckoutStoreBase.updateCardNumber');
+    try {
+      return super.updateCardNumber(value);
+    } finally {
+      _$CheckoutStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void updateExpiryDate(String value) {
+    final _$actionInfo = _$CheckoutStoreBaseActionController.startAction(
+        name: 'CheckoutStoreBase.updateExpiryDate');
+    try {
+      return super.updateExpiryDate(value);
+    } finally {
+      _$CheckoutStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void updateSecurityCode(String value) {
+    final _$actionInfo = _$CheckoutStoreBaseActionController.startAction(
+        name: 'CheckoutStoreBase.updateSecurityCode');
+    try {
+      return super.updateSecurityCode(value);
+    } finally {
+      _$CheckoutStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void resetCardForm() {
+    final _$actionInfo = _$CheckoutStoreBaseActionController.startAction(
+        name: 'CheckoutStoreBase.resetCardForm');
+    try {
+      return super.resetCardForm();
+    } finally {
+      _$CheckoutStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
 
   @override
   void selectMethod(PaymentMethodType method) {
@@ -252,6 +387,11 @@ pixQrCode: ${pixQrCode},
 pixCopyPasteCode: ${pixCopyPasteCode},
 paymentId: ${paymentId},
 paymentResult: ${paymentResult},
+cardHolderName: ${cardHolderName},
+cardNumber: ${cardNumber},
+expiryDate: ${expiryDate},
+securityCode: ${securityCode},
+cardFormVersion: ${cardFormVersion},
 hasError: ${hasError},
 hasGeneratedPix: ${hasGeneratedPix},
 isPixSelected: ${isPixSelected},

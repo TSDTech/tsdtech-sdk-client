@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:mobx/mobx.dart';
 import 'package:tsdtech_client_sdk/models/services/service.model.dart';
 import 'package:tsdtech_client_sdk/tsdtech_sdk_client.dart';
+
+part 'main.g.dart';
+
+final ExampleShowcaseStore _exampleShowcaseStore = ExampleShowcaseStore();
 
 void main() {
 	_configureDemoTheme(DemoThemePreset.brand);
@@ -54,83 +60,67 @@ TsdtechThemeData _themeForPreset(DemoThemePreset preset) {
 	}
 }
 
-class ExampleApp extends StatefulWidget {
+class ExampleApp extends StatelessWidget {
 	const ExampleApp({super.key});
 
 	@override
-	State<ExampleApp> createState() => _ExampleAppState();
-}
-
-class _ExampleAppState extends State<ExampleApp> {
-	DemoThemePreset _preset = DemoThemePreset.brand;
-
-	void _setPreset(DemoThemePreset preset) {
-		setState(() {
-			_preset = preset;
-			_configureDemoTheme(preset);
-		});
-	}
-
-	@override
 	Widget build(BuildContext context) {
-		final theme = TsdtechUiConfig.instance.theme;
+		return Observer(
+			builder: (_) {
+				final preset = _exampleShowcaseStore.preset;
+				final theme = TsdtechUiConfig.instance.theme;
 
-		return MaterialApp(
-			title: 'TSDTech SDK Example',
-			debugShowCheckedModeBanner: false,
-			theme: theme.toMaterialTheme().copyWith(
-						scaffoldBackgroundColor: theme.backgroundColor,
-						appBarTheme: AppBarTheme(
-							backgroundColor: theme.backgroundColor,
-							foregroundColor: theme.textPrimaryColor,
-							elevation: 0,
-							centerTitle: false,
-						),
-						chipTheme: ChipThemeData(
-							backgroundColor: theme.surfaceVariantColor,
-							selectedColor: theme.primaryColor,
-							labelStyle: TextStyle(color: theme.textPrimaryColor),
-							secondaryLabelStyle: TextStyle(color: theme.textOnPrimaryColor),
-							shape: RoundedRectangleBorder(
-								borderRadius: BorderRadius.circular(999),
-								side: BorderSide(color: theme.outlineColor),
+				return MaterialApp(
+					title: 'TSDTech SDK Example',
+					debugShowCheckedModeBanner: false,
+					theme: theme.toMaterialTheme().copyWith(
+								scaffoldBackgroundColor: theme.backgroundColor,
+								appBarTheme: AppBarTheme(
+									backgroundColor: theme.backgroundColor,
+									foregroundColor: theme.textPrimaryColor,
+									elevation: 0,
+									centerTitle: false,
+								),
+								chipTheme: ChipThemeData(
+									backgroundColor: theme.surfaceVariantColor,
+									selectedColor: theme.primaryColor,
+									labelStyle: TextStyle(color: theme.textPrimaryColor),
+									secondaryLabelStyle: TextStyle(color: theme.textOnPrimaryColor),
+									shape: RoundedRectangleBorder(
+										borderRadius: BorderRadius.circular(999),
+										side: BorderSide(color: theme.outlineColor),
+									),
+								),
 							),
-						),
+					localizationsDelegates: GlobalMaterialLocalizations.delegates,
+					supportedLocales: const [
+						Locale('pt', 'BR'),
+						Locale('en'),
+						Locale('es'),
+					],
+					home: ExampleHomePage(
+						store: _exampleShowcaseStore,
+						key: ValueKey(preset),
 					),
-			localizationsDelegates: GlobalMaterialLocalizations.delegates,
-			supportedLocales: const [
-				Locale('pt', 'BR'),
-				Locale('en'),
-				Locale('es'),
-			],
-			home: ExampleHomePage(
-				preset: _preset,
-				onPresetChanged: _setPreset,
-			),
+				);
+			},
 		);
 	}
 }
 
-class ExampleHomePage extends StatefulWidget {
-	const ExampleHomePage({
+class ExampleHomePage extends StatelessWidget {
+	ExampleHomePage({
 		super.key,
-		required this.preset,
-		required this.onPresetChanged,
+		required this.store,
 	});
 
-	final DemoThemePreset preset;
-	final ValueChanged<DemoThemePreset> onPresetChanged;
-
-	@override
-	State<ExampleHomePage> createState() => _ExampleHomePageState();
-}
-
-class _ExampleHomePageState extends State<ExampleHomePage> {
 	static const _administratorId = 'admin_demo_123';
 	static const _gatewayPublicKey = '''-----BEGIN PUBLIC KEY-----
 MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK0M-demo-key-for-example-only-12345
 67890abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVXYZIDAQAB
 -----END PUBLIC KEY-----''';
+
+	final ExampleShowcaseStore store;
 
 	late final List<CartItem> _demoItems = [
 		CartItem(
@@ -155,14 +145,6 @@ MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK0M-demo-key-for-example-only-12345
 		),
 	];
 
-	final CheckoutStore _checkoutStore = CheckoutStore();
-	final PaymentStore _paymentStore = PaymentStore();
-	final CardFormStore _cardFormStore = CardFormStore();
-
-	PaymentFormData? _paymentFormResult;
-	CardFormData? _cardPreview;
-	PaymentStatus? _checkoutStatus;
-
 	double get _total {
 		return _demoItems.fold<double>(
 			0,
@@ -170,147 +152,144 @@ MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK0M-demo-key-for-example-only-12345
 		);
 	}
 
-	void _showMessage(String message) {
+	void _showMessage(BuildContext context, String message) {
 		ScaffoldMessenger.of(context).showSnackBar(
 			SnackBar(content: Text(message)),
 		);
 	}
 
-	Future<void> _openCheckoutScreen() async {
+	Future<void> _openCheckoutScreen(BuildContext context) async {
 		await Navigator.of(context).push(
 			CheckoutScreen.route(
 				items: _demoItems,
 				administratorId: _administratorId,
-				onSuccess: () => _showMessage('CheckoutScreen concluiu o fluxo.'),
-				onCancel: () => _showMessage('CheckoutScreen encerrada pelo usuário.'),
+				onSuccess: () => _showMessage(context, 'CheckoutScreen concluiu o fluxo.'),
+				onCancel: () => _showMessage(context, 'CheckoutScreen encerrada pelo usuário.'),
 			),
 		);
-	}
-
-	@override
-	void dispose() {
-		_checkoutStore.dispose();
-		super.dispose();
 	}
 
 	@override
 	Widget build(BuildContext context) {
-		final theme = TsdtechUiConfig.instance.theme;
-		final isWide = MediaQuery.sizeOf(context).width >= 980;
+		return Observer(
+			builder: (_) {
+				final theme = TsdtechUiConfig.instance.theme;
+				final isWide = MediaQuery.sizeOf(context).width >= 980;
 
-		return Scaffold(
-			appBar: AppBar(
-				title: const Text('TSDTech SDK Example'),
-			),
-			body: DecoratedBox(
-				decoration: BoxDecoration(
-					gradient: LinearGradient(
-						begin: Alignment.topLeft,
-						end: Alignment.bottomRight,
-						colors: [
-							theme.backgroundColor,
-							theme.surfaceVariantColor,
-						],
+				return Scaffold(
+					appBar: AppBar(
+						title: const Text('TSDTech SDK Example'),
 					),
-				),
-				child: SafeArea(
-					child: SingleChildScrollView(
-						padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
-						child: Column(
-							crossAxisAlignment: CrossAxisAlignment.stretch,
-							children: [
-								_HeroSection(
-									total: _total,
-									itemCount: _demoItems.length,
-									preset: widget.preset,
-									onPresetChanged: widget.onPresetChanged,
-									onOpenScreen: _openCheckoutScreen,
-								),
-								const SizedBox(height: 20),
-								_SectionCard(
-									title: 'Uso básico com CheckoutWidget',
-									subtitle:
-											'Exibe o widget direto no layout da sua app. O botão do CheckoutWidget usa os dados do carrinho de demonstração.',
-									child: Column(
-										crossAxisAlignment: CrossAxisAlignment.stretch,
-										children: [
-											_CartPreview(items: _demoItems, total: _total),
-											const SizedBox(height: 20),
-											CheckoutWidget(
-												store: _checkoutStore,
-												items: _demoItems,
-												administratorId: _administratorId,
-												gatewayPublicKey: _gatewayPublicKey,
-												onStatusChange: (status) {
-													setState(() => _checkoutStatus = status);
-												},
-												onSuccess: (result) {
-													_showMessage(
-														'Pagamento ${result.method.name} finalizado: ${result.transactionId}',
-													);
-												},
-												onError: (message) {
-													_showMessage('CheckoutWidget retornou erro: $message');
-												},
-											),
-											const SizedBox(height: 16),
-											_StatusBanner(status: _checkoutStatus),
-										],
-									),
-								),
-								const SizedBox(height: 20),
-								_SectionCard(
-									title: 'Uso de telas com CheckoutScreen',
-									subtitle:
-											'Abre o fluxo completo em uma rota dedicada, útil quando você quer separar resumo do pedido e ação de pagamento.',
-									child: Column(
-										crossAxisAlignment: CrossAxisAlignment.start,
-										children: [
-											const Wrap(
-												spacing: 12,
-												runSpacing: 12,
+					body: DecoratedBox(
+						decoration: BoxDecoration(
+							gradient: LinearGradient(
+								begin: Alignment.topLeft,
+								end: Alignment.bottomRight,
+								colors: [
+									theme.backgroundColor,
+									theme.surfaceVariantColor,
+								],
+							),
+						),
+						child: SafeArea(
+							child: SingleChildScrollView(
+								padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
+								child: Column(
+									crossAxisAlignment: CrossAxisAlignment.stretch,
+									children: [
+										_HeroSection(
+											total: _total,
+											itemCount: _demoItems.length,
+											preset: store.preset,
+											onPresetChanged: store.setPreset,
+											onOpenScreen: () => _openCheckoutScreen(context),
+										),
+										const SizedBox(height: 20),
+										_SectionCard(
+											title: 'Uso básico com CheckoutWidget',
+											subtitle:
+													'Exibe o widget direto no layout da sua app. O botão do CheckoutWidget usa os dados do carrinho de demonstração.',
+											child: Column(
+												crossAxisAlignment: CrossAxisAlignment.stretch,
 												children: [
-													_FeatureChip(label: 'Navegação pronta'),
-													_FeatureChip(label: 'Resumo do pedido'),
-													_FeatureChip(label: 'Controle de loading'),
-													_FeatureChip(label: 'Tratamento de chave pública'),
+													_CartPreview(items: _demoItems, total: _total),
+													const SizedBox(height: 20),
+													CheckoutWidget(
+														store: store.checkoutStore,
+														items: _demoItems,
+														administratorId: _administratorId,
+														gatewayPublicKey: _gatewayPublicKey,
+														onStatusChange: store.setCheckoutStatus,
+														onSuccess: (result) {
+															_showMessage(
+																context,
+																'Pagamento ${result.method.name} finalizado: ${result.transactionId}',
+															);
+														},
+														onError: (message) {
+															_showMessage(context, 'CheckoutWidget retornou erro: $message');
+														},
+													),
+													const SizedBox(height: 16),
+													_StatusBanner(status: store.checkoutStatus),
 												],
 											),
-											const SizedBox(height: 16),
-											FilledButton.icon(
-												onPressed: _openCheckoutScreen,
-												icon: const Icon(Icons.open_in_new_rounded),
-												label: const Text('Abrir CheckoutScreen'),
-											),
-										],
-									),
-								),
-								const SizedBox(height: 20),
-								isWide
-										? Row(
+										),
+										const SizedBox(height: 20),
+										_SectionCard(
+											title: 'Uso de telas com CheckoutScreen',
+											subtitle:
+													'Abre o fluxo completo em uma rota dedicada, útil quando você quer separar resumo do pedido e ação de pagamento.',
+											child: Column(
 												crossAxisAlignment: CrossAxisAlignment.start,
 												children: [
-													Expanded(child: _buildStandaloneFormsSection()),
-													const SizedBox(width: 20),
-													Expanded(child: _buildThemeSection()),
-												],
-											)
-										: Column(
-												children: [
-													_buildStandaloneFormsSection(),
-													const SizedBox(height: 20),
-													_buildThemeSection(),
+													const Wrap(
+														spacing: 12,
+														runSpacing: 12,
+														children: [
+															_FeatureChip(label: 'Navegação pronta'),
+															_FeatureChip(label: 'Resumo do pedido'),
+															_FeatureChip(label: 'Controle de loading'),
+															_FeatureChip(label: 'Tratamento de chave pública'),
+														],
+													),
+													const SizedBox(height: 16),
+													FilledButton.icon(
+														onPressed: () => _openCheckoutScreen(context),
+														icon: const Icon(Icons.open_in_new_rounded),
+														label: const Text('Abrir CheckoutScreen'),
+													),
 												],
 											),
-							],
+										),
+										const SizedBox(height: 20),
+										isWide
+												? Row(
+														crossAxisAlignment: CrossAxisAlignment.start,
+														children: [
+															Expanded(child: _buildStandaloneFormsSection(context)),
+															const SizedBox(width: 20),
+															Expanded(child: _buildThemeSection(context)),
+														],
+													)
+												: Column(
+														children: [
+															_buildStandaloneFormsSection(context),
+															const SizedBox(height: 20),
+															_buildThemeSection(context),
+														],
+													),
+									],
+								),
+							),
 						),
 					),
-				),
-			),
+				);
+			},
 		);
 	}
 
-	Widget _buildStandaloneFormsSection() {
+	Widget _buildStandaloneFormsSection(BuildContext context) {
 		return _SectionCard(
 			title: 'Formulários isolados',
 			subtitle:
@@ -319,11 +298,12 @@ MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK0M-demo-key-for-example-only-12345
 				crossAxisAlignment: CrossAxisAlignment.stretch,
 				children: [
 					PaymentForm(
-						store: _paymentStore,
+						store: store.paymentStore,
 						submitLabel: 'Simular envio',
 						onSubmit: (data) {
-							setState(() => _paymentFormResult = data);
+							store.setPaymentFormResult(data);
 							_showMessage(
+								context,
 								data.isCard
 										? 'PaymentForm enviou cartão de ${data.cardData?.cardholderName ?? 'titular não informado'}.'
 										: 'PaymentForm enviou PIX.',
@@ -333,30 +313,30 @@ MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK0M-demo-key-for-example-only-12345
 					const SizedBox(height: 16),
 					_InfoTile(
 						title: 'Último resultado do PaymentForm',
-						content: _paymentFormResult == null
+						content: store.paymentFormResult == null
 								? 'Nenhum submit ainda.'
-								: _paymentFormResult!.isCard
-										? 'Método: cartão\nTitular: ${_paymentFormResult!.cardData?.cardholderName ?? '-'}\nBandeira: ${_paymentFormResult!.cardData?.brand.name ?? 'unknown'}'
+								: store.paymentFormResult!.isCard
+										? 'Método: cartão\nTitular: ${store.paymentFormResult!.cardData?.cardholderName ?? '-'}\nBandeira: ${store.paymentFormResult!.cardData?.brand.name ?? 'unknown'}'
 										: 'Método: PIX',
 					),
 					const SizedBox(height: 20),
 					CardForm(
-						store: _cardFormStore,
+						store: store.cardFormStore,
 						submitLabel: 'Validar cartão',
 						onChanged: (data) {
-							setState(() => _cardPreview = data);
+							store.setCardPreview(data);
 						},
 						onSubmit: (data) {
-							setState(() => _cardPreview = data);
-							_showMessage('CardForm validou ${data.brand.name.toUpperCase()}.');
+							store.setCardPreview(data);
+							_showMessage(context, 'CardForm validou ${data.brand.name.toUpperCase()}.');
 						},
 					),
 					const SizedBox(height: 16),
 					_InfoTile(
 						title: 'Preview do CardForm',
-						content: _cardPreview == null
+						content: store.cardPreview == null
 								? 'Preencha o formulário para visualizar a saída capturada.'
-								: 'Titular: ${_cardPreview!.cardholderName}\nBandeira: ${_cardPreview!.brand.name}\nDocumento: ${_cardPreview!.taxId}',
+								: 'Titular: ${store.cardPreview!.cardholderName}\nBandeira: ${store.cardPreview!.brand.name}\nDocumento: ${store.cardPreview!.taxId}',
 					),
 					const SizedBox(height: 20),
 					PixDisplay(
@@ -367,14 +347,14 @@ MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK0M-demo-key-for-example-only-12345
 									'00020126580014BR.GOV.BCB.PIX0136123e4567-e89b-12d3-a456-4266141740005204000053039865405123.455802BR5925TSDTECH SDK EXAMPLE6009SAO PAULO62070503***6304A1B2',
 						),
 						expiresAt: DateTime.now().add(const Duration(minutes: 25)),
-						onCopied: () => _showMessage('Código PIX copiado.'),
+						onCopied: () => _showMessage(context, 'Código PIX copiado.'),
 					),
 				],
 			),
 		);
 	}
 
-	Widget _buildThemeSection() {
+	Widget _buildThemeSection(BuildContext context) {
 		final theme = TsdtechUiConfig.instance.theme;
 
 		return _SectionCard(
@@ -388,11 +368,11 @@ MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK0M-demo-key-for-example-only-12345
 						spacing: 12,
 						runSpacing: 12,
 						children: DemoThemePreset.values.map((preset) {
-							final isSelected = widget.preset == preset;
+							final isSelected = store.preset == preset;
 							return ChoiceChip(
 								label: Text(_presetLabel(preset)),
 								selected: isSelected,
-								onSelected: (_) => widget.onPresetChanged(preset),
+								onSelected: (_) => store.setPreset(preset),
 							);
 						}).toList(),
 					),
@@ -413,7 +393,7 @@ MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK0M-demo-key-for-example-only-12345
 								),
 								const SizedBox(height: 12),
 								_PaletteRow(label: 'Base URL', value: TsdtechUiConfig.instance.baseUrl),
-								_PaletteRow(label: 'Preset', value: _presetLabel(widget.preset)),
+								_PaletteRow(label: 'Preset', value: _presetLabel(store.preset)),
 								_PaletteRow(label: 'Brightness', value: theme.brightness.name),
 								_PaletteRow(label: 'Border radius', value: theme.borderRadius.toStringAsFixed(0)),
 								_PaletteRow(label: 'Font family', value: theme.fontFamily ?? 'system'),
@@ -435,6 +415,41 @@ MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK0M-demo-key-for-example-only-12345
 			),
 		);
 	}
+}
+
+class ExampleShowcaseStore = ExampleShowcaseStoreBase with _$ExampleShowcaseStore;
+
+abstract class ExampleShowcaseStoreBase with Store {
+	@observable
+	DemoThemePreset preset = DemoThemePreset.brand;
+
+	@observable
+	PaymentFormData? paymentFormResult;
+
+	@observable
+	CardFormData? cardPreview;
+
+	@observable
+	PaymentStatus? checkoutStatus;
+
+	final CheckoutStore checkoutStore = CheckoutStore();
+	final PaymentStore paymentStore = PaymentStore();
+	final CardFormStore cardFormStore = CardFormStore();
+
+	@action
+	void setPreset(DemoThemePreset value) {
+		_configureDemoTheme(value);
+		preset = value;
+	}
+
+	@action
+	void setPaymentFormResult(PaymentFormData? value) => paymentFormResult = value;
+
+	@action
+	void setCardPreview(CardFormData? value) => cardPreview = value;
+
+	@action
+	void setCheckoutStatus(PaymentStatus? value) => checkoutStatus = value;
 }
 
 String _presetLabel(DemoThemePreset preset) {

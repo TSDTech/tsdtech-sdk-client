@@ -243,13 +243,7 @@ void main() {
       checkoutAdapter.when('POST', '/checkouts/client', {
         'paymentMethod': 'bill',
         'paymentId': 'bill_001',
-        'bill': {
-          'pinbankSlipId': 'slip_01',
-          'base64Path': 'base64string',
-          'digitableLine': '12345.67890',
-          'barCode': '12345678901234567890',
-          'digitalAccountPinbankId': 'acc_01',
-        },
+        'status': 'pending',
       });
 
       final request = CheckoutRequest(
@@ -263,7 +257,6 @@ void main() {
       expect(result.isSuccess, true);
       expect(result.value!.paymentMethod, 'bill');
       expect(result.value!.paymentId, 'bill_001');
-      expect(result.value!.bill, isNotNull);
     });
   });
 

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 
 import '../components/card_form/card_brand.dart';
@@ -8,6 +9,8 @@ part 'card_form_store.g.dart';
 class CardFormStore = CardFormStoreBase with _$CardFormStore;
 
 abstract class CardFormStoreBase with Store {
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
   @observable
   String cardNumber = '';
 
@@ -25,6 +28,12 @@ abstract class CardFormStoreBase with Store {
 
   @observable
   CardBrand brand = CardBrand.unknown;
+
+  @observable
+  int formVersion = 0;
+
+  @observable
+  int cvvFieldVersion = 0;
 
   @computed
   CardFormData get data => CardFormData(
@@ -61,6 +70,12 @@ abstract class CardFormStoreBase with Store {
   void updateCvv(String value) => cvv = value;
 
   @action
+  void clearCvv() {
+    cvv = '';
+    cvvFieldVersion++;
+  }
+
+  @action
   void updateTaxId(String value) => taxId = value;
 
   @action
@@ -74,6 +89,8 @@ abstract class CardFormStoreBase with Store {
     cvv = value.cvv;
     taxId = value.taxId;
     brand = value.brand;
+    formVersion++;
+    cvvFieldVersion++;
   }
 
   @action
@@ -84,5 +101,15 @@ abstract class CardFormStoreBase with Store {
     cvv = '';
     taxId = '';
     brand = CardBrand.unknown;
+    formVersion++;
+    cvvFieldVersion++;
+  }
+
+  bool validateForm() => formKey.currentState?.validate() ?? false;
+
+  @action
+  void resetForm() {
+    formKey.currentState?.reset();
+    reset();
   }
 }

@@ -155,6 +155,10 @@ MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK0M-demo-key-for-example-only-12345
 		),
 	];
 
+	final CheckoutStore _checkoutStore = CheckoutStore();
+	final PaymentStore _paymentStore = PaymentStore();
+	final CardFormStore _cardFormStore = CardFormStore();
+
 	PaymentFormData? _paymentFormResult;
 	CardFormData? _cardPreview;
 	PaymentStatus? _checkoutStatus;
@@ -181,6 +185,12 @@ MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK0M-demo-key-for-example-only-12345
 				onCancel: () => _showMessage('CheckoutScreen encerrada pelo usuário.'),
 			),
 		);
+	}
+
+	@override
+	void dispose() {
+		_checkoutStore.dispose();
+		super.dispose();
 	}
 
 	@override
@@ -227,6 +237,7 @@ MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK0M-demo-key-for-example-only-12345
 											_CartPreview(items: _demoItems, total: _total),
 											const SizedBox(height: 20),
 											CheckoutWidget(
+												store: _checkoutStore,
 												items: _demoItems,
 												administratorId: _administratorId,
 												gatewayPublicKey: _gatewayPublicKey,
@@ -255,10 +266,10 @@ MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK0M-demo-key-for-example-only-12345
 									child: Column(
 										crossAxisAlignment: CrossAxisAlignment.start,
 										children: [
-											Wrap(
+											const Wrap(
 												spacing: 12,
 												runSpacing: 12,
-												children: const [
+												children: [
 													_FeatureChip(label: 'Navegação pronta'),
 													_FeatureChip(label: 'Resumo do pedido'),
 													_FeatureChip(label: 'Controle de loading'),
@@ -308,6 +319,7 @@ MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK0M-demo-key-for-example-only-12345
 				crossAxisAlignment: CrossAxisAlignment.stretch,
 				children: [
 					PaymentForm(
+						store: _paymentStore,
 						submitLabel: 'Simular envio',
 						onSubmit: (data) {
 							setState(() => _paymentFormResult = data);
@@ -329,6 +341,7 @@ MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK0M-demo-key-for-example-only-12345
 					),
 					const SizedBox(height: 20),
 					CardForm(
+						store: _cardFormStore,
 						submitLabel: 'Validar cartão',
 						onChanged: (data) {
 							setState(() => _cardPreview = data);

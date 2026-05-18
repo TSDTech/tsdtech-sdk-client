@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:mobx/mobx.dart';
 import '../../../core/services/intra-api/md-checkout/checkouts_service.dart';
 import '../../../models/cart/cart_item.model.dart';
 import '../../../models/checkouts/calculate_item.model.dart';
@@ -39,7 +38,7 @@ class CheckoutWidgetController {
   }
 }
 
-class CheckoutWidget extends StatefulWidget {
+class CheckoutWidget extends StatelessWidget {
   final List<CartItem> items;
   final String administratorId;
   final String gatewayPublicKey;
@@ -52,7 +51,7 @@ class CheckoutWidget extends StatefulWidget {
   final Widget? errorWidget;
   final bool showSubmitButton;
   final CheckoutWidgetController? controller;
-  final CheckoutStore? store;
+  final CheckoutStore store;
 
   const CheckoutWidget({
     super.key,
@@ -68,255 +67,201 @@ class CheckoutWidget extends StatefulWidget {
     this.errorWidget,
     this.showSubmitButton = true,
     this.controller,
-    this.store,
+    required this.store,
   });
 
   @override
-  State<CheckoutWidget> createState() => _CheckoutWidgetState();
-}
+  Widget build(BuildContext context) {
+    final effectiveStore = store;
 
-class _CheckoutWidgetState extends State<CheckoutWidget> {
-  late CheckoutStore _store;
-  ReactionDisposer? _controllerSyncDisposer;
-  
-  // Controllers do Cartão (O pai precisa gerenciar para acessar os dados)
-  final _formKey = GlobalKey<FormState>();
-  final _cardHolderController = TextEditingController();
-  final _cardNumberController = TextEditingController();
-  final _expiryController = TextEditingController();
-  final _securityCodeController = TextEditingController();
-
-  // Estados dos pagamentos dinâmicos
-  String? _pixQrCode;
-  String? _pixCopyPasteCode;
-  String? _paymentId;
-  Timer? _pixPollingTimer;
-
-  @override
-  void initState() {
-    super.initState();
-    _configureStore();
-  }
-
-  @override
-  void didUpdateWidget(covariant CheckoutWidget oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.store != widget.store) {
-      _configureStore();
-    }
-    if (oldWidget.controller != widget.controller) {
-      oldWidget.controller?._submitPayment = null;
-      _syncControllerState();
-    }
-  }
-
-  @override
-  void dispose() {
-    widget.controller?._submitPayment = null;
-    _pixPollingTimer?.cancel();
-    _controllerSyncDisposer?.call();
-    _cardHolderController.dispose();
-    _cardNumberController.dispose();
-    _expiryController.dispose();
-    _securityCodeController.dispose();
-    super.dispose();
-  }
-
-  void _notifyStatus(PaymentStatus status) {
-    widget.onStatusChange?.call(status);
-  }
-
-  void _configureStore() {
-    _controllerSyncDisposer?.call();
-    _store = widget.store ?? CheckoutStore(
-      initialMethod: widget.showPix
-          ? PaymentMethodType.pix
-          : PaymentMethodType.card,
-    );
-    _controllerSyncDisposer = autorun((_) {
-      _store.selectedMethod;
-      _store.isLoading;
-      _store.hasGeneratedPix;
-      _syncControllerState();
-    });
-  }
-
-  void _syncControllerState() {
-    final controller = widget.controller;
-    if (controller == null) {
-      return;
+    void notifyStatus(PaymentStatus status) {
+      onStatusChange?.call(status);
     }
 
-    controller._submitPayment = _processPayment;
-    controller.selectedMethod.value = _store.selectedMethod;
-    controller.isLoading.value = _store.isLoading;
-    controller.hasGeneratedPix.value = _store.hasGeneratedPix;
-  }
+    void syncControllerState(Future<void> Function() submitPayment) {
+      final checkoutController = controller;
+      if (checkoutController == null) {
+        return;
+      }
 
-  List<CalculateItem> _buildCalculateItems() {
-    return widget.items.map((item) {
-      return CalculateItem(
-        serviceId: item.service.id ?? '',
-        value: item.service.price ?? 0.0,
-        quantity: item.quantity,
-      );
-    }).toList();
-  }
+      checkoutController._submitPayment = submitPayment;
+      checkoutController.selectedMethod.value = effectiveStore.selectedMethod;
+      checkoutController.isLoading.value = effectiveStore.isLoading;
+      checkoutController.hasGeneratedPix.value = effectiveStore.hasGeneratedPix;
+    }
 
-  double get _totalValue {
-    return widget.items.fold<double>(0.0, (sum, item) {
+    List<CalculateItem> buildCalculateItems() {
+      return items.map((item) {
+        return CalculateItem(
+          serviceId: item.service.id ?? '',
+          value: item.service.price ?? 0.0,
+          quantity: item.quantity,
+        );
+      }).toList();
+    }
+
+    final totalValue = items.fold<double>(0.0, (sum, item) {
       return sum + (item.service.price ?? 0.0) * item.quantity;
     });
-  }
 
-  String _methodToApiString(PaymentMethodType method) {
-    switch (method) {
-      case PaymentMethodType.pix:
-        return 'pix';
-      case PaymentMethodType.card:
-        return 'card';
-    }
-  }
-
-  Future<void> _processPayment() async {
-    if (_store.isCardSelected) {
-      if (!_formKey.currentState!.validate()) return;
-      if (widget.gatewayPublicKey.trim().isEmpty) {
-        _showError('A chave pública do gateway não pode ficar vazia.');
-        return;
+    String methodToApiString(PaymentMethodType method) {
+      switch (method) {
+        case PaymentMethodType.pix:
+          return 'pix';
+        case PaymentMethodType.card:
+          return 'card';
       }
     }
 
-    _store.setLoading(true);
-    _syncControllerState();
-    _store.clearError();
-    _notifyStatus(PaymentStatus.processing);
+    String toBackendCardExpiry(String value) {
+      final parts = value.split('/');
+      if (parts.length != 2) return '';
+      final month = parts[0].padLeft(2, '0');
+      final year = parts[1];
+      return '20$year$month';
+    }
 
-    try {
-      final cartItems = _buildCalculateItems();
-      final checkoutRequest = CheckoutRequest(
-        cart: cartItems,
-        paymentMethod: _methodToApiString(_store.selectedMethod),
-        totalValue: _totalValue,
-        encryptedCard: _store.isCardSelected
-            ? _buildEncryptedCardData()
-            : null,
+    String buildEncryptedCardData() {
+      final cardData = CardPaymentData(
+        cardHolderName: effectiveStore.cardHolderName.trim(),
+        cardNumber: effectiveStore.cardNumber.trim(),
+        cardExpiryDate: toBackendCardExpiry(effectiveStore.expiryDate.trim()),
+        securityCode: effectiveStore.securityCode.trim(),
       );
-
-      final result = await CheckoutsService.instance.createCheckout(checkoutRequest);
-      
-      if (!result.isSuccess) {
-        _showError(result.error.toString());
-        return;
-      }
-
-      final response = result.value!;
-      
-      if (_store.isPixSelected) {
-        _store.setPixData(
-          paymentId: response.paymentId,
-          qrCode: response.pix?.qrCode,
-          copyPasteCode: response.pix?.copyPasteCode,
-        );
-        _notifyStatus(PaymentStatus.waitingPayment);
-        
-        if (_store.paymentId != null) {
-          _startPixPolling(_store.paymentId!);
-        }
-        _syncControllerState();
-      } else if (_store.isCardSelected) {
-        _handleSuccess(
-          response.paymentId ?? response.depositRequestId ?? 'card_${DateTime.now().millisecondsSinceEpoch}',
-          depositRequestId: response.depositRequestId,
-        );
-      }
-    } catch (error) {
-      _showError(error.toString());
-    } finally {
-      _store.setLoading(false);
-      _syncControllerState();
+      return CardEncryptor.encrypt(gatewayPublicKey, cardData);
     }
-  }
 
-  String _toBackendCardExpiry(String value) {
-    final parts = value.split('/');
-    if (parts.length != 2) return '';
-    final month = parts[0].padLeft(2, '0');
-    final year = parts[1];
-    return '20$year$month'; // Converte MM/AA para 20AAMM
-  }
+    void showError(String message, Future<void> Function() submitPayment) {
+      effectiveStore.setError(message);
+      onError?.call(message);
+      notifyStatus(PaymentStatus.failed);
+      syncControllerState(submitPayment);
+    }
 
-  String _buildEncryptedCardData() {
-    final cardData = CardPaymentData(
-      cardHolderName: _cardHolderController.text.trim(),
-      cardNumber: _cardNumberController.text.trim(),
-      cardExpiryDate: _toBackendCardExpiry(_expiryController.text.trim()), // <-- Correção aqui
-      securityCode: _securityCodeController.text.trim(),
-    );
-    return CardEncryptor.encrypt(widget.gatewayPublicKey, cardData);
-  }
+    void handleSuccess(
+      String transactionId,
+      Future<void> Function() submitPayment, {
+      String? pixQrCode,
+      String? depositRequestId,
+      String? message,
+    }) {
+      notifyStatus(PaymentStatus.success);
+      final result = PaymentResult(
+        transactionId: transactionId,
+        method: effectiveStore.selectedMethod,
+        status: PaymentStatus.success,
+        pixQrCode: pixQrCode,
+        depositRequestId: depositRequestId,
+        message: message,
+      );
+      effectiveStore.setPaymentResult(result);
+      onSuccess?.call(result);
+      syncControllerState(submitPayment);
+    }
 
-  void _showError(String message) {
-    _store.setError(message);
-    widget.onError?.call(message);
-    _notifyStatus(PaymentStatus.failed);
-    _syncControllerState();
-  }
+    void startPixPolling(String paymentId, Future<void> Function() submitPayment) {
+      effectiveStore.startPixPolling(
+        Timer.periodic(const Duration(seconds: 5), (timer) async {
+          try {
+            final statusResult = await CheckoutsService.instance.getPixStatus(paymentId);
+            if (!statusResult.isSuccess) return;
 
-  void _startPixPolling(String paymentId) {
-    _pixPollingTimer?.cancel();
-    _pixPollingTimer = Timer.periodic(const Duration(seconds: 5), (timer) async {
-      try {
-        final statusResult = await CheckoutsService.instance.getPixStatus(paymentId);
-        if (!statusResult.isSuccess) return;
-        
-        final status = statusResult.value?.toLowerCase() ?? '';
-        if (status == 'paid' || status == 'completed' || status == 'success') {
-          timer.cancel();
-          _handleSuccess(paymentId, pixQrCode: _store.pixQrCode);
+            final status = statusResult.value?.toLowerCase() ?? '';
+            if (status == 'paid' || status == 'completed' || status == 'success') {
+              timer.cancel();
+              handleSuccess(
+                paymentId,
+                submitPayment,
+                pixQrCode: effectiveStore.pixQrCode,
+              );
+            }
+          } catch (_) {
+            // Ignored: manter polling
+          }
+        }),
+      );
+    }
+
+    Future<void> processPayment() async {
+      if (effectiveStore.isCardSelected) {
+        if (!effectiveStore.validateCardForm()) return;
+        if (gatewayPublicKey.trim().isEmpty) {
+          showError('A chave pública do gateway não pode ficar vazia.', processPayment);
+          return;
         }
-      } catch (_) {
-        // Ignored: manter polling
       }
-    });
-  }
 
-  void _handleSuccess(
-    String transactionId, {
-    String? pixQrCode,
-    String? depositRequestId,
-    String? message,
-  }) {
-    _notifyStatus(PaymentStatus.success);
-    final result = PaymentResult(
-      transactionId: transactionId,
-      method: _store.selectedMethod,
-      status: PaymentStatus.success,
-      pixQrCode: pixQrCode,
-      depositRequestId: depositRequestId,
-      message: message,
-    );
-    _store.setPaymentResult(result);
-    widget.onSuccess?.call(result);
-  }
+      effectiveStore.setLoading(true);
+      syncControllerState(processPayment);
+      effectiveStore.clearError();
+      notifyStatus(PaymentStatus.processing);
 
-  @override
-  Widget build(BuildContext context) {
+      try {
+        final checkoutRequest = CheckoutRequest(
+          cart: buildCalculateItems(),
+          paymentMethod: methodToApiString(effectiveStore.selectedMethod),
+          totalValue: totalValue,
+          encryptedCard: effectiveStore.isCardSelected
+              ? buildEncryptedCardData()
+              : null,
+        );
+
+        final result = await CheckoutsService.instance.createCheckout(checkoutRequest);
+
+        if (!result.isSuccess) {
+          showError(result.error.toString(), processPayment);
+          return;
+        }
+
+        final response = result.value!;
+
+        if (effectiveStore.isPixSelected) {
+          effectiveStore.setPixData(
+            paymentId: response.paymentId,
+            qrCode: response.pix?.qrCode,
+            copyPasteCode: response.pix?.copyPasteCode,
+          );
+          notifyStatus(PaymentStatus.waitingPayment);
+
+          if (effectiveStore.paymentId != null) {
+            startPixPolling(effectiveStore.paymentId!, processPayment);
+          }
+          syncControllerState(processPayment);
+        } else if (effectiveStore.isCardSelected) {
+          handleSuccess(
+            response.paymentId ??
+                response.depositRequestId ??
+                'card_${DateTime.now().millisecondsSinceEpoch}',
+            processPayment,
+            depositRequestId: response.depositRequestId,
+          );
+        }
+      } catch (error) {
+        showError(error.toString(), processPayment);
+      } finally {
+        effectiveStore.setLoading(false);
+        syncControllerState(processPayment);
+      }
+    }
+
+    syncControllerState(processPayment);
+
     return Observer(
       builder: (_) {
-        if (_store.isLoading) {
-          return CheckoutLoadingState(customLoading: widget.loadingWidget);
+        syncControllerState(processPayment);
+        if (effectiveStore.isLoading) {
+          return CheckoutLoadingState(customLoading: loadingWidget);
         }
 
-        if (_store.hasError) {
+        if (effectiveStore.hasError) {
           return CheckoutErrorState(
-            message: _store.errorMessage!,
-            onRetry: _processPayment,
-            customError: widget.errorWidget,
+            message: effectiveStore.errorMessage!,
+            onRetry: processPayment,
+            customError: errorWidget,
           );
         }
 
-        final method = _store.selectedMethod;
+        final method = effectiveStore.selectedMethod;
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -325,32 +270,36 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
             PaymentMethodSelector(
               selectedMethod: method,
               onChanged: (newMethod) {
-                _store.selectMethod(newMethod);
-                _pixPollingTimer?.cancel();
-                _syncControllerState();
+                effectiveStore.selectMethod(newMethod);
+                syncControllerState(processPayment);
               },
-              showPix: widget.showPix,
-              showCard: widget.showCard,
+              showPix: showPix,
+              showCard: showCard,
             ),
             const SizedBox(height: 24),
             switch (method) {
               PaymentMethodType.pix => PixPaymentView(
-                  qrCode: _store.pixQrCode,
-                  copyPasteCode: _store.pixCopyPasteCode,
+                  qrCode: effectiveStore.pixQrCode,
+                  copyPasteCode: effectiveStore.pixCopyPasteCode,
                 ),
               PaymentMethodType.card => CardPaymentView(
-                  formKey: _formKey,
-                  cardHolderController: _cardHolderController,
-                  cardNumberController: _cardNumberController,
-                  expiryController: _expiryController,
-                  securityCodeController: _securityCodeController,
+                  formKey: effectiveStore.cardFormKey,
+                  formVersion: effectiveStore.cardFormVersion,
+                  cardHolderName: effectiveStore.cardHolderName,
+                  cardNumber: effectiveStore.cardNumber,
+                  expiryDate: effectiveStore.expiryDate,
+                  securityCode: effectiveStore.securityCode,
+                  onCardHolderChanged: effectiveStore.updateCardHolderName,
+                  onCardNumberChanged: effectiveStore.updateCardNumber,
+                  onExpiryChanged: effectiveStore.updateExpiryDate,
+                  onSecurityCodeChanged: effectiveStore.updateSecurityCode,
                 ),
             },
             const SizedBox(height: 24),
-            if (widget.showSubmitButton &&
-                !(method == PaymentMethodType.pix && _store.hasGeneratedPix))
+            if (showSubmitButton &&
+                !(method == PaymentMethodType.pix && effectiveStore.hasGeneratedPix))
               ElevatedButton(
-                onPressed: _processPayment,
+                onPressed: processPayment,
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),

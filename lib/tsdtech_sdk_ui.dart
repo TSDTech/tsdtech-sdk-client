@@ -10,4 +10,7 @@ export 'src/ui/components/card_form/card_form_controller.dart';
 export 'src/ui/components/card_form/card_form_fields.dart';
 export 'src/ui/components/card_form/card_form.dart';
 export 'src/ui/components/pix_display/pix_display.dart';
+export 'src/ui/stores/card_form_store.dart';
+export 'src/ui/stores/checkout_store.dart';
+export 'src/ui/stores/payment_store.dart';
 export 'src/ui/widgets/payment_form/payment_form.dart';

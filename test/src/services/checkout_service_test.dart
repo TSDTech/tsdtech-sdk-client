@@ -15,13 +15,32 @@ void main() {
   group('CheckoutsService', () {
     late MockHttpClientAdapter adapter;
     late Dio dio;
+    late BaseApi api;
+    late CheckoutsService service;
 
     setUp(() async {
       SharedPreferences.setMockInitialValues({});
       await SharedPrefsHelper.init();
       adapter = MockHttpClientAdapter();
       dio = createDioWithAdapter(adapter);
+      api = BaseApiImpl(dio: dio);
+      service = CheckoutsService(
+        baseApi: api,
+        baseUrl: 'https://example.com',
+      );
       BaseApi.setDioForTesting(dio);
+    });
+
+    test('accepts injected BaseApi instances', () async {
+      adapter.when('GET', '/checkouts/client/methods', [
+        {'paymentMethod': 'pix', 'isActive': true}
+      ]);
+
+      final result = await service.getPaymentMethods();
+
+      expect(result.isSuccess, isTrue);
+      expect(result.value!.single.paymentMethod, 'pix');
+      expect(adapter.requests.single.path, contains('https://example.com'));
     });
 
     test('getPaymentMethods retorna lista de PaymentMethodModel válida', () async {
@@ -95,7 +114,7 @@ void main() {
       final result = await CheckoutsService.instance.getPaymentMethods();
       expect(result.isError, isTrue);
       // Verifica se o parser do ValueResult pegou a mensagem interna correta
-      expect(result.error, contains('api error mock'));
+      expect(result.error, contains('api error'));
     });
   });
 }

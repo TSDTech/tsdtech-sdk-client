@@ -1,5 +1,6 @@
 import 'package:tsdtech_client_sdk/core/services/intra-api/intra.api.dart';
 import 'package:tsdtech_client_sdk/core/constants/constants.dart';
+import 'package:tsdtech_client_sdk/core/services/base.api.dart';
 import 'package:tsdtech_client_sdk/models/providers/provider.model.dart';
 import 'package:tsdtech_client_sdk/models/vouchers/provider_request.model.dart';
 import 'package:tsdtech_client_sdk/models/common/paginated_list.model.dart';
@@ -35,7 +36,8 @@ class ProviderRequestsService extends IntraApi {
   static final ProviderRequestsService instance = ProviderRequestsService();
 
   /// Creates a [ProviderRequestsService] instance with the base URL from [Constants].
-  ProviderRequestsService() : super(Constants.getBaseUrl());
+  ProviderRequestsService({BaseApi? baseApi, String? baseUrl})
+      : super(baseUrl ?? Constants.getBaseUrl(), baseApi: baseApi);
 
   /// Retrieves provider requests for the authenticated client.
   ///

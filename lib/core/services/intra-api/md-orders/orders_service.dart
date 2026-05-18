@@ -1,5 +1,6 @@
 import 'package:tsdtech_client_sdk/core/services/intra-api/intra.api.dart';
 import 'package:tsdtech_client_sdk/core/constants/constants.dart';
+import 'package:tsdtech_client_sdk/core/services/base.api.dart';
 import 'package:tsdtech_client_sdk/models/common/paginated_list.model.dart';
 import 'package:tsdtech_client_sdk/models/common/pagination.model.dart';
 import 'package:tsdtech_client_sdk/models/orders/order.model.dart';
@@ -20,13 +21,15 @@ import 'package:tsdtech_client_sdk/models/value_result.dart';
 /// ```
 ///
 /// ## Singleton Pattern
-/// Access the service via [OrdersService.instance].
+/// Access the service via [OrdersService.instance], or create a new instance
+/// with custom [BaseApi] and base URL dependencies.
 class OrdersService extends IntraApi {
   /// Singleton instance of [OrdersService].
   static final OrdersService instance = OrdersService();
 
   /// Creates an [OrdersService] instance with the base URL from [Constants].
-  OrdersService() : super(Constants.getBaseUrl());
+  OrdersService({BaseApi? baseApi, String? baseUrl})
+      : super(baseUrl ?? Constants.getBaseUrl(), baseApi: baseApi);
 
   /// Retrieves all orders for the authenticated client with optional filtering.
   ///

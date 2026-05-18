@@ -34,12 +34,8 @@ class CheckoutsService extends IntraApi {
   static final CheckoutsService instance = CheckoutsService();
 
   /// Creates a [CheckoutsService] instance with the base URL from [Constants].
-  CheckoutsService() : super(Constants.getBaseUrl());
-
-  /// Debug logger - only prints when BaseApi debug mode is enabled.
-  void _debugLog(String message) {
-    // Logging is handled by BaseApi.setDebugMode()
-  }
+  CheckoutsService({BaseApi? baseApi, String? baseUrl})
+      : super(baseUrl ?? Constants.getBaseUrl(), baseApi: baseApi);
 
   /// Retrieves the list of available payment methods for the current user.
   ///
@@ -67,7 +63,7 @@ class CheckoutsService extends IntraApi {
         return ValueResult.success(list);
       }
       return ValueResult.success(<PaymentMethodModel>[]);
-    } catch (e, st) {
+    } catch (e) {
       return ValueResult.fromError(e);
     }
   }
@@ -91,7 +87,7 @@ class CheckoutsService extends IntraApi {
       final data = response.data as Map<String, dynamic>;
       final result = CalculateResponse.fromJson(data);
       return ValueResult.success(result);
-    } catch (e, st) {
+    } catch (e) {
       return ValueResult.fromError(e);
     }
   }
@@ -135,7 +131,7 @@ class CheckoutsService extends IntraApi {
       final data = response.data as Map<String, dynamic>;
       final result = CheckoutResponse.fromJson(data);
       return ValueResult.success(result);
-    } catch (e, st) {
+    } catch (e) {
       return ValueResult.fromError(e);
     }
   }
@@ -159,7 +155,7 @@ class CheckoutsService extends IntraApi {
       final data = response.data as Map<String, dynamic>;
       final status = data['status'] as String? ?? '';
       return ValueResult.success(status);
-    } catch (e, st) {
+    } catch (e) {
       return ValueResult.fromError(e);
     }
   }

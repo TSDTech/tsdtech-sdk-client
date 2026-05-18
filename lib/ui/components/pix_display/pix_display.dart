@@ -1,0 +1,1 @@
+export '../../../../src/ui/components/pix_display/pix_display.dart';

@@ -1,0 +1,1 @@
+export '../../src/ui/config/tsdtech_ui_config.dart';

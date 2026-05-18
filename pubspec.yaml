@@ -1,9 +1,13 @@
 name: tsdtech_client_sdk
+
 description: SDK Dart para integração com a plataforma TsdTech de pagamentos.
+
 publish_to: 'none'
+
 repository: https://github.com/tsdtech/tsdtech-client-sdk
 homepage: https://github.com/tsdtech/tsdtech-client-sdk
 issue_tracker: https://github.com/tsdtech/tsdtech-client-sdk/issues
+
 topics:
   - payment
   - sdk
@@ -12,9 +16,15 @@ topics:
 version: 0.1.0
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
+  sdk: '>=3.11.0 <4.0.0'
 
 dependencies:
+  flutter:
+    sdk: flutter
+
+  flutter_localizations:
+    sdk: flutter
+
   dio: ^5.3.3
   get_it: ^9.2.1
   shared_preferences: ^2.5.3
@@ -22,19 +32,16 @@ dependencies:
   url_launcher: ^6.3.1
   flutter_svg: ^2.1.0
   pin_code_fields: ^9.3.0
-  auto_route: ^11.1.0
-  auto_route_generator: ^10.5.0
+  auto_route: ^10.3.0
   file_picker: ^11.0.2
   intl: ^0.20.2
-  flutter_localizations:
-    sdk: flutter
   mask_text_input_formatter: ^2.9.0
   path: ^1.9.1
   http: ^1.4.0
   lucide_icons: ^0.257.0
   hugeicons: ^1.1.7
   json_annotation: ^4.9.0
-  google_fonts: ^8.1.0
+  google_fonts: ^6.2.1
   lucide_icons_flutter: ^3.0.6
   geolocator: ^14.0.2
   shimmer: ^3.0.0
@@ -50,28 +57,37 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
   flutter_lints: ^6.0.0
   build_runner: ^2.4.15
-  mobx_codegen: ^2.3.0
+  mobx_codegen: ^2.7.0
   json_serializable: ^6.9.0
   # test: ^1.25.0
   mockito: ^5.4.0
   coverage: ^1.1.0
+  auto_route_generator: ^10.3.1
+  mockito: ^5.4.5
+  coverage: ^1.11.1
 
 flutter:
   uses-material-design: true
+
   fonts:
     - family: Segoe UI Symbol
       fonts:
         - asset: assets/Segoe UI Symbol.ttf
+
     - family: Open Sans
       fonts:
         - asset: assets/Open Sans Light.ttf
           weight: 300
+
         - asset: assets/Open Sans Regular.ttf
           weight: 400
+
         - asset: assets/Open Sans Semibold.ttf
           weight: 600
+
         - asset: assets/Open Sans Bold.ttf
           weight: 700
 

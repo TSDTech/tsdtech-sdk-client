@@ -105,13 +105,13 @@ class CheckoutsService extends IntraApi {
   ///   flow the checkout creation only initiates the deposit; the client must
   ///   complete the card authorization/confirmation using the `GatewayService`
   ///   and the returned `depositRequestId`.
-  /// - PIX or Bill (one-step): the response will contain `pix` or `bill`
-  ///   payloads with payment instructions that can be consumed immediately.
+  /// - PIX (one-step): the response will contain `pix` payloads with payment
+  ///   instructions that can be consumed immediately.
   ///
   /// Important: do NOT add gateway interaction methods here — `GatewayService`
   /// is responsible for handling gateway-specific flows (card deposits,
   /// redirects, etc.). This service only creates the checkout and returns the
-  /// server response which may contain `depositRequestId`, `pix` or `bill`.
+  /// server response which may contain `depositRequestId` or `pix`.
   ///
   /// - [request]: The [CheckoutRequest] containing order details and payment info
   /// - Returns: [ValueResult] containing the [CheckoutResponse] with confirmation
@@ -124,7 +124,7 @@ class CheckoutsService extends IntraApi {
   /// if (result.isSuccess) {
   ///   final resp = result.value;
   ///   // Card (two-step): check `resp.depositRequestId` and use GatewayService
-  ///   // PIX/Bill: check `resp.pix` / `resp.bill` for payment instructions
+  ///   // PIX: check `resp.pix` for payment instructions
   /// }
   /// ```
   Future<ValueResult<CheckoutResponse>> createCheckout(

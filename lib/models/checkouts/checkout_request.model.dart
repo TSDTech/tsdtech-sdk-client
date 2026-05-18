@@ -13,9 +13,6 @@ class CheckoutRequest {
   @deprecated
   final CardPaymentData? card;
   final String? depositRequestId;
-  final BillPayerData? billPayer;
-  final String? billDueDate;
-  final String? billInstructions;
   final int? installmentNumber;
 
   CheckoutRequest({
@@ -25,9 +22,6 @@ class CheckoutRequest {
     this.encryptedCard,
     this.card,
     this.depositRequestId,
-    this.billPayer,
-    this.billDueDate,
-    this.billInstructions,
     this.installmentNumber,
   });
 
@@ -55,27 +49,4 @@ class CardPaymentData {
   factory CardPaymentData.fromJson(Map<String, dynamic> json) =>
       _$CardPaymentDataFromJson(json);
   Map<String, dynamic> toJson() => _$CardPaymentDataToJson(this);
-}
-
-@JsonSerializable()
-class BillPayerData {
-  final String name;
-  final String address;
-  final String neighborhood;
-  final String city;
-  final String zipCode;
-  final String state;
-
-  BillPayerData({
-    required this.name,
-    required this.address,
-    required this.neighborhood,
-    required this.city,
-    required this.zipCode,
-    required this.state,
-  });
-
-  factory BillPayerData.fromJson(Map<String, dynamic> json) =>
-      _$BillPayerDataFromJson(json);
-  Map<String, dynamic> toJson() => _$BillPayerDataToJson(this);
 }

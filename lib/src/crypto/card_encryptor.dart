@@ -20,7 +20,9 @@ class CardEncryptor {
       // O cast é necessário pois o parser pode retornar RSAPrivateKey dependendo do PEM
       publicKey = parser.parse(normalizedPem) as RSAPublicKey;
     } catch (e) {
-      throw FormatException('Falha ao fazer parse da chave pública PEM. Formato inválido. Detalhes: $e');
+      throw FormatException(
+        'Falha ao fazer parse da chave pública PEM. Formato inválido. Detalhes: $e',
+      );
     }
 
     // O padding OAEP com SHA-256 e MGF1 é configurado aqui:

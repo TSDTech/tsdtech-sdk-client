@@ -1,8 +1,10 @@
 import 'package:tsdtech_client_sdk/core/constants/platform/platform_origin.dart';
 
 class Constants {
-  static const String stage =
-      String.fromEnvironment('STAGE', defaultValue: 'dev');
+  static const String stage = String.fromEnvironment(
+    'STAGE',
+    defaultValue: 'dev',
+  );
 
   static const backendUrl = String.fromEnvironment(
     'BACKEND_URL',

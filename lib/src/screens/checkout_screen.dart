@@ -132,9 +132,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       await _ensureGatewayPublicKey();
       if (!mounted || _gatewayPublicKey.isEmpty) {
         if (_gatewayKeyError != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(_gatewayKeyError!)),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(_gatewayKeyError!)));
         }
         return;
       }
@@ -257,8 +257,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           ElevatedButton(
                             onPressed: isDisabled ? null : _handlePay,
                             style: ElevatedButton.styleFrom(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 16),
+                              padding: const EdgeInsets.symmetric(vertical: 16),
                             ),
                             child: Text(
                               _isFetchingGatewayPublicKey
@@ -307,10 +306,7 @@ class _OrderSummaryCard extends StatelessWidget {
           children: [
             const Text(
               'Resumo do pedido',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-              ),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 16),
             if (items.isEmpty)
@@ -330,8 +326,9 @@ class _OrderSummaryCard extends StatelessWidget {
                           children: [
                             Text(
                               item.service.name ?? 'Servico sem nome',
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.w600),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                             const SizedBox(height: 4),
                             Text(

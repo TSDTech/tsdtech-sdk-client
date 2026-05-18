@@ -55,8 +55,11 @@ class CheckoutsService extends IntraApi {
       final data = response.data;
       if (data is List) {
         final list = data
-            .map((e) => PaymentMethodModel.fromJson(
-                Map<String, dynamic>.from(e as Map)))
+            .map(
+              (e) => PaymentMethodModel.fromJson(
+                Map<String, dynamic>.from(e as Map),
+              ),
+            )
             .toList();
         return ValueResult.success(list);
       }
@@ -78,7 +81,8 @@ class CheckoutsService extends IntraApi {
   /// );
   /// ```
   Future<ValueResult<CalculateResponse>> calculateCart(
-      CalculateRequest request) async {
+    CalculateRequest request,
+  ) async {
     try {
       const path = '/checkouts/client/calculate';
       final response = await post(path, data: request.toJson());
@@ -122,7 +126,8 @@ class CheckoutsService extends IntraApi {
   /// }
   /// ```
   Future<ValueResult<CheckoutResponse>> createCheckout(
-      CheckoutRequest request) async {
+    CheckoutRequest request,
+  ) async {
     try {
       const path = '/checkouts/client';
       final response = await post(path, data: request.toJson());

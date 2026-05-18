@@ -22,7 +22,9 @@ void main() {
     });
 
     test('null optional fields', () {
-      final resp = PaymentStatusResponse(status: GatewayPaymentStatus.processing);
+      final resp = PaymentStatusResponse(
+        status: GatewayPaymentStatus.processing,
+      );
       final json = resp.toJson();
       final resp2 = PaymentStatusResponse.fromJson(json);
       expect(resp2.authorizationCode, isNull);
@@ -31,7 +33,10 @@ void main() {
 
     test('malformed status throws', () {
       final bad = {'status': 'unknown'};
-      expect(() => PaymentStatusResponse.fromJson(bad), throwsA(isA<ArgumentError>()));
+      expect(
+        () => PaymentStatusResponse.fromJson(bad),
+        throwsA(isA<ArgumentError>()),
+      );
     });
   });
 }

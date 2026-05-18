@@ -54,7 +54,8 @@ class ValueResult<T> {
   T? get value {
     if (isError) {
       throw StateError(
-          'Cannot access value when result is an error. Error: $_error');
+        'Cannot access value when result is an error. Error: $_error',
+      );
     }
     return _value as T;
   }
@@ -104,9 +105,9 @@ class ValueResult<T> {
         final String? titleValue =
             errorMap['title'] as String? ?? dataMap?['title'] as String?;
         title = titleValue;
-        final String errorMsg = (errorMap['message'] ??
-            dataMap?['message'] ??
-            errorMessage) as String;
+        final String errorMsg =
+            (errorMap['message'] ?? dataMap?['message'] ?? errorMessage)
+                as String;
         errorMessage = errorMsg;
       } else if (error is String) {
         errorMessage = error;
@@ -143,10 +144,7 @@ class ValueResult<T> {
   /// - [onSuccess]: Function to call with the value if this is a success
   /// - [onFailure]: Function to call with the error message if this is a failure
   /// - Returns: The result of whichever function was called
-  R fold<R>(
-    R Function(T value) onSuccess,
-    R Function(String error) onFailure,
-  ) {
+  R fold<R>(R Function(T value) onSuccess, R Function(String error) onFailure) {
     if (isSuccess) {
       return onSuccess(_value as T);
     } else {

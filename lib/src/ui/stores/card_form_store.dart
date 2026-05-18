@@ -37,13 +37,13 @@ abstract class CardFormStoreBase with Store {
 
   @computed
   CardFormData get data => CardFormData(
-        cardNumber: cardNumber,
-        cardholderName: cardholderName,
-        expiryDate: expiryDate,
-        cvv: cvv,
-        taxId: taxId,
-        brand: brand,
-      );
+    cardNumber: cardNumber,
+    cardholderName: cardholderName,
+    expiryDate: expiryDate,
+    cvv: cvv,
+    taxId: taxId,
+    brand: brand,
+  );
 
   @computed
   bool get isAmex => brand == CardBrand.amex;

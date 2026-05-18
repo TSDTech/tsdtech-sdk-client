@@ -15,7 +15,7 @@ import 'views/pix_payment_view.dart';
 
 class CheckoutWidgetController {
   CheckoutWidgetController()
-      : selectedMethod = ValueNotifier(PaymentMethodType.pix);
+    : selectedMethod = ValueNotifier(PaymentMethodType.pix);
 
   final ValueNotifier<PaymentMethodType> selectedMethod;
   final ValueNotifier<bool> isLoading = ValueNotifier(false);
@@ -158,15 +158,22 @@ class CheckoutWidget extends StatelessWidget {
       syncControllerState(submitPayment);
     }
 
-    void startPixPolling(String paymentId, Future<void> Function() submitPayment) {
+    void startPixPolling(
+      String paymentId,
+      Future<void> Function() submitPayment,
+    ) {
       effectiveStore.startPixPolling(
         Timer.periodic(const Duration(seconds: 5), (timer) async {
           try {
-            final statusResult = await CheckoutsService.instance.getPixStatus(paymentId);
+            final statusResult = await CheckoutsService.instance.getPixStatus(
+              paymentId,
+            );
             if (!statusResult.isSuccess) return;
 
             final status = statusResult.value?.toLowerCase() ?? '';
-            if (status == 'paid' || status == 'completed' || status == 'success') {
+            if (status == 'paid' ||
+                status == 'completed' ||
+                status == 'success') {
               timer.cancel();
               handleSuccess(
                 paymentId,
@@ -185,7 +192,10 @@ class CheckoutWidget extends StatelessWidget {
       if (effectiveStore.isCardSelected) {
         if (!effectiveStore.validateCardForm()) return;
         if (gatewayPublicKey.trim().isEmpty) {
-          showError('A chave pública do gateway não pode ficar vazia.', processPayment);
+          showError(
+            'A chave pública do gateway não pode ficar vazia.',
+            processPayment,
+          );
           return;
         }
       }
@@ -205,7 +215,9 @@ class CheckoutWidget extends StatelessWidget {
               : null,
         );
 
-        final result = await CheckoutsService.instance.createCheckout(checkoutRequest);
+        final result = await CheckoutsService.instance.createCheckout(
+          checkoutRequest,
+        );
 
         if (!result.isSuccess) {
           showError(result.error.toString(), processPayment);
@@ -278,32 +290,35 @@ class CheckoutWidget extends StatelessWidget {
             const SizedBox(height: 24),
             switch (method) {
               PaymentMethodType.pix => PixPaymentView(
-                  qrCode: effectiveStore.pixQrCode,
-                  copyPasteCode: effectiveStore.pixCopyPasteCode,
-                ),
+                qrCode: effectiveStore.pixQrCode,
+                copyPasteCode: effectiveStore.pixCopyPasteCode,
+              ),
               PaymentMethodType.card => CardPaymentView(
-                  formKey: effectiveStore.cardFormKey,
-                  formVersion: effectiveStore.cardFormVersion,
-                  cardHolderName: effectiveStore.cardHolderName,
-                  cardNumber: effectiveStore.cardNumber,
-                  expiryDate: effectiveStore.expiryDate,
-                  securityCode: effectiveStore.securityCode,
-                  onCardHolderChanged: effectiveStore.updateCardHolderName,
-                  onCardNumberChanged: effectiveStore.updateCardNumber,
-                  onExpiryChanged: effectiveStore.updateExpiryDate,
-                  onSecurityCodeChanged: effectiveStore.updateSecurityCode,
-                ),
+                formKey: effectiveStore.cardFormKey,
+                formVersion: effectiveStore.cardFormVersion,
+                cardHolderName: effectiveStore.cardHolderName,
+                cardNumber: effectiveStore.cardNumber,
+                expiryDate: effectiveStore.expiryDate,
+                securityCode: effectiveStore.securityCode,
+                onCardHolderChanged: effectiveStore.updateCardHolderName,
+                onCardNumberChanged: effectiveStore.updateCardNumber,
+                onExpiryChanged: effectiveStore.updateExpiryDate,
+                onSecurityCodeChanged: effectiveStore.updateSecurityCode,
+              ),
             },
             const SizedBox(height: 24),
             if (showSubmitButton &&
-                !(method == PaymentMethodType.pix && effectiveStore.hasGeneratedPix))
+                !(method == PaymentMethodType.pix &&
+                    effectiveStore.hasGeneratedPix))
               ElevatedButton(
                 onPressed: processPayment,
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
                 child: Text(
-                  method == PaymentMethodType.card ? 'Pagar Agora' : 'Gerar Pagamento',
+                  method == PaymentMethodType.card
+                      ? 'Pagar Agora'
+                      : 'Gerar Pagamento',
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),

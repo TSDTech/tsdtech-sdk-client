@@ -12,8 +12,9 @@ ServiceFormField _$ServiceFormFieldFromJson(Map<String, dynamic> json) =>
       type: json['type'] as String,
       label: json['label'] as String,
       isRequired: json['required'] as bool? ?? false,
-      options:
-          (json['options'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      options: (json['options'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
       validationKey: json['validationKey'] as String?,
     );
 

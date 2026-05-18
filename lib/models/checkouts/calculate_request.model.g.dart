@@ -14,6 +14,4 @@ CalculateRequest _$CalculateRequestFromJson(Map<String, dynamic> json) =>
     );
 
 Map<String, dynamic> _$CalculateRequestToJson(CalculateRequest instance) =>
-    <String, dynamic>{
-      'cart': instance.cart.map((e) => e.toJson()).toList(),
-    };
+    <String, dynamic>{'cart': instance.cart.map((e) => e.toJson()).toList()};

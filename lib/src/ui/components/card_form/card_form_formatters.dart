@@ -18,8 +18,9 @@ class CardNumberFormatter extends TextInputFormatter {
 
     final isAmex = brand == CardBrand.amex;
     final maxLen = isAmex ? 15 : 16;
-    final limited =
-        digits.length > maxLen ? digits.substring(0, maxLen) : digits;
+    final limited = digits.length > maxLen
+        ? digits.substring(0, maxLen)
+        : digits;
 
     final buf = StringBuffer();
     for (int i = 0; i < limited.length; i++) {

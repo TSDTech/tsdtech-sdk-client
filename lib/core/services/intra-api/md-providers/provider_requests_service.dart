@@ -57,14 +57,16 @@ class ProviderRequestsService extends IntraApi {
   ///   service: true,
   /// );
   /// ```
-  Future<ValueResult<PaginatedList<ProviderRequest>>> getProviderRequestsClient(
-      {Pagination? pagination,
-      bool? clients,
-      bool? service,
-      bool? provider,
-      bool? voucher,
-      bool? administrator,
-      String? status}) async {
+  Future<ValueResult<PaginatedList<ProviderRequest>>>
+  getProviderRequestsClient({
+    Pagination? pagination,
+    bool? clients,
+    bool? service,
+    bool? provider,
+    bool? voucher,
+    bool? administrator,
+    String? status,
+  }) async {
     try {
       final queryParams = {
         'page': pagination?.page ?? 1,
@@ -122,8 +124,9 @@ class ProviderRequestsService extends IntraApi {
       const path = 'provider-service-types/client';
       final response = await get(path, queryParameters: queryParams);
       final paginated = PaginatedList<ProviderModel>.fromJson(
-          response.data as Map<String, dynamic>,
-          (item) => ProviderModel.fromJson(item as Map<String, dynamic>));
+        response.data as Map<String, dynamic>,
+        (item) => ProviderModel.fromJson(item as Map<String, dynamic>),
+      );
       return ValueResult.success(paginated);
     } catch (e) {
       return ValueResult.fromError(e);

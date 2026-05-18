@@ -10,10 +10,9 @@ part 'checkout_store.g.dart';
 class CheckoutStore = CheckoutStoreBase with _$CheckoutStore;
 
 abstract class CheckoutStoreBase with Store {
-  CheckoutStoreBase({
-    PaymentMethodType initialMethod = PaymentMethodType.pix,
-  })  : _initialMethod = initialMethod,
-        selectedMethod = initialMethod;
+  CheckoutStoreBase({PaymentMethodType initialMethod = PaymentMethodType.pix})
+    : _initialMethod = initialMethod,
+      selectedMethod = initialMethod;
 
   final PaymentMethodType _initialMethod;
   final GlobalKey<FormState> cardFormKey = GlobalKey<FormState>();
@@ -118,11 +117,7 @@ abstract class CheckoutStoreBase with Store {
   void clearError() => errorMessage = null;
 
   @action
-  void setPixData({
-    String? paymentId,
-    String? qrCode,
-    String? copyPasteCode,
-  }) {
+  void setPixData({String? paymentId, String? qrCode, String? copyPasteCode}) {
     this.paymentId = paymentId;
     pixQrCode = qrCode;
     pixCopyPasteCode = copyPasteCode;

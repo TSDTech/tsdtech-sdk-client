@@ -52,10 +52,7 @@ void main() {
       find.widgetWithText(TextFormField, 'Validade'),
       '12/99',
     );
-    await tester.enterText(
-      find.widgetWithText(TextFormField, 'CVV'),
-      '123',
-    );
+    await tester.enterText(find.widgetWithText(TextFormField, 'CVV'), '123');
     await tester.enterText(
       find.widgetWithText(TextFormField, 'CPF/CNPJ do titular'),
       '52998224725',

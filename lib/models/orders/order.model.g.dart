@@ -7,25 +7,26 @@ part of 'order.model.dart';
 // **************************************************************************
 
 OrderModel _$OrderModelFromJson(Map<String, dynamic> json) => OrderModel(
-      id: json['id'] as String,
-      hash: json['hash'] as String?,
-      status: json['status'] as String?,
-      clientId: json['clientId'] as String?,
-      orderPaymentInfoId: json['orderPaymentInfoId'] as String?,
-      createdAt: json['createdAt'] == null
-          ? null
-          : DateTime.parse(json['createdAt'] as String),
-      updatedAt: json['updatedAt'] == null
-          ? null
-          : DateTime.parse(json['updatedAt'] as String),
-      client: json['client'] == null
-          ? null
-          : OrderClientInfo.fromJson(json['client'] as Map<String, dynamic>),
-      orderPaymentInfo: json['orderPaymentInfo'] == null
-          ? null
-          : OrderPaymentInfo.fromJson(
-              json['orderPaymentInfo'] as Map<String, dynamic>),
-    );
+  id: json['id'] as String,
+  hash: json['hash'] as String?,
+  status: json['status'] as String?,
+  clientId: json['clientId'] as String?,
+  orderPaymentInfoId: json['orderPaymentInfoId'] as String?,
+  createdAt: json['createdAt'] == null
+      ? null
+      : DateTime.parse(json['createdAt'] as String),
+  updatedAt: json['updatedAt'] == null
+      ? null
+      : DateTime.parse(json['updatedAt'] as String),
+  client: json['client'] == null
+      ? null
+      : OrderClientInfo.fromJson(json['client'] as Map<String, dynamic>),
+  orderPaymentInfo: json['orderPaymentInfo'] == null
+      ? null
+      : OrderPaymentInfo.fromJson(
+          json['orderPaymentInfo'] as Map<String, dynamic>,
+        ),
+);
 
 Map<String, dynamic> _$OrderModelToJson(OrderModel instance) =>
     <String, dynamic>{

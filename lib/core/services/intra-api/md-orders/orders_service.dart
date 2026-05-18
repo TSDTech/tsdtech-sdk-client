@@ -71,8 +71,10 @@ class OrdersService extends IntraApi {
         final items = data
             .map((item) => OrderModel.fromJson(item as Map<String, dynamic>))
             .toList();
-        paginated =
-            PaginatedList<OrderModel>(items: items, pageCount: items.length);
+        paginated = PaginatedList<OrderModel>(
+          items: items,
+          pageCount: items.length,
+        );
       } else if (data is Map) {
         final item = OrderModel.fromJson(data as Map<String, dynamic>);
         paginated = PaginatedList<OrderModel>(items: [item], pageCount: 1);

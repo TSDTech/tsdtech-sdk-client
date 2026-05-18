@@ -41,9 +41,11 @@ class IntraApi {
   /// - [headers]: Optional map of additional headers
   /// - Returns: A [Future] containing the [Response]
   @protected
-  Future<Response<dynamic>> get(String path,
-      {Map<String, dynamic>? queryParameters,
-      Map<String, dynamic>? headers}) async {
+  Future<Response<dynamic>> get(
+    String path, {
+    Map<String, dynamic>? queryParameters,
+    Map<String, dynamic>? headers,
+  }) async {
     return await BaseApi.get(
       joinUrl(_baseUrl, path),
       queryParameters: queryParameters,
@@ -58,8 +60,11 @@ class IntraApi {
   /// - [headers]: Optional map of additional headers
   /// - Returns: A [Future] containing the [Response]
   @protected
-  Future<Response<dynamic>> post(String path,
-      {Object? data, Map<String, dynamic>? headers}) async {
+  Future<Response<dynamic>> post(
+    String path, {
+    Object? data,
+    Map<String, dynamic>? headers,
+  }) async {
     return await BaseApi.post(
       joinUrl(_baseUrl, path),
       data: data,
@@ -74,8 +79,11 @@ class IntraApi {
   /// - [headers]: Optional map of additional headers
   /// - Returns: A [Future] containing the [Response]
   @protected
-  Future<Response<dynamic>> put(String path,
-      {Object? data, Map<String, dynamic>? headers}) async {
+  Future<Response<dynamic>> put(
+    String path, {
+    Object? data,
+    Map<String, dynamic>? headers,
+  }) async {
     return await BaseApi.put(
       joinUrl(_baseUrl, path),
       data: data,
@@ -90,8 +98,11 @@ class IntraApi {
   /// - [headers]: Optional map of additional headers
   /// - Returns: A [Future] containing the [Response]
   @protected
-  Future<Response<dynamic>> patch(String path,
-      {Object? data, Map<String, dynamic>? headers}) async {
+  Future<Response<dynamic>> patch(
+    String path, {
+    Object? data,
+    Map<String, dynamic>? headers,
+  }) async {
     return await BaseApi.patch(
       joinUrl(_baseUrl, path),
       data: data,
@@ -106,8 +117,11 @@ class IntraApi {
   /// - [headers]: Optional map of additional headers
   /// - Returns: A [Future] containing the [Response]
   @protected
-  Future<Response<dynamic>> delete(String path,
-      {Object? data, Map<String, dynamic>? headers}) async {
+  Future<Response<dynamic>> delete(
+    String path, {
+    Object? data,
+    Map<String, dynamic>? headers,
+  }) async {
     return await BaseApi.delete(
       joinUrl(_baseUrl, path),
       data: data,

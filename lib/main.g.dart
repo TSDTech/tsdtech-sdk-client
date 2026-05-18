@@ -9,8 +9,10 @@ part of 'main.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$ExampleShowcaseStore on ExampleShowcaseStoreBase, Store {
-  late final _$presetAtom =
-      Atom(name: 'ExampleShowcaseStoreBase.preset', context: context);
+  late final _$presetAtom = Atom(
+    name: 'ExampleShowcaseStoreBase.preset',
+    context: context,
+  );
 
   @override
   DemoThemePreset get preset {
@@ -26,7 +28,9 @@ mixin _$ExampleShowcaseStore on ExampleShowcaseStoreBase, Store {
   }
 
   late final _$paymentFormResultAtom = Atom(
-      name: 'ExampleShowcaseStoreBase.paymentFormResult', context: context);
+    name: 'ExampleShowcaseStoreBase.paymentFormResult',
+    context: context,
+  );
 
   @override
   PaymentFormData? get paymentFormResult {
@@ -41,8 +45,10 @@ mixin _$ExampleShowcaseStore on ExampleShowcaseStoreBase, Store {
     });
   }
 
-  late final _$cardPreviewAtom =
-      Atom(name: 'ExampleShowcaseStoreBase.cardPreview', context: context);
+  late final _$cardPreviewAtom = Atom(
+    name: 'ExampleShowcaseStoreBase.cardPreview',
+    context: context,
+  );
 
   @override
   CardFormData? get cardPreview {
@@ -57,8 +63,10 @@ mixin _$ExampleShowcaseStore on ExampleShowcaseStoreBase, Store {
     });
   }
 
-  late final _$checkoutStatusAtom =
-      Atom(name: 'ExampleShowcaseStoreBase.checkoutStatus', context: context);
+  late final _$checkoutStatusAtom = Atom(
+    name: 'ExampleShowcaseStoreBase.checkoutStatus',
+    context: context,
+  );
 
   @override
   PaymentStatus? get checkoutStatus {
@@ -73,13 +81,16 @@ mixin _$ExampleShowcaseStore on ExampleShowcaseStoreBase, Store {
     });
   }
 
-  late final _$ExampleShowcaseStoreBaseActionController =
-      ActionController(name: 'ExampleShowcaseStoreBase', context: context);
+  late final _$ExampleShowcaseStoreBaseActionController = ActionController(
+    name: 'ExampleShowcaseStoreBase',
+    context: context,
+  );
 
   @override
   void setPreset(DemoThemePreset value) {
     final _$actionInfo = _$ExampleShowcaseStoreBaseActionController.startAction(
-        name: 'ExampleShowcaseStoreBase.setPreset');
+      name: 'ExampleShowcaseStoreBase.setPreset',
+    );
     try {
       return super.setPreset(value);
     } finally {
@@ -90,7 +101,8 @@ mixin _$ExampleShowcaseStore on ExampleShowcaseStoreBase, Store {
   @override
   void setPaymentFormResult(PaymentFormData? value) {
     final _$actionInfo = _$ExampleShowcaseStoreBaseActionController.startAction(
-        name: 'ExampleShowcaseStoreBase.setPaymentFormResult');
+      name: 'ExampleShowcaseStoreBase.setPaymentFormResult',
+    );
     try {
       return super.setPaymentFormResult(value);
     } finally {
@@ -101,7 +113,8 @@ mixin _$ExampleShowcaseStore on ExampleShowcaseStoreBase, Store {
   @override
   void setCardPreview(CardFormData? value) {
     final _$actionInfo = _$ExampleShowcaseStoreBaseActionController.startAction(
-        name: 'ExampleShowcaseStoreBase.setCardPreview');
+      name: 'ExampleShowcaseStoreBase.setCardPreview',
+    );
     try {
       return super.setCardPreview(value);
     } finally {
@@ -112,7 +125,8 @@ mixin _$ExampleShowcaseStore on ExampleShowcaseStoreBase, Store {
   @override
   void setCheckoutStatus(PaymentStatus? value) {
     final _$actionInfo = _$ExampleShowcaseStoreBaseActionController.startAction(
-        name: 'ExampleShowcaseStoreBase.setCheckoutStatus');
+      name: 'ExampleShowcaseStoreBase.setCheckoutStatus',
+    );
     try {
       return super.setCheckoutStatus(value);
     } finally {

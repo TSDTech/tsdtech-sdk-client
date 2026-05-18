@@ -14,6 +14,7 @@ class PublicKeyResponse {
     this.expiresAt,
   });
 
-  factory PublicKeyResponse.fromJson(Map<String, dynamic> json) => _$PublicKeyResponseFromJson(json);
+  factory PublicKeyResponse.fromJson(Map<String, dynamic> json) =>
+      _$PublicKeyResponseFromJson(json);
   Map<String, dynamic> toJson() => _$PublicKeyResponseToJson(this);
 }

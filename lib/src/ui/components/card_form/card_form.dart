@@ -56,8 +56,10 @@ class CardForm extends StatelessWidget {
     }
 
     String? validateName(String? value) {
-      if (value == null || value.trim().isEmpty) return 'Nome do titular obrigatório';
-      if (value.trim().split(RegExp(r'\s+')).length < 2) return 'Informe o nome completo';
+      if (value == null || value.trim().isEmpty)
+        return 'Nome do titular obrigatório';
+      if (value.trim().split(RegExp(r'\s+')).length < 2)
+        return 'Informe o nome completo';
       return null;
     }
 
@@ -71,7 +73,8 @@ class CardForm extends StatelessWidget {
       if (month < 1 || month > 12) return 'Mês inválido';
       final now = DateTime.now();
       final expiry = DateTime(2000 + year, month + 1);
-      if (expiry.isBefore(DateTime(now.year, now.month))) return 'Cartão expirado';
+      if (expiry.isBefore(DateTime(now.year, now.month)))
+        return 'Cartão expirado';
       return null;
     }
 
@@ -89,7 +92,8 @@ class CardForm extends StatelessWidget {
       if (value == null || value.isEmpty) return 'CPF/CNPJ obrigatório';
       final digits = value.replaceAll(RegExp(r'\D'), '');
       if (digits.length == 11) return _validCpf(digits) ? null : 'CPF inválido';
-      if (digits.length == 14) return _validCnpj(digits) ? null : 'CNPJ inválido';
+      if (digits.length == 14)
+        return _validCnpj(digits) ? null : 'CNPJ inválido';
       return 'CPF/CNPJ incompleto';
     }
 
@@ -157,7 +161,9 @@ class CardForm extends StatelessWidget {
                 children: [
                   Expanded(
                     child: CardFormField(
-                      fieldKey: ValueKey('card-expiry-${effectiveStore.formVersion}'),
+                      fieldKey: ValueKey(
+                        'card-expiry-${effectiveStore.formVersion}',
+                      ),
                       initialValue: effectiveStore.expiryDate,
                       label: 'Validade',
                       hint: 'MM/AA',
@@ -170,7 +176,8 @@ class CardForm extends StatelessWidget {
                         notifyChanged();
                       },
                       textInputAction: TextInputAction.next,
-                      onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
+                      onFieldSubmitted: (_) =>
+                          FocusScope.of(context).nextFocus(),
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -197,7 +204,8 @@ class CardForm extends StatelessWidget {
                         notifyChanged();
                       },
                       textInputAction: TextInputAction.next,
-                      onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
+                      onFieldSubmitted: (_) =>
+                          FocusScope.of(context).nextFocus(),
                     ),
                   ),
                 ],
@@ -219,8 +227,9 @@ class CardForm extends StatelessWidget {
                 textInputAction: showSubmitButton
                     ? TextInputAction.done
                     : TextInputAction.next,
-                onFieldSubmitted:
-                    showSubmitButton ? (_) => handleSubmit() : null,
+                onFieldSubmitted: showSubmitButton
+                    ? (_) => handleSubmit()
+                    : null,
               ),
               if (showSubmitButton) ...[
                 const SizedBox(height: 24),

@@ -13,9 +13,9 @@ abstract class PaymentStoreBase with Store {
   PaymentStoreBase({
     PaymentFormMethod initialMethod = PaymentFormMethod.pix,
     CardFormStore? cardFormStore,
-  })  : _initialMethod = initialMethod,
-        cardFormStore = cardFormStore ?? CardFormStore(),
-        selectedMethod = initialMethod;
+  }) : _initialMethod = initialMethod,
+       cardFormStore = cardFormStore ?? CardFormStore(),
+       selectedMethod = initialMethod;
 
   final PaymentFormMethod _initialMethod;
   final CardFormStore cardFormStore;
@@ -42,13 +42,12 @@ abstract class PaymentStoreBase with Store {
   bool get isPixSelected => selectedMethod == PaymentFormMethod.pix;
 
   @computed
-  CardFormData? get selectedCardData => isCardSelected ? cardFormStore.data : null;
+  CardFormData? get selectedCardData =>
+      isCardSelected ? cardFormStore.data : null;
 
   @computed
-  PaymentFormData get currentData => PaymentFormData(
-        method: selectedMethod,
-        cardData: selectedCardData,
-      );
+  PaymentFormData get currentData =>
+      PaymentFormData(method: selectedMethod, cardData: selectedCardData);
 
   @action
   void selectMethod(PaymentFormMethod method) {

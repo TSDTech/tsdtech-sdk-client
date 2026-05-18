@@ -91,14 +91,18 @@ class AuthServiceClientUser extends IntraApi {
         throw Exception('administratorId is required for login');
       }
 
-      final response = await post('/auth-client-users/public/login', data: {
-        'email': email,
-        'password': password,
-        'administratorId': administratorId,
-      });
+      final response = await post(
+        '/auth-client-users/public/login',
+        data: {
+          'email': email,
+          'password': password,
+          'administratorId': administratorId,
+        },
+      );
 
-      final loginResponse =
-          LoginResponseClient.fromJson(response.data as Map<String, dynamic>);
+      final loginResponse = LoginResponseClient.fromJson(
+        response.data as Map<String, dynamic>,
+      );
 
       return ValueResult.success(loginResponse);
     } catch (e) {
@@ -151,11 +155,14 @@ class AuthServiceClientUser extends IntraApi {
       // remove legacy fullDomain param and replace by administratorId
       payload.remove('fullDomain');
       payload['administratorId'] = administratorId;
-      final response =
-          await post('/auth-client-users/public/signup', data: payload);
+      final response = await post(
+        '/auth-client-users/public/signup',
+        data: payload,
+      );
 
-      final loginResponse =
-          LoginResponseClient.fromJson(response.data as Map<String, dynamic>);
+      final loginResponse = LoginResponseClient.fromJson(
+        response.data as Map<String, dynamic>,
+      );
 
       return ValueResult.success(loginResponse);
     } catch (e) {

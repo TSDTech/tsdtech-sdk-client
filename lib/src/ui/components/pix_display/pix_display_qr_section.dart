@@ -110,10 +110,7 @@ class ExpiredQrOverlay extends StatelessWidget {
             SizedBox(height: 12),
             Text(
               'QR Code expirado',
-              style: TextStyle(
-                fontSize: 14,
-                color: TsdtechColors.textDisabled,
-              ),
+              style: TextStyle(fontSize: 14, color: TsdtechColors.textDisabled),
               textAlign: TextAlign.center,
             ),
           ],

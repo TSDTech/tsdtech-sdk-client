@@ -12,41 +12,45 @@ mixin _$PaymentStore on PaymentStoreBase, Store {
   Computed<bool>? _$canInteractComputed;
 
   @override
-  bool get canInteract =>
-      (_$canInteractComputed ??= Computed<bool>(() => super.canInteract,
-              name: 'PaymentStoreBase.canInteract'))
-          .value;
+  bool get canInteract => (_$canInteractComputed ??= Computed<bool>(
+    () => super.canInteract,
+    name: 'PaymentStoreBase.canInteract',
+  )).value;
   Computed<bool>? _$isCardSelectedComputed;
 
   @override
-  bool get isCardSelected =>
-      (_$isCardSelectedComputed ??= Computed<bool>(() => super.isCardSelected,
-              name: 'PaymentStoreBase.isCardSelected'))
-          .value;
+  bool get isCardSelected => (_$isCardSelectedComputed ??= Computed<bool>(
+    () => super.isCardSelected,
+    name: 'PaymentStoreBase.isCardSelected',
+  )).value;
   Computed<bool>? _$isPixSelectedComputed;
 
   @override
-  bool get isPixSelected =>
-      (_$isPixSelectedComputed ??= Computed<bool>(() => super.isPixSelected,
-              name: 'PaymentStoreBase.isPixSelected'))
-          .value;
+  bool get isPixSelected => (_$isPixSelectedComputed ??= Computed<bool>(
+    () => super.isPixSelected,
+    name: 'PaymentStoreBase.isPixSelected',
+  )).value;
   Computed<CardFormData?>? _$selectedCardDataComputed;
 
   @override
-  CardFormData? get selectedCardData => (_$selectedCardDataComputed ??=
-          Computed<CardFormData?>(() => super.selectedCardData,
-              name: 'PaymentStoreBase.selectedCardData'))
-      .value;
+  CardFormData? get selectedCardData =>
+      (_$selectedCardDataComputed ??= Computed<CardFormData?>(
+        () => super.selectedCardData,
+        name: 'PaymentStoreBase.selectedCardData',
+      )).value;
   Computed<PaymentFormData>? _$currentDataComputed;
 
   @override
-  PaymentFormData get currentData => (_$currentDataComputed ??=
-          Computed<PaymentFormData>(() => super.currentData,
-              name: 'PaymentStoreBase.currentData'))
-      .value;
+  PaymentFormData get currentData =>
+      (_$currentDataComputed ??= Computed<PaymentFormData>(
+        () => super.currentData,
+        name: 'PaymentStoreBase.currentData',
+      )).value;
 
-  late final _$selectedMethodAtom =
-      Atom(name: 'PaymentStoreBase.selectedMethod', context: context);
+  late final _$selectedMethodAtom = Atom(
+    name: 'PaymentStoreBase.selectedMethod',
+    context: context,
+  );
 
   @override
   PaymentFormMethod get selectedMethod {
@@ -61,8 +65,10 @@ mixin _$PaymentStore on PaymentStoreBase, Store {
     });
   }
 
-  late final _$enabledAtom =
-      Atom(name: 'PaymentStoreBase.enabled', context: context);
+  late final _$enabledAtom = Atom(
+    name: 'PaymentStoreBase.enabled',
+    context: context,
+  );
 
   @override
   bool get enabled {
@@ -77,8 +83,10 @@ mixin _$PaymentStore on PaymentStoreBase, Store {
     });
   }
 
-  late final _$isLoadingAtom =
-      Atom(name: 'PaymentStoreBase.isLoading', context: context);
+  late final _$isLoadingAtom = Atom(
+    name: 'PaymentStoreBase.isLoading',
+    context: context,
+  );
 
   @override
   bool get isLoading {
@@ -93,8 +101,10 @@ mixin _$PaymentStore on PaymentStoreBase, Store {
     });
   }
 
-  late final _$lastSubmittedDataAtom =
-      Atom(name: 'PaymentStoreBase.lastSubmittedData', context: context);
+  late final _$lastSubmittedDataAtom = Atom(
+    name: 'PaymentStoreBase.lastSubmittedData',
+    context: context,
+  );
 
   @override
   PaymentFormData? get lastSubmittedData {
@@ -109,13 +119,16 @@ mixin _$PaymentStore on PaymentStoreBase, Store {
     });
   }
 
-  late final _$PaymentStoreBaseActionController =
-      ActionController(name: 'PaymentStoreBase', context: context);
+  late final _$PaymentStoreBaseActionController = ActionController(
+    name: 'PaymentStoreBase',
+    context: context,
+  );
 
   @override
   void selectMethod(PaymentFormMethod method) {
     final _$actionInfo = _$PaymentStoreBaseActionController.startAction(
-        name: 'PaymentStoreBase.selectMethod');
+      name: 'PaymentStoreBase.selectMethod',
+    );
     try {
       return super.selectMethod(method);
     } finally {
@@ -126,7 +139,8 @@ mixin _$PaymentStore on PaymentStoreBase, Store {
   @override
   void setEnabled(bool value) {
     final _$actionInfo = _$PaymentStoreBaseActionController.startAction(
-        name: 'PaymentStoreBase.setEnabled');
+      name: 'PaymentStoreBase.setEnabled',
+    );
     try {
       return super.setEnabled(value);
     } finally {
@@ -137,7 +151,8 @@ mixin _$PaymentStore on PaymentStoreBase, Store {
   @override
   void setLoading(bool value) {
     final _$actionInfo = _$PaymentStoreBaseActionController.startAction(
-        name: 'PaymentStoreBase.setLoading');
+      name: 'PaymentStoreBase.setLoading',
+    );
     try {
       return super.setLoading(value);
     } finally {
@@ -148,7 +163,8 @@ mixin _$PaymentStore on PaymentStoreBase, Store {
   @override
   void setCardData(CardFormData value) {
     final _$actionInfo = _$PaymentStoreBaseActionController.startAction(
-        name: 'PaymentStoreBase.setCardData');
+      name: 'PaymentStoreBase.setCardData',
+    );
     try {
       return super.setCardData(value);
     } finally {
@@ -159,7 +175,8 @@ mixin _$PaymentStore on PaymentStoreBase, Store {
   @override
   void markSubmitted() {
     final _$actionInfo = _$PaymentStoreBaseActionController.startAction(
-        name: 'PaymentStoreBase.markSubmitted');
+      name: 'PaymentStoreBase.markSubmitted',
+    );
     try {
       return super.markSubmitted();
     } finally {
@@ -170,7 +187,8 @@ mixin _$PaymentStore on PaymentStoreBase, Store {
   @override
   void clearSubmission() {
     final _$actionInfo = _$PaymentStoreBaseActionController.startAction(
-        name: 'PaymentStoreBase.clearSubmission');
+      name: 'PaymentStoreBase.clearSubmission',
+    );
     try {
       return super.clearSubmission();
     } finally {
@@ -181,7 +199,8 @@ mixin _$PaymentStore on PaymentStoreBase, Store {
   @override
   void reset() {
     final _$actionInfo = _$PaymentStoreBaseActionController.startAction(
-        name: 'PaymentStoreBase.reset');
+      name: 'PaymentStoreBase.reset',
+    );
     try {
       return super.reset();
     } finally {

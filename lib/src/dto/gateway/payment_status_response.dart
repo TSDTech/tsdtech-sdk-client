@@ -21,6 +21,7 @@ class PaymentStatusResponse {
     this.brand,
   });
 
-  factory PaymentStatusResponse.fromJson(Map<String, dynamic> json) => _$PaymentStatusResponseFromJson(json);
+  factory PaymentStatusResponse.fromJson(Map<String, dynamic> json) =>
+      _$PaymentStatusResponseFromJson(json);
   Map<String, dynamic> toJson() => _$PaymentStatusResponseToJson(this);
 }

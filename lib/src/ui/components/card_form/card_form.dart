@@ -56,10 +56,12 @@ class CardForm extends StatelessWidget {
     }
 
     String? validateName(String? value) {
-      if (value == null || value.trim().isEmpty)
+      if (value == null || value.trim().isEmpty) {
         return 'Nome do titular obrigatório';
-      if (value.trim().split(RegExp(r'\s+')).length < 2)
+      }
+      if (value.trim().split(RegExp(r'\s+')).length < 2) {
         return 'Informe o nome completo';
+      }
       return null;
     }
 
@@ -73,8 +75,9 @@ class CardForm extends StatelessWidget {
       if (month < 1 || month > 12) return 'Mês inválido';
       final now = DateTime.now();
       final expiry = DateTime(2000 + year, month + 1);
-      if (expiry.isBefore(DateTime(now.year, now.month)))
+      if (expiry.isBefore(DateTime(now.year, now.month))) {
         return 'Cartão expirado';
+      }
       return null;
     }
 
@@ -92,8 +95,9 @@ class CardForm extends StatelessWidget {
       if (value == null || value.isEmpty) return 'CPF/CNPJ obrigatório';
       final digits = value.replaceAll(RegExp(r'\D'), '');
       if (digits.length == 11) return _validCpf(digits) ? null : 'CPF inválido';
-      if (digits.length == 14)
+      if (digits.length == 14) {
         return _validCnpj(digits) ? null : 'CNPJ inválido';
+      }
       return 'CPF/CNPJ incompleto';
     }
 

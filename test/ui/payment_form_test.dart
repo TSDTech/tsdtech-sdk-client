@@ -5,12 +5,13 @@ import 'package:tsdtech_client_sdk/tsdtech_sdk_ui.dart';
 void main() {
   testWidgets('does not submit invalid card form', (tester) async {
     PaymentFormData? submittedData;
+    final store = PaymentStore(initialMethod: PaymentFormMethod.card);
 
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
           body: PaymentForm(
-            initialMethod: PaymentFormMethod.card,
+            store: store,
             onSubmit: (data) => submittedData = data,
           ),
         ),
@@ -26,12 +27,13 @@ void main() {
 
   testWidgets('submits validated card data', (tester) async {
     PaymentFormData? submittedData;
+    final store = PaymentStore(initialMethod: PaymentFormMethod.card);
 
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
           body: PaymentForm(
-            initialMethod: PaymentFormMethod.card,
+            store: store,
             onSubmit: (data) => submittedData = data,
           ),
         ),
@@ -70,12 +72,13 @@ void main() {
 
   testWidgets('submits pix without card validation', (tester) async {
     PaymentFormData? submittedData;
+    final store = PaymentStore(initialMethod: PaymentFormMethod.pix);
 
     await tester.pumpWidget(
       MaterialApp(
         home: Scaffold(
           body: PaymentForm(
-            initialMethod: PaymentFormMethod.pix,
+            store: store,
             onSubmit: (data) => submittedData = data,
           ),
         ),

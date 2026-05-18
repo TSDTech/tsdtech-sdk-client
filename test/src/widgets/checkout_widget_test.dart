@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tsdtech_client_sdk/src/ui/checkout/checkout_widget.dart';
 import 'package:tsdtech_client_sdk/src/ui/checkout/payment_method_selector.dart';
+import 'package:tsdtech_client_sdk/src/ui/stores/checkout_store.dart';
 import 'package:tsdtech_client_sdk/src/ui/checkout/views/pix_payment_view.dart';
 import 'package:tsdtech_client_sdk/src/ui/checkout/views/card_payment_view.dart';
 
@@ -9,9 +10,10 @@ void main() {
   group('CheckoutWidget UI Tests', () {
     testWidgets('CA-1 e CA-2: Renderiza corretamente com as opções PIX e Cartão', (WidgetTester tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
+        MaterialApp(
           home: Scaffold(
             body: CheckoutWidget(
+              store: CheckoutStore(),
               items: [], // Simula carrinho vazio para teste de UI
               administratorId: 'admin_123',
               gatewayPublicKey: 'pk_123',
@@ -35,9 +37,10 @@ void main() {
 
     testWidgets('CA-2: Troca de abas atualiza a View do componente', (WidgetTester tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
+        MaterialApp(
           home: Scaffold(
             body: CheckoutWidget(
+              store: CheckoutStore(),
               items: [],
               administratorId: 'admin_123',
               gatewayPublicKey: 'pk_123',

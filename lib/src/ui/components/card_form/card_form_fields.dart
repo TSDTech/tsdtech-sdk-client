@@ -8,8 +8,10 @@ import 'card_brand.dart';
 class CardFormField extends StatelessWidget {
   const CardFormField({
     super.key,
-    required this.controller,
-    required this.focusNode,
+    this.controller,
+    this.focusNode,
+    this.fieldKey,
+    this.initialValue,
     required this.label,
     required this.hint,
     this.enabled = true,
@@ -26,8 +28,10 @@ class CardFormField extends StatelessWidget {
     this.onFieldSubmitted,
   });
 
-  final TextEditingController controller;
-  final FocusNode focusNode;
+  final TextEditingController? controller;
+  final FocusNode? focusNode;
+  final Key? fieldKey;
+  final String? initialValue;
   final String label;
   final String hint;
   final bool enabled;
@@ -46,8 +50,10 @@ class CardFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      key: fieldKey,
       controller: controller,
       focusNode: focusNode,
+      initialValue: controller == null ? initialValue : null,
       enabled: enabled,
       autofocus: autofocus,
       keyboardType: keyboardType,

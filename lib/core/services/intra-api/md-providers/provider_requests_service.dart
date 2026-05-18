@@ -69,7 +69,7 @@ class ProviderRequestsService extends IntraApi {
       final queryParams = {
         'page': pagination?.page ?? 1,
         'pageSize': pagination?.pageCount ?? 10,
-        if (status != null) 'status': status,
+        'status': ?status,
         if (clients != null) 'clients': clients.toString(),
         if (service != null) 'service': service.toString(),
         if (provider != null) 'provider': provider.toString(),
@@ -117,7 +117,7 @@ class ProviderRequestsService extends IntraApi {
         'pageSize': pagination?.pageCount ?? 10,
         if (serviceType != null) 'serviceType': serviceType.toString(),
         if (providerBool != null) 'provider': providerBool.toString(),
-        if (serviceId != null) 'serviceId': serviceId,
+        'serviceId': ?serviceId,
       };
       const path = 'provider-service-types/client';
       final response = await get(path, queryParameters: queryParams);

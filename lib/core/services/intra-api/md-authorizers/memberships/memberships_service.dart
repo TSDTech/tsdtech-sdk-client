@@ -67,8 +67,8 @@ class MembershipsService extends IntraApi {
         if (organizationIds != null && organizationIds.isNotEmpty)
           'organizationIds': organizationIds,
         if (roles != null && roles.isNotEmpty) 'roles': roles,
-        if (clientUser != null) 'clientUser': clientUser,
-        if (organization != null) 'organization': organization,
+        'clientUser': ?clientUser,
+        'organization': ?organization,
       };
 
       final response =

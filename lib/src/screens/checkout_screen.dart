@@ -241,10 +241,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             builder: (context, isLoading, _) {
               return ValueListenableBuilder<PaymentMethodType>(
                 valueListenable: _checkoutController.selectedMethod,
-                builder: (context, method, __) {
+                builder: (context, method, _) {
                   return ValueListenableBuilder<bool>(
                     valueListenable: _checkoutController.hasGeneratedPix,
-                    builder: (context, hasGeneratedPix, ___) {
+                    builder: (context, hasGeneratedPix, _) {
                       final isDisabled =
                           isLoading ||
                           _isFetchingGatewayPublicKey ||

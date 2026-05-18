@@ -1,6 +1,5 @@
 import 'package:test/test.dart';
 import 'package:tsdtech_client_sdk/tsdtech_sdk_client.dart';
-import 'package:tsdtech_client_sdk/models/checkouts/checkout_request.model.dart';
 
 void main() {
   group('CardPaymentRequest', () {

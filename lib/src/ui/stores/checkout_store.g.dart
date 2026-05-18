@@ -6,44 +6,40 @@ part of 'checkout_store.dart';
 // StoreGenerator
 // **************************************************************************
 
+// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
+
 mixin _$CheckoutStore on CheckoutStoreBase, Store {
   Computed<bool>? _$hasErrorComputed;
 
   @override
   bool get hasError =>
-      (_$hasErrorComputed ??= Computed<bool>(
-        () => super.hasError,
-        name: 'CheckoutStoreBase.hasError',
-      )).value;
+      (_$hasErrorComputed ??= Computed<bool>(() => super.hasError,
+              name: 'CheckoutStoreBase.hasError'))
+          .value;
   Computed<bool>? _$hasGeneratedPixComputed;
 
   @override
   bool get hasGeneratedPix =>
-      (_$hasGeneratedPixComputed ??= Computed<bool>(
-        () => super.hasGeneratedPix,
-        name: 'CheckoutStoreBase.hasGeneratedPix',
-      )).value;
+      (_$hasGeneratedPixComputed ??= Computed<bool>(() => super.hasGeneratedPix,
+              name: 'CheckoutStoreBase.hasGeneratedPix'))
+          .value;
   Computed<bool>? _$isPixSelectedComputed;
 
   @override
   bool get isPixSelected =>
-      (_$isPixSelectedComputed ??= Computed<bool>(
-        () => super.isPixSelected,
-        name: 'CheckoutStoreBase.isPixSelected',
-      )).value;
+      (_$isPixSelectedComputed ??= Computed<bool>(() => super.isPixSelected,
+              name: 'CheckoutStoreBase.isPixSelected'))
+          .value;
   Computed<bool>? _$isCardSelectedComputed;
 
   @override
   bool get isCardSelected =>
-      (_$isCardSelectedComputed ??= Computed<bool>(
-        () => super.isCardSelected,
-        name: 'CheckoutStoreBase.isCardSelected',
-      )).value;
+      (_$isCardSelectedComputed ??= Computed<bool>(() => super.isCardSelected,
+              name: 'CheckoutStoreBase.isCardSelected'))
+          .value;
 
-  late final _$selectedMethodAtom = Atom(
-    name: 'CheckoutStoreBase.selectedMethod',
-    context: context,
-  );
+  late final _$selectedMethodAtom =
+      Atom(name: 'CheckoutStoreBase.selectedMethod', context: context);
 
   @override
   PaymentMethodType get selectedMethod {
@@ -58,10 +54,8 @@ mixin _$CheckoutStore on CheckoutStoreBase, Store {
     });
   }
 
-  late final _$isLoadingAtom = Atom(
-    name: 'CheckoutStoreBase.isLoading',
-    context: context,
-  );
+  late final _$isLoadingAtom =
+      Atom(name: 'CheckoutStoreBase.isLoading', context: context);
 
   @override
   bool get isLoading {
@@ -76,10 +70,8 @@ mixin _$CheckoutStore on CheckoutStoreBase, Store {
     });
   }
 
-  late final _$errorMessageAtom = Atom(
-    name: 'CheckoutStoreBase.errorMessage',
-    context: context,
-  );
+  late final _$errorMessageAtom =
+      Atom(name: 'CheckoutStoreBase.errorMessage', context: context);
 
   @override
   String? get errorMessage {
@@ -94,10 +86,8 @@ mixin _$CheckoutStore on CheckoutStoreBase, Store {
     });
   }
 
-  late final _$pixQrCodeAtom = Atom(
-    name: 'CheckoutStoreBase.pixQrCode',
-    context: context,
-  );
+  late final _$pixQrCodeAtom =
+      Atom(name: 'CheckoutStoreBase.pixQrCode', context: context);
 
   @override
   String? get pixQrCode {
@@ -112,10 +102,8 @@ mixin _$CheckoutStore on CheckoutStoreBase, Store {
     });
   }
 
-  late final _$pixCopyPasteCodeAtom = Atom(
-    name: 'CheckoutStoreBase.pixCopyPasteCode',
-    context: context,
-  );
+  late final _$pixCopyPasteCodeAtom =
+      Atom(name: 'CheckoutStoreBase.pixCopyPasteCode', context: context);
 
   @override
   String? get pixCopyPasteCode {
@@ -130,10 +118,8 @@ mixin _$CheckoutStore on CheckoutStoreBase, Store {
     });
   }
 
-  late final _$paymentIdAtom = Atom(
-    name: 'CheckoutStoreBase.paymentId',
-    context: context,
-  );
+  late final _$paymentIdAtom =
+      Atom(name: 'CheckoutStoreBase.paymentId', context: context);
 
   @override
   String? get paymentId {
@@ -148,10 +134,8 @@ mixin _$CheckoutStore on CheckoutStoreBase, Store {
     });
   }
 
-  late final _$paymentResultAtom = Atom(
-    name: 'CheckoutStoreBase.paymentResult',
-    context: context,
-  );
+  late final _$paymentResultAtom =
+      Atom(name: 'CheckoutStoreBase.paymentResult', context: context);
 
   @override
   PaymentResult? get paymentResult {
@@ -166,16 +150,13 @@ mixin _$CheckoutStore on CheckoutStoreBase, Store {
     });
   }
 
-  late final _$CheckoutStoreBaseActionController = ActionController(
-    name: 'CheckoutStoreBase',
-    context: context,
-  );
+  late final _$CheckoutStoreBaseActionController =
+      ActionController(name: 'CheckoutStoreBase', context: context);
 
   @override
   void selectMethod(PaymentMethodType method) {
     final _$actionInfo = _$CheckoutStoreBaseActionController.startAction(
-      name: 'CheckoutStoreBase.selectMethod',
-    );
+        name: 'CheckoutStoreBase.selectMethod');
     try {
       return super.selectMethod(method);
     } finally {
@@ -186,8 +167,7 @@ mixin _$CheckoutStore on CheckoutStoreBase, Store {
   @override
   void setLoading(bool value) {
     final _$actionInfo = _$CheckoutStoreBaseActionController.startAction(
-      name: 'CheckoutStoreBase.setLoading',
-    );
+        name: 'CheckoutStoreBase.setLoading');
     try {
       return super.setLoading(value);
     } finally {
@@ -198,8 +178,7 @@ mixin _$CheckoutStore on CheckoutStoreBase, Store {
   @override
   void setError(String? message) {
     final _$actionInfo = _$CheckoutStoreBaseActionController.startAction(
-      name: 'CheckoutStoreBase.setError',
-    );
+        name: 'CheckoutStoreBase.setError');
     try {
       return super.setError(message);
     } finally {
@@ -210,8 +189,7 @@ mixin _$CheckoutStore on CheckoutStoreBase, Store {
   @override
   void clearError() {
     final _$actionInfo = _$CheckoutStoreBaseActionController.startAction(
-      name: 'CheckoutStoreBase.clearError',
-    );
+        name: 'CheckoutStoreBase.clearError');
     try {
       return super.clearError();
     } finally {
@@ -222,14 +200,10 @@ mixin _$CheckoutStore on CheckoutStoreBase, Store {
   @override
   void setPixData({String? paymentId, String? qrCode, String? copyPasteCode}) {
     final _$actionInfo = _$CheckoutStoreBaseActionController.startAction(
-      name: 'CheckoutStoreBase.setPixData',
-    );
+        name: 'CheckoutStoreBase.setPixData');
     try {
       return super.setPixData(
-        paymentId: paymentId,
-        qrCode: qrCode,
-        copyPasteCode: copyPasteCode,
-      );
+          paymentId: paymentId, qrCode: qrCode, copyPasteCode: copyPasteCode);
     } finally {
       _$CheckoutStoreBaseActionController.endAction(_$actionInfo);
     }
@@ -238,8 +212,7 @@ mixin _$CheckoutStore on CheckoutStoreBase, Store {
   @override
   void clearPixData() {
     final _$actionInfo = _$CheckoutStoreBaseActionController.startAction(
-      name: 'CheckoutStoreBase.clearPixData',
-    );
+        name: 'CheckoutStoreBase.clearPixData');
     try {
       return super.clearPixData();
     } finally {
@@ -250,8 +223,7 @@ mixin _$CheckoutStore on CheckoutStoreBase, Store {
   @override
   void setPaymentResult(PaymentResult? result) {
     final _$actionInfo = _$CheckoutStoreBaseActionController.startAction(
-      name: 'CheckoutStoreBase.setPaymentResult',
-    );
+        name: 'CheckoutStoreBase.setPaymentResult');
     try {
       return super.setPaymentResult(result);
     } finally {
@@ -262,8 +234,7 @@ mixin _$CheckoutStore on CheckoutStoreBase, Store {
   @override
   void reset() {
     final _$actionInfo = _$CheckoutStoreBaseActionController.startAction(
-      name: 'CheckoutStoreBase.reset',
-    );
+        name: 'CheckoutStoreBase.reset');
     try {
       return super.reset();
     } finally {
@@ -273,6 +244,18 @@ mixin _$CheckoutStore on CheckoutStoreBase, Store {
 
   @override
   String toString() {
-    return '''selectedMethod: ${selectedMethod}, isLoading: ${isLoading}, errorMessage: ${errorMessage}, pixQrCode: ${pixQrCode}, pixCopyPasteCode: ${pixCopyPasteCode}, paymentId: ${paymentId}, paymentResult: ${paymentResult}, hasError: ${hasError}, hasGeneratedPix: ${hasGeneratedPix}, isPixSelected: ${isPixSelected}, isCardSelected: ${isCardSelected}''';
+    return '''
+selectedMethod: ${selectedMethod},
+isLoading: ${isLoading},
+errorMessage: ${errorMessage},
+pixQrCode: ${pixQrCode},
+pixCopyPasteCode: ${pixCopyPasteCode},
+paymentId: ${paymentId},
+paymentResult: ${paymentResult},
+hasError: ${hasError},
+hasGeneratedPix: ${hasGeneratedPix},
+isPixSelected: ${isPixSelected},
+isCardSelected: ${isCardSelected}
+    ''';
   }
 }

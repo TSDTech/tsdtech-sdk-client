@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 import '../../components/card_form/card_form.dart';
 import '../../components/card_form/card_form_controller.dart';
 import '../../components/card_form/card_form_data.dart';
+import '../../stores/payment_store.dart';
 import '../../theme/tsdtech_colors.dart';
 import '../../theme/tsdtech_text_styles.dart';
 import 'payment_form_data.dart';
@@ -16,6 +18,7 @@ class PaymentForm extends StatefulWidget {
   const PaymentForm({
     super.key,
     this.initialMethod = PaymentFormMethod.pix,
+    this.store,
     this.enabled = true,
     this.isLoading = false,
     this.submitLabel = 'Pagar',
@@ -25,6 +28,7 @@ class PaymentForm extends StatefulWidget {
   });
 
   final PaymentFormMethod initialMethod;
+  final PaymentStore? store;
   final bool enabled;
   final bool isLoading;
   final String submitLabel;
@@ -37,88 +41,107 @@ class PaymentForm extends StatefulWidget {
 }
 
 class _PaymentFormState extends State<PaymentForm> {
-  late PaymentFormMethod _selectedMethod;
   final CardFormController _cardController = CardFormController();
+  late PaymentStore _store;
 
   @override
   void initState() {
     super.initState();
-    _selectedMethod = widget.initialMethod;
+    _configureStore();
+  }
+
+  @override
+  void didUpdateWidget(covariant PaymentForm oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.store != widget.store) {
+      _configureStore();
+    }
+
+    _store.setEnabled(widget.enabled);
+    _store.setLoading(widget.isLoading);
+  }
+
+  void _configureStore() {
+    _store = widget.store ?? PaymentStore(initialMethod: widget.initialMethod);
+    _store.setEnabled(widget.enabled);
+    _store.setLoading(widget.isLoading);
   }
 
   void _selectMethod(PaymentFormMethod method) {
-    if (!widget.enabled || widget.isLoading || method == _selectedMethod) {
-      return;
+    final previousMethod = _store.selectedMethod;
+    _store.selectMethod(method);
+    if (_store.selectedMethod != previousMethod) {
+      widget.onMethodChanged?.call(_store.selectedMethod);
     }
-
-    setState(() => _selectedMethod = method);
-    widget.onMethodChanged?.call(method);
   }
 
   Future<void> _handleSubmit() async {
-    if (!widget.enabled || widget.isLoading) return;
+    if (!_store.canInteract) return;
 
     CardFormData? cardData;
-    if (_selectedMethod == PaymentFormMethod.card) {
+    if (_store.isCardSelected) {
       if (!_cardController.validate()) return;
       cardData = _cardController.data;
       if (cardData == null) return;
+      _store.setCardData(cardData);
     }
 
-    widget.onSubmit(
-      PaymentFormData(
-        method: _selectedMethod,
-        cardData: cardData,
-      ),
-    );
+    _store.markSubmitted();
+    widget.onSubmit(_store.currentData);
   }
 
   @override
   Widget build(BuildContext context) {
-    final canInteract = widget.enabled && !widget.isLoading;
+    return Observer(
+      builder: (_) {
+        final canInteract = _store.canInteract;
+        final selectedMethod = _store.selectedMethod;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(
-          'Forma de pagamento',
-          style: TsdtechTextStyles.titleMedium.copyWith(
-            color: TsdtechColors.textPrimary,
-          ),
-        ),
-        const SizedBox(height: 12),
-        Wrap(
-          spacing: 10,
-          runSpacing: 10,
-          children: PaymentFormMethod.values
-              .map(
-                (method) => PaymentMethodChip(
-                  method: method,
-                  selected: method == _selectedMethod,
-                  enabled: canInteract,
-                  onSelected: () => _selectMethod(method),
-                ),
-              )
-              .toList(),
-        ),
-        if (_selectedMethod == PaymentFormMethod.card) ...[
-          const SizedBox(height: 20),
-          CardForm(
-            controller: _cardController,
-            enabled: canInteract,
-            autofocus: widget.cardAutofocus,
-            showSubmitButton: false,
-          ),
-        ],
-        const SizedBox(height: 20),
-        PaymentSubmitButton(
-          method: _selectedMethod,
-          label: widget.submitLabel,
-          loading: widget.isLoading,
-          enabled: canInteract,
-          onPressed: _handleSubmit,
-        ),
-      ],
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              'Forma de pagamento',
+              style: TsdtechTextStyles.titleMedium.copyWith(
+                color: TsdtechColors.textPrimary,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: PaymentFormMethod.values
+                  .map(
+                    (method) => PaymentMethodChip(
+                      method: method,
+                      selected: method == selectedMethod,
+                      enabled: canInteract,
+                      onSelected: () => _selectMethod(method),
+                    ),
+                  )
+                  .toList(),
+            ),
+            if (_store.isCardSelected) ...[
+              const SizedBox(height: 20),
+              CardForm(
+                controller: _cardController,
+                store: _store.cardFormStore,
+                enabled: canInteract,
+                autofocus: widget.cardAutofocus,
+                showSubmitButton: false,
+              ),
+            ],
+            const SizedBox(height: 20),
+            PaymentSubmitButton(
+              method: selectedMethod,
+              label: widget.submitLabel,
+              loading: _store.isLoading,
+              enabled: canInteract,
+              onPressed: _handleSubmit,
+            ),
+          ],
+        );
+      },
     );
   }
 }

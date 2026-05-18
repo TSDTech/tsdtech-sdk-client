@@ -6,36 +6,31 @@ part of 'card_form_store.dart';
 // StoreGenerator
 // **************************************************************************
 
+// ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
+
 mixin _$CardFormStore on CardFormStoreBase, Store {
   Computed<CardFormData>? _$dataComputed;
 
   @override
   CardFormData get data =>
-      (_$dataComputed ??= Computed<CardFormData>(
-        () => super.data,
-        name: 'CardFormStoreBase.data',
-      )).value;
+      (_$dataComputed ??= Computed<CardFormData>(() => super.data,
+              name: 'CardFormStoreBase.data'))
+          .value;
   Computed<bool>? _$isAmexComputed;
 
   @override
-  bool get isAmex =>
-      (_$isAmexComputed ??= Computed<bool>(
-        () => super.isAmex,
-        name: 'CardFormStoreBase.isAmex',
-      )).value;
+  bool get isAmex => (_$isAmexComputed ??=
+          Computed<bool>(() => super.isAmex, name: 'CardFormStoreBase.isAmex'))
+      .value;
   Computed<bool>? _$isEmptyComputed;
 
   @override
-  bool get isEmpty =>
-      (_$isEmptyComputed ??= Computed<bool>(
-        () => super.isEmpty,
-        name: 'CardFormStoreBase.isEmpty',
-      )).value;
+  bool get isEmpty => (_$isEmptyComputed ??= Computed<bool>(() => super.isEmpty,
+          name: 'CardFormStoreBase.isEmpty'))
+      .value;
 
-  late final _$cardNumberAtom = Atom(
-    name: 'CardFormStoreBase.cardNumber',
-    context: context,
-  );
+  late final _$cardNumberAtom =
+      Atom(name: 'CardFormStoreBase.cardNumber', context: context);
 
   @override
   String get cardNumber {
@@ -50,10 +45,8 @@ mixin _$CardFormStore on CardFormStoreBase, Store {
     });
   }
 
-  late final _$cardholderNameAtom = Atom(
-    name: 'CardFormStoreBase.cardholderName',
-    context: context,
-  );
+  late final _$cardholderNameAtom =
+      Atom(name: 'CardFormStoreBase.cardholderName', context: context);
 
   @override
   String get cardholderName {
@@ -68,10 +61,8 @@ mixin _$CardFormStore on CardFormStoreBase, Store {
     });
   }
 
-  late final _$expiryDateAtom = Atom(
-    name: 'CardFormStoreBase.expiryDate',
-    context: context,
-  );
+  late final _$expiryDateAtom =
+      Atom(name: 'CardFormStoreBase.expiryDate', context: context);
 
   @override
   String get expiryDate {
@@ -101,10 +92,8 @@ mixin _$CardFormStore on CardFormStoreBase, Store {
     });
   }
 
-  late final _$taxIdAtom = Atom(
-    name: 'CardFormStoreBase.taxId',
-    context: context,
-  );
+  late final _$taxIdAtom =
+      Atom(name: 'CardFormStoreBase.taxId', context: context);
 
   @override
   String get taxId {
@@ -119,10 +108,8 @@ mixin _$CardFormStore on CardFormStoreBase, Store {
     });
   }
 
-  late final _$brandAtom = Atom(
-    name: 'CardFormStoreBase.brand',
-    context: context,
-  );
+  late final _$brandAtom =
+      Atom(name: 'CardFormStoreBase.brand', context: context);
 
   @override
   CardBrand get brand {
@@ -137,16 +124,13 @@ mixin _$CardFormStore on CardFormStoreBase, Store {
     });
   }
 
-  late final _$CardFormStoreBaseActionController = ActionController(
-    name: 'CardFormStoreBase',
-    context: context,
-  );
+  late final _$CardFormStoreBaseActionController =
+      ActionController(name: 'CardFormStoreBase', context: context);
 
   @override
   void updateCardNumber(String value) {
     final _$actionInfo = _$CardFormStoreBaseActionController.startAction(
-      name: 'CardFormStoreBase.updateCardNumber',
-    );
+        name: 'CardFormStoreBase.updateCardNumber');
     try {
       return super.updateCardNumber(value);
     } finally {
@@ -157,8 +141,7 @@ mixin _$CardFormStore on CardFormStoreBase, Store {
   @override
   void updateCardholderName(String value) {
     final _$actionInfo = _$CardFormStoreBaseActionController.startAction(
-      name: 'CardFormStoreBase.updateCardholderName',
-    );
+        name: 'CardFormStoreBase.updateCardholderName');
     try {
       return super.updateCardholderName(value);
     } finally {
@@ -169,8 +152,7 @@ mixin _$CardFormStore on CardFormStoreBase, Store {
   @override
   void updateExpiryDate(String value) {
     final _$actionInfo = _$CardFormStoreBaseActionController.startAction(
-      name: 'CardFormStoreBase.updateExpiryDate',
-    );
+        name: 'CardFormStoreBase.updateExpiryDate');
     try {
       return super.updateExpiryDate(value);
     } finally {
@@ -181,8 +163,7 @@ mixin _$CardFormStore on CardFormStoreBase, Store {
   @override
   void updateCvv(String value) {
     final _$actionInfo = _$CardFormStoreBaseActionController.startAction(
-      name: 'CardFormStoreBase.updateCvv',
-    );
+        name: 'CardFormStoreBase.updateCvv');
     try {
       return super.updateCvv(value);
     } finally {
@@ -193,8 +174,7 @@ mixin _$CardFormStore on CardFormStoreBase, Store {
   @override
   void updateTaxId(String value) {
     final _$actionInfo = _$CardFormStoreBaseActionController.startAction(
-      name: 'CardFormStoreBase.updateTaxId',
-    );
+        name: 'CardFormStoreBase.updateTaxId');
     try {
       return super.updateTaxId(value);
     } finally {
@@ -205,8 +185,7 @@ mixin _$CardFormStore on CardFormStoreBase, Store {
   @override
   void setBrand(CardBrand value) {
     final _$actionInfo = _$CardFormStoreBaseActionController.startAction(
-      name: 'CardFormStoreBase.setBrand',
-    );
+        name: 'CardFormStoreBase.setBrand');
     try {
       return super.setBrand(value);
     } finally {
@@ -217,8 +196,7 @@ mixin _$CardFormStore on CardFormStoreBase, Store {
   @override
   void setData(CardFormData value) {
     final _$actionInfo = _$CardFormStoreBaseActionController.startAction(
-      name: 'CardFormStoreBase.setData',
-    );
+        name: 'CardFormStoreBase.setData');
     try {
       return super.setData(value);
     } finally {
@@ -229,8 +207,7 @@ mixin _$CardFormStore on CardFormStoreBase, Store {
   @override
   void reset() {
     final _$actionInfo = _$CardFormStoreBaseActionController.startAction(
-      name: 'CardFormStoreBase.reset',
-    );
+        name: 'CardFormStoreBase.reset');
     try {
       return super.reset();
     } finally {
@@ -240,6 +217,16 @@ mixin _$CardFormStore on CardFormStoreBase, Store {
 
   @override
   String toString() {
-    return '''cardNumber: ${cardNumber}, cardholderName: ${cardholderName}, expiryDate: ${expiryDate}, cvv: ${cvv}, taxId: ${taxId}, brand: ${brand}, data: ${data}, isAmex: ${isAmex}, isEmpty: ${isEmpty}''';
+    return '''
+cardNumber: ${cardNumber},
+cardholderName: ${cardholderName},
+expiryDate: ${expiryDate},
+cvv: ${cvv},
+taxId: ${taxId},
+brand: ${brand},
+data: ${data},
+isAmex: ${isAmex},
+isEmpty: ${isEmpty}
+    ''';
   }
 }

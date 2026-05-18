@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:mobx/mobx.dart';
 
+import '../../stores/card_form_store.dart';
 import '../../theme/tsdtech_colors.dart';
 import '../../theme/tsdtech_text_styles.dart';
 import 'card_brand.dart';
@@ -13,6 +16,7 @@ class CardForm extends StatefulWidget {
   const CardForm({
     super.key,
     this.controller,
+    this.store,
     this.onChanged,
     this.onSubmit,
     this.submitLabel = 'Pagar',
@@ -22,6 +26,7 @@ class CardForm extends StatefulWidget {
   });
 
   final CardFormController? controller;
+  final CardFormStore? store;
   final void Function(CardFormData data)? onChanged;
   final void Function(CardFormData data)? onSubmit;
   final String submitLabel;
@@ -35,6 +40,7 @@ class CardForm extends StatefulWidget {
 
 class _CardFormState extends State<CardForm> implements CardFormScope {
   final _formKey = GlobalKey<FormState>();
+  final List<ReactionDisposer> _storeReactions = <ReactionDisposer>[];
 
   late final TextEditingController _cardNumberCtrl;
   late final TextEditingController _nameCtrl;
@@ -48,7 +54,7 @@ class _CardFormState extends State<CardForm> implements CardFormScope {
   final _cvvFocus = FocusNode();
   final _taxIdFocus = FocusNode();
 
-  CardBrand _brand = CardBrand.unknown;
+  late CardFormStore _store;
 
   @override
   void initState() {
@@ -58,12 +64,16 @@ class _CardFormState extends State<CardForm> implements CardFormScope {
     _expiryCtrl = TextEditingController();
     _cvvCtrl = TextEditingController();
     _taxIdCtrl = TextEditingController();
+    _bindStore(widget.store);
     widget.controller?.attach(this);
   }
 
   @override
   void didUpdateWidget(CardForm oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (oldWidget.store != widget.store) {
+      _bindStore(widget.store);
+    }
     if (oldWidget.controller != widget.controller) {
       oldWidget.controller?.detach();
       widget.controller?.attach(this);
@@ -73,6 +83,7 @@ class _CardFormState extends State<CardForm> implements CardFormScope {
   @override
   void dispose() {
     widget.controller?.detach();
+    _disposeStoreReactions();
     _cardNumberCtrl.dispose();
     _nameCtrl.dispose();
     _expiryCtrl.dispose();
@@ -86,42 +97,80 @@ class _CardFormState extends State<CardForm> implements CardFormScope {
     super.dispose();
   }
 
+  void _bindStore(CardFormStore? store) {
+    _disposeStoreReactions();
+    _store = store ?? CardFormStore();
+    _syncControllersFromStore();
+    _storeReactions.addAll(<ReactionDisposer>[
+      reaction<String>((_) => _store.cardNumber, (value) {
+        _syncControllerValue(_cardNumberCtrl, value);
+      }),
+      reaction<String>((_) => _store.cardholderName, (value) {
+        _syncControllerValue(_nameCtrl, value);
+      }),
+      reaction<String>((_) => _store.expiryDate, (value) {
+        _syncControllerValue(_expiryCtrl, value);
+      }),
+      reaction<String>((_) => _store.cvv, (value) {
+        _syncControllerValue(_cvvCtrl, value);
+      }),
+      reaction<String>((_) => _store.taxId, (value) {
+        _syncControllerValue(_taxIdCtrl, value);
+      }),
+    ]);
+  }
+
+  void _disposeStoreReactions() {
+    for (final disposer in _storeReactions) {
+      disposer();
+    }
+    _storeReactions.clear();
+  }
+
+  void _syncControllersFromStore() {
+    _syncControllerValue(_cardNumberCtrl, _store.cardNumber);
+    _syncControllerValue(_nameCtrl, _store.cardholderName);
+    _syncControllerValue(_expiryCtrl, _store.expiryDate);
+    _syncControllerValue(_cvvCtrl, _store.cvv);
+    _syncControllerValue(_taxIdCtrl, _store.taxId);
+  }
+
+  void _syncControllerValue(TextEditingController controller, String value) {
+    if (controller.text == value) {
+      return;
+    }
+
+    controller.value = controller.value.copyWith(
+      text: value,
+      selection: TextSelection.collapsed(offset: value.length),
+      composing: TextRange.empty,
+    );
+  }
+
   @override
   bool validateForm() => _formKey.currentState?.validate() ?? false;
 
   @override
-  CardFormData buildData() => CardFormData(
-        cardNumber: _cardNumberCtrl.text,
-        cardholderName: _nameCtrl.text,
-        expiryDate: _expiryCtrl.text,
-        cvv: _cvvCtrl.text,
-        taxId: _taxIdCtrl.text,
-        brand: _brand,
-      );
+  CardFormData buildData() => _store.data;
 
   @override
   void resetForm() {
     _formKey.currentState?.reset();
-    _cardNumberCtrl.clear();
-    _nameCtrl.clear();
-    _expiryCtrl.clear();
-    _cvvCtrl.clear();
-    _taxIdCtrl.clear();
-    setState(() => _brand = CardBrand.unknown);
+    _store.reset();
   }
 
-  void _notifyChanged() => widget.onChanged?.call(buildData());
+  void _notifyChanged() => widget.onChanged?.call(_store.data);
 
   void _handleSubmit() {
     if (_formKey.currentState?.validate() ?? false) {
-      widget.onSubmit?.call(buildData());
+      widget.onSubmit?.call(_store.data);
     }
   }
 
   String? _validateCardNumber(String? value) {
     if (value == null || value.isEmpty) return 'Número do cartão obrigatório';
     final digits = value.replaceAll(' ', '');
-    final required = _brand == CardBrand.amex ? 15 : 16;
+    final required = _store.brand == CardBrand.amex ? 15 : 16;
     if (digits.length < required) return 'Número do cartão incompleto';
     if (!_luhnCheck(digits)) return 'Número do cartão inválido';
     return null;
@@ -149,7 +198,7 @@ class _CardFormState extends State<CardForm> implements CardFormScope {
 
   String? _validateCvv(String? value) {
     if (value == null || value.isEmpty) return 'CVV obrigatório';
-    final isAmex = _brand == CardBrand.amex;
+    final isAmex = _store.brand == CardBrand.amex;
     final required = isAmex ? 4 : 3;
     if (value.length < required) {
       return isAmex ? 'CVV deve ter 4 dígitos' : 'CVV deve ter 3 dígitos';
@@ -167,133 +216,155 @@ class _CardFormState extends State<CardForm> implements CardFormScope {
 
   @override
   Widget build(BuildContext context) {
-    final isAmex = _brand == CardBrand.amex;
+    return Observer(
+      builder: (_) {
+        final isAmex = _store.isAmex;
 
-    return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          CardFormField(
-            controller: _cardNumberCtrl,
-            focusNode: _cardNumberFocus,
-            label: 'Número do cartão',
-            hint: '0000 0000 0000 0000',
-            enabled: widget.enabled,
-            autofocus: widget.autofocus,
-            keyboardType: TextInputType.number,
-            inputFormatters: [
-              CardNumberFormatter(
-                onBrandChanged: (brand) {
-                  if (brand != _brand) {
-                    setState(() => _brand = brand);
-                    if (_cvvCtrl.text.isNotEmpty) _cvvCtrl.clear();
-                  }
-                },
-              ),
-            ],
-            suffixIcon: CardBrandIcon(brand: _brand),
-            validator: _validateCardNumber,
-            onChanged: (_) => _notifyChanged(),
-            textInputAction: TextInputAction.next,
-            onFieldSubmitted: (_) => _nameFocus.requestFocus(),
-          ),
-          const SizedBox(height: 16),
-          CardFormField(
-            controller: _nameCtrl,
-            focusNode: _nameFocus,
-            label: 'Nome do titular',
-            hint: 'Como impresso no cartão',
-            enabled: widget.enabled,
-            keyboardType: TextInputType.name,
-            textCapitalization: TextCapitalization.words,
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(r'[a-zA-ZÀ-ú\s]')),
-            ],
-            validator: _validateName,
-            onChanged: (_) => _notifyChanged(),
-            textInputAction: TextInputAction.next,
-            onFieldSubmitted: (_) => _expiryFocus.requestFocus(),
-          ),
-          const SizedBox(height: 16),
-          Row(
+        return Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Expanded(
-                child: CardFormField(
-                  controller: _expiryCtrl,
-                  focusNode: _expiryFocus,
-                  label: 'Validade',
-                  hint: 'MM/AA',
-                  enabled: widget.enabled,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [ExpiryFormatter()],
-                  validator: _validateExpiry,
-                  onChanged: (_) => _notifyChanged(),
-                  textInputAction: TextInputAction.next,
-                  onFieldSubmitted: (_) => _cvvFocus.requestFocus(),
-                ),
+              CardFormField(
+                controller: _cardNumberCtrl,
+                focusNode: _cardNumberFocus,
+                label: 'Número do cartão',
+                hint: '0000 0000 0000 0000',
+                enabled: widget.enabled,
+                autofocus: widget.autofocus,
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  CardNumberFormatter(
+                    onBrandChanged: (brand) {
+                      if (brand != _store.brand) {
+                        _store.setBrand(brand);
+                        if (_cvvCtrl.text.isNotEmpty) {
+                          _store.updateCvv('');
+                        }
+                        _notifyChanged();
+                      }
+                    },
+                  ),
+                ],
+                suffixIcon: CardBrandIcon(brand: _store.brand),
+                validator: _validateCardNumber,
+                onChanged: (value) {
+                  _store.updateCardNumber(value);
+                  _notifyChanged();
+                },
+                textInputAction: TextInputAction.next,
+                onFieldSubmitted: (_) => _nameFocus.requestFocus(),
               ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: CardFormField(
-                  controller: _cvvCtrl,
-                  focusNode: _cvvFocus,
-                  label: 'CVV',
-                  hint: isAmex ? '4 dígitos' : '3 dígitos',
-                  enabled: widget.enabled,
-                  keyboardType: TextInputType.number,
-                  obscureText: true,
-                  maxLength: isAmex ? 4 : 3,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(isAmex ? 4 : 3),
-                  ],
-                  suffixIcon: CvvTooltipIcon(isAmex: isAmex),
-                  validator: _validateCvv,
-                  onChanged: (_) => _notifyChanged(),
-                  textInputAction: TextInputAction.next,
-                  onFieldSubmitted: (_) => _taxIdFocus.requestFocus(),
-                ),
+              const SizedBox(height: 16),
+              CardFormField(
+                controller: _nameCtrl,
+                focusNode: _nameFocus,
+                label: 'Nome do titular',
+                hint: 'Como impresso no cartão',
+                enabled: widget.enabled,
+                keyboardType: TextInputType.name,
+                textCapitalization: TextCapitalization.words,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'[a-zA-ZÀ-ú\s]')),
+                ],
+                validator: _validateName,
+                onChanged: (value) {
+                  _store.updateCardholderName(value);
+                  _notifyChanged();
+                },
+                textInputAction: TextInputAction.next,
+                onFieldSubmitted: (_) => _expiryFocus.requestFocus(),
               ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: CardFormField(
+                      controller: _expiryCtrl,
+                      focusNode: _expiryFocus,
+                      label: 'Validade',
+                      hint: 'MM/AA',
+                      enabled: widget.enabled,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [ExpiryFormatter()],
+                      validator: _validateExpiry,
+                      onChanged: (value) {
+                        _store.updateExpiryDate(value);
+                        _notifyChanged();
+                      },
+                      textInputAction: TextInputAction.next,
+                      onFieldSubmitted: (_) => _cvvFocus.requestFocus(),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: CardFormField(
+                      controller: _cvvCtrl,
+                      focusNode: _cvvFocus,
+                      label: 'CVV',
+                      hint: isAmex ? '4 dígitos' : '3 dígitos',
+                      enabled: widget.enabled,
+                      keyboardType: TextInputType.number,
+                      obscureText: true,
+                      maxLength: isAmex ? 4 : 3,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(isAmex ? 4 : 3),
+                      ],
+                      suffixIcon: CvvTooltipIcon(isAmex: isAmex),
+                      validator: _validateCvv,
+                      onChanged: (value) {
+                        _store.updateCvv(value);
+                        _notifyChanged();
+                      },
+                      textInputAction: TextInputAction.next,
+                      onFieldSubmitted: (_) => _taxIdFocus.requestFocus(),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              CardFormField(
+                controller: _taxIdCtrl,
+                focusNode: _taxIdFocus,
+                label: 'CPF/CNPJ do titular',
+                hint: '000.000.000-00',
+                enabled: widget.enabled,
+                keyboardType: TextInputType.number,
+                inputFormatters: [TaxIdFormatter()],
+                validator: _validateTaxId,
+                onChanged: (value) {
+                  _store.updateTaxId(value);
+                  _notifyChanged();
+                },
+                textInputAction: widget.showSubmitButton
+                    ? TextInputAction.done
+                    : TextInputAction.next,
+                onFieldSubmitted:
+                    widget.showSubmitButton ? (_) => _handleSubmit() : null,
+              ),
+              if (widget.showSubmitButton) ...[
+                const SizedBox(height: 24),
+                FilledButton(
+                  onPressed: widget.enabled ? _handleSubmit : null,
+                  style: FilledButton.styleFrom(
+                    backgroundColor: TsdtechColors.primary,
+                    foregroundColor: TsdtechColors.textOnPrimary,
+                    minimumSize: const Size.fromHeight(52),
+                    textStyle: TsdtechTextStyles.titleMedium.copyWith(
+                      color: TsdtechColors.textOnPrimary,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Text(widget.submitLabel),
+                ),
+              ],
             ],
           ),
-          const SizedBox(height: 16),
-          CardFormField(
-            controller: _taxIdCtrl,
-            focusNode: _taxIdFocus,
-            label: 'CPF/CNPJ do titular',
-            hint: '000.000.000-00',
-            enabled: widget.enabled,
-            keyboardType: TextInputType.number,
-            inputFormatters: [TaxIdFormatter()],
-            validator: _validateTaxId,
-            onChanged: (_) => _notifyChanged(),
-            textInputAction: widget.showSubmitButton
-                ? TextInputAction.done
-                : TextInputAction.next,
-            onFieldSubmitted:
-                widget.showSubmitButton ? (_) => _handleSubmit() : null,
-          ),
-          if (widget.showSubmitButton) ...[
-            const SizedBox(height: 24),
-            FilledButton(
-              onPressed: widget.enabled ? _handleSubmit : null,
-              style: FilledButton.styleFrom(
-                backgroundColor: TsdtechColors.primary,
-                foregroundColor: TsdtechColors.textOnPrimary,
-                minimumSize: const Size.fromHeight(52),
-                textStyle: TsdtechTextStyles.titleMedium.copyWith(
-                  color: TsdtechColors.textOnPrimary,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              child: Text(widget.submitLabel),
-            ),
-          ],
-        ],
-      ),
+        );
+      },
     );
   }
 }

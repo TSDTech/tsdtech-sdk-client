@@ -1,10 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:mobx/mobx.dart';
 import '../../../core/services/intra-api/md-checkout/checkouts_service.dart';
 import '../../../models/cart/cart_item.model.dart';
 import '../../../models/checkouts/calculate_item.model.dart';
 import '../../../models/checkouts/checkout_request.model.dart';
 import '../../crypto/card_encryptor.dart';
+import '../stores/checkout_store.dart';
 import 'checkout_states.dart';
 import 'payment_method_selector.dart';
 import 'payment_types.dart';
@@ -49,6 +52,7 @@ class CheckoutWidget extends StatefulWidget {
   final Widget? errorWidget;
   final bool showSubmitButton;
   final CheckoutWidgetController? controller;
+  final CheckoutStore? store;
 
   const CheckoutWidget({
     super.key,
@@ -64,6 +68,7 @@ class CheckoutWidget extends StatefulWidget {
     this.errorWidget,
     this.showSubmitButton = true,
     this.controller,
+    this.store,
   });
 
   @override
@@ -71,9 +76,8 @@ class CheckoutWidget extends StatefulWidget {
 }
 
 class _CheckoutWidgetState extends State<CheckoutWidget> {
-  late final ValueNotifier<PaymentMethodType> _selectedMethod;
-  final ValueNotifier<bool> _isLoading = ValueNotifier(false);
-  final ValueNotifier<String?> _errorMessage = ValueNotifier(null);
+  late CheckoutStore _store;
+  ReactionDisposer? _controllerSyncDisposer;
   
   // Controllers do Cartão (O pai precisa gerenciar para acessar os dados)
   final _formKey = GlobalKey<FormState>();
@@ -91,16 +95,15 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
   @override
   void initState() {
     super.initState();
-    final initialMethod = widget.showPix
-        ? PaymentMethodType.pix
-        : PaymentMethodType.card;
-    _selectedMethod = ValueNotifier(initialMethod);
-    _syncControllerState();
+    _configureStore();
   }
 
   @override
   void didUpdateWidget(covariant CheckoutWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (oldWidget.store != widget.store) {
+      _configureStore();
+    }
     if (oldWidget.controller != widget.controller) {
       oldWidget.controller?._submitPayment = null;
       _syncControllerState();
@@ -111,9 +114,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
   void dispose() {
     widget.controller?._submitPayment = null;
     _pixPollingTimer?.cancel();
-    _selectedMethod.dispose();
-    _isLoading.dispose();
-    _errorMessage.dispose();
+    _controllerSyncDisposer?.call();
     _cardHolderController.dispose();
     _cardNumberController.dispose();
     _expiryController.dispose();
@@ -125,6 +126,21 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
     widget.onStatusChange?.call(status);
   }
 
+  void _configureStore() {
+    _controllerSyncDisposer?.call();
+    _store = widget.store ?? CheckoutStore(
+      initialMethod: widget.showPix
+          ? PaymentMethodType.pix
+          : PaymentMethodType.card,
+    );
+    _controllerSyncDisposer = autorun((_) {
+      _store.selectedMethod;
+      _store.isLoading;
+      _store.hasGeneratedPix;
+      _syncControllerState();
+    });
+  }
+
   void _syncControllerState() {
     final controller = widget.controller;
     if (controller == null) {
@@ -132,9 +148,9 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
     }
 
     controller._submitPayment = _processPayment;
-    controller.selectedMethod.value = _selectedMethod.value;
-    controller.isLoading.value = _isLoading.value;
-    controller.hasGeneratedPix.value = _pixQrCode != null;
+    controller.selectedMethod.value = _store.selectedMethod;
+    controller.isLoading.value = _store.isLoading;
+    controller.hasGeneratedPix.value = _store.hasGeneratedPix;
   }
 
   List<CalculateItem> _buildCalculateItems() {
@@ -163,7 +179,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
   }
 
   Future<void> _processPayment() async {
-    if (_selectedMethod.value == PaymentMethodType.card) {
+    if (_store.isCardSelected) {
       if (!_formKey.currentState!.validate()) return;
       if (widget.gatewayPublicKey.trim().isEmpty) {
         _showError('A chave pública do gateway não pode ficar vazia.');
@@ -171,18 +187,18 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
       }
     }
 
-    _isLoading.value = true;
+    _store.setLoading(true);
     _syncControllerState();
-    _errorMessage.value = null;
+    _store.clearError();
     _notifyStatus(PaymentStatus.processing);
 
     try {
       final cartItems = _buildCalculateItems();
       final checkoutRequest = CheckoutRequest(
         cart: cartItems,
-        paymentMethod: _methodToApiString(_selectedMethod.value),
+        paymentMethod: _methodToApiString(_store.selectedMethod),
         totalValue: _totalValue,
-        encryptedCard: _selectedMethod.value == PaymentMethodType.card
+        encryptedCard: _store.isCardSelected
             ? _buildEncryptedCardData()
             : null,
       );
@@ -196,18 +212,19 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
 
       final response = result.value!;
       
-      if (_selectedMethod.value == PaymentMethodType.pix) {
-        _paymentId = response.paymentId;
-        _pixQrCode = response.pix?.qrCode;
-        _pixCopyPasteCode = response.pix?.copyPasteCode;
+      if (_store.isPixSelected) {
+        _store.setPixData(
+          paymentId: response.paymentId,
+          qrCode: response.pix?.qrCode,
+          copyPasteCode: response.pix?.copyPasteCode,
+        );
         _notifyStatus(PaymentStatus.waitingPayment);
         
-        if (_paymentId != null) {
-          _startPixPolling(_paymentId!);
+        if (_store.paymentId != null) {
+          _startPixPolling(_store.paymentId!);
         }
-        setState(() {});
         _syncControllerState();
-      } else if (_selectedMethod.value == PaymentMethodType.card) {
+      } else if (_store.isCardSelected) {
         _handleSuccess(
           response.paymentId ?? response.depositRequestId ?? 'card_${DateTime.now().millisecondsSinceEpoch}',
           depositRequestId: response.depositRequestId,
@@ -216,7 +233,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
     } catch (error) {
       _showError(error.toString());
     } finally {
-      _isLoading.value = false;
+      _store.setLoading(false);
       _syncControllerState();
     }
   }
@@ -240,7 +257,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
   }
 
   void _showError(String message) {
-    _errorMessage.value = message;
+    _store.setError(message);
     widget.onError?.call(message);
     _notifyStatus(PaymentStatus.failed);
     _syncControllerState();
@@ -256,7 +273,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
         final status = statusResult.value?.toLowerCase() ?? '';
         if (status == 'paid' || status == 'completed' || status == 'success') {
           timer.cancel();
-          _handleSuccess(paymentId, pixQrCode: _pixQrCode);
+          _handleSuccess(paymentId, pixQrCode: _store.pixQrCode);
         }
       } catch (_) {
         // Ignored: manter polling
@@ -271,94 +288,78 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
     String? message,
   }) {
     _notifyStatus(PaymentStatus.success);
-    widget.onSuccess?.call(PaymentResult(
+    final result = PaymentResult(
       transactionId: transactionId,
-      method: _selectedMethod.value,
+      method: _store.selectedMethod,
       status: PaymentStatus.success,
       pixQrCode: pixQrCode,
       depositRequestId: depositRequestId,
       message: message,
-    ));
+    );
+    _store.setPaymentResult(result);
+    widget.onSuccess?.call(result);
   }
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<bool>(
-      valueListenable: _isLoading,
-      builder: (context, isLoading, _) {
-        if (isLoading) {
+    return Observer(
+      builder: (_) {
+        if (_store.isLoading) {
           return CheckoutLoadingState(customLoading: widget.loadingWidget);
         }
 
-        return ValueListenableBuilder<String?>(
-          valueListenable: _errorMessage,
-          builder: (context, error, _) {
-            if (error != null) {
-              return CheckoutErrorState(
-                message: error,
-                onRetry: _processPayment,
-                customError: widget.errorWidget,
-              );
-            }
+        if (_store.hasError) {
+          return CheckoutErrorState(
+            message: _store.errorMessage!,
+            onRetry: _processPayment,
+            customError: widget.errorWidget,
+          );
+        }
 
-            return ValueListenableBuilder<PaymentMethodType>(
-              valueListenable: _selectedMethod,
-              builder: (context, method, _) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    PaymentMethodSelector(
-                      selectedMethod: method,
-                      onChanged: (newMethod) {
-                        _selectedMethod.value = newMethod;
-                        // Resetamos as variáveis visuais de conclusão ao trocar de método
-                        _pixQrCode = null;
-                        _pixCopyPasteCode = null;
-                        _pixPollingTimer?.cancel();
-                        _syncControllerState();
-                        setState(() {});
-                      },
-                      showPix: widget.showPix,
-                      showCard: widget.showCard,
-                    ),
-                    const SizedBox(height: 24),
-                    
-                    // Renderização elegante via Switch case utilizando nossos novos widgets
-                    switch (method) {
-                      PaymentMethodType.pix => PixPaymentView(
-                          qrCode: _pixQrCode,
-                          copyPasteCode: _pixCopyPasteCode,
-                        ),
-                      PaymentMethodType.card => CardPaymentView(
-                          formKey: _formKey,
-                          cardHolderController: _cardHolderController,
-                          cardNumberController: _cardNumberController,
-                          expiryController: _expiryController,
-                          securityCodeController: _securityCodeController,
-                        ),
-                    },
+        final method = _store.selectedMethod;
 
-                    const SizedBox(height: 24),
-                    
-                    // Oculta o botão se o PIX já foi gerado
-                    if (widget.showSubmitButton &&
-                        !(method == PaymentMethodType.pix && _pixQrCode != null))
-                      ElevatedButton(
-                        onPressed: _processPayment,
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                        ),
-                        child: Text(
-                          method == PaymentMethodType.card ? 'Pagar Agora' : 'Gerar Pagamento',
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                  ],
-                );
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            PaymentMethodSelector(
+              selectedMethod: method,
+              onChanged: (newMethod) {
+                _store.selectMethod(newMethod);
+                _pixPollingTimer?.cancel();
+                _syncControllerState();
               },
-            );
-          },
+              showPix: widget.showPix,
+              showCard: widget.showCard,
+            ),
+            const SizedBox(height: 24),
+            switch (method) {
+              PaymentMethodType.pix => PixPaymentView(
+                  qrCode: _store.pixQrCode,
+                  copyPasteCode: _store.pixCopyPasteCode,
+                ),
+              PaymentMethodType.card => CardPaymentView(
+                  formKey: _formKey,
+                  cardHolderController: _cardHolderController,
+                  cardNumberController: _cardNumberController,
+                  expiryController: _expiryController,
+                  securityCodeController: _securityCodeController,
+                ),
+            },
+            const SizedBox(height: 24),
+            if (widget.showSubmitButton &&
+                !(method == PaymentMethodType.pix && _store.hasGeneratedPix))
+              ElevatedButton(
+                onPressed: _processPayment,
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                ),
+                child: Text(
+                  method == PaymentMethodType.card ? 'Pagar Agora' : 'Gerar Pagamento',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+          ],
         );
       },
     );

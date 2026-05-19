@@ -19,14 +19,14 @@ ClientUserTokenData _$ClientUserTokenDataFromJson(Map<String, dynamic> json) =>
     );
 
 Map<String, dynamic> _$ClientUserTokenDataToJson(
-        ClientUserTokenData instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'name': instance.name,
-      'secondName': instance.secondName,
-      'email': instance.email,
-      'phone': instance.phone,
-      'cpf': instance.cpf,
-      'is2FAAuthorized': instance.is2FAAuthorized,
-      'expiresAt': instance.expiresAt,
-    };
+  ClientUserTokenData instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'name': instance.name,
+  'secondName': instance.secondName,
+  'email': instance.email,
+  'phone': instance.phone,
+  'cpf': instance.cpf,
+  'is2FAAuthorized': instance.is2FAAuthorized,
+  'expiresAt': instance.expiresAt,
+};

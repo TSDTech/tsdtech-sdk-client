@@ -38,15 +38,17 @@ void main() {
     test('fromError with nested error.message parses response payload', () {
       final requestOptions = RequestOptions(path: '/test');
       final response = Response(
-          requestOptions: requestOptions,
-          data: {
-            'error': {'message': 'detailed', 'title': 'MyTitle'}
-          },
-          statusCode: 400);
+        requestOptions: requestOptions,
+        data: {
+          'error': {'message': 'detailed', 'title': 'MyTitle'},
+        },
+        statusCode: 400,
+      );
       final e = DioException(
-          requestOptions: requestOptions,
-          response: response,
-          type: DioExceptionType.badResponse);
+        requestOptions: requestOptions,
+        response: response,
+        type: DioExceptionType.badResponse,
+      );
 
       final r = ValueResult.fromError(e);
       expect(r.isError, isTrue);
@@ -57,15 +59,17 @@ void main() {
     test('fromError with nested data.detail list extracts first detail', () {
       final requestOptions = RequestOptions(path: '/test');
       final response = Response(
-          requestOptions: requestOptions,
-          data: {
-            'detail': ['first detail', 'second']
-          },
-          statusCode: 400);
+        requestOptions: requestOptions,
+        data: {
+          'detail': ['first detail', 'second'],
+        },
+        statusCode: 400,
+      );
       final e = DioException(
-          requestOptions: requestOptions,
-          response: response,
-          type: DioExceptionType.badResponse);
+        requestOptions: requestOptions,
+        response: response,
+        type: DioExceptionType.badResponse,
+      );
 
       final r = ValueResult.fromError(e);
       expect(r.isError, isTrue);

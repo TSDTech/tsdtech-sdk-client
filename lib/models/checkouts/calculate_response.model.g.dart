@@ -15,7 +15,4 @@ CalculateResponse _$CalculateResponseFromJson(Map<String, dynamic> json) =>
     );
 
 Map<String, dynamic> _$CalculateResponseToJson(CalculateResponse instance) =>
-    <String, dynamic>{
-      'totalValue': instance.totalValue,
-      'cart': instance.cart,
-    };
+    <String, dynamic>{'totalValue': instance.totalValue, 'cart': instance.cart};

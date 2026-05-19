@@ -13,14 +13,15 @@ class CheckoutResponse {
   final String? gatewayBaseUrl;
   final String? publicKeyUrl;
 
-  CheckoutResponse(
-      {required this.paymentMethod,
-      this.paymentId,
-      this.pix,
-      this.status,
-      this.depositRequestId,
-      this.gatewayBaseUrl,
-      this.publicKeyUrl});
+  CheckoutResponse({
+    required this.paymentMethod,
+    this.paymentId,
+    this.pix,
+    this.status,
+    this.depositRequestId,
+    this.gatewayBaseUrl,
+    this.publicKeyUrl,
+  });
 
   factory CheckoutResponse.fromJson(Map<String, dynamic> json) =>
       _$CheckoutResponseFromJson(json);

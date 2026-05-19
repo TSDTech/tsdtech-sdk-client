@@ -7,12 +7,9 @@ part of 'pagination.model.dart';
 // **************************************************************************
 
 Pagination _$PaginationFromJson(Map<String, dynamic> json) => Pagination(
-      page: (json['page'] as num).toInt(),
-      pageCount: (json['pageCount'] as num).toInt(),
-    );
+  page: (json['page'] as num).toInt(),
+  pageCount: (json['pageCount'] as num).toInt(),
+);
 
 Map<String, dynamic> _$PaginationToJson(Pagination instance) =>
-    <String, dynamic>{
-      'page': instance.page,
-      'pageCount': instance.pageCount,
-    };
+    <String, dynamic>{'page': instance.page, 'pageCount': instance.pageCount};

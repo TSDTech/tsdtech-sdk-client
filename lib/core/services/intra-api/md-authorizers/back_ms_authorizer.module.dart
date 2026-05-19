@@ -9,7 +9,8 @@ class BackMsAuthorizerModule extends ModuleBase {
   void inject(GetIt sl) {
     if (!sl.isRegistered<AuthServiceClientUser>()) {
       sl.registerLazySingleton<AuthServiceClientUser>(
-          () => AuthServiceClientUser());
+        () => AuthServiceClientUser(),
+      );
     }
     if (!sl.isRegistered<MembershipsService>()) {
       sl.registerLazySingleton<MembershipsService>(() => MembershipsService());

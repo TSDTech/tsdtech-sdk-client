@@ -8,11 +8,7 @@ import 'package:tsdtech_client_sdk/src/ui/checkout/payment_types.dart';
 void main() {
   CartItem buildCartItem() {
     return CartItem(
-      service: Service(
-        id: 'service_1',
-        name: 'Servico teste',
-        price: 19.9,
-      ),
+      service: Service(id: 'service_1', name: 'Servico teste', price: 19.9),
       quantity: 1,
     );
   }

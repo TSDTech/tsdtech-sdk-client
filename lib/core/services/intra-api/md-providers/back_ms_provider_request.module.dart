@@ -7,7 +7,8 @@ class BackMsProviderRequestModule extends ModuleBase {
   void inject(GetIt sl) {
     if (!sl.isRegistered<ProviderRequestsService>()) {
       sl.registerLazySingleton<ProviderRequestsService>(
-          () => ProviderRequestsService());
+        () => ProviderRequestsService(),
+      );
     }
   }
 }

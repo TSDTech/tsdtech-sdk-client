@@ -1,6 +1,5 @@
 import 'package:test/test.dart';
 import 'package:tsdtech_client_sdk/tsdtech_sdk_client.dart';
-import 'package:tsdtech_client_sdk/models/checkouts/checkout_request.model.dart';
 
 void main() {
   group('CardPaymentRequest', () {
@@ -35,8 +34,15 @@ void main() {
     });
 
     test('malformed json throws', () {
-      final malformed = {'depositRequestId': 123, 'encryptedCard': 'x', 'keyId': 'k'};
-      expect(() => CardPaymentRequest.fromJson(malformed), throwsA(isA<TypeError>()));
+      final malformed = {
+        'depositRequestId': 123,
+        'encryptedCard': 'x',
+        'keyId': 'k',
+      };
+      expect(
+        () => CardPaymentRequest.fromJson(malformed),
+        throwsA(isA<TypeError>()),
+      );
     });
   });
 }

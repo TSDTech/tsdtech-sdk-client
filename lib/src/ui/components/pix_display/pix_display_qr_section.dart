@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:tsdtech_client_sdk/tsdtech_sdk_client.dart';
 
-import '../../theme/tsdtech_colors.dart';
-import '../../theme/tsdtech_text_styles.dart';
-
 class PixQrSection extends StatelessWidget {
   const PixQrSection({
     super.key,
@@ -113,10 +110,7 @@ class ExpiredQrOverlay extends StatelessWidget {
             SizedBox(height: 12),
             Text(
               'QR Code expirado',
-              style: TextStyle(
-                fontSize: 14,
-                color: TsdtechColors.textDisabled,
-              ),
+              style: TextStyle(fontSize: 14, color: TsdtechColors.textDisabled),
               textAlign: TextAlign.center,
             ),
           ],

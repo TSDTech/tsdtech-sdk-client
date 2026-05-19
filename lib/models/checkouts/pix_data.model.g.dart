@@ -7,11 +7,11 @@ part of 'pix_data.model.dart';
 // **************************************************************************
 
 PixData _$PixDataFromJson(Map<String, dynamic> json) => PixData(
-      qrCode: json['qrCode'] as String,
-      copyPasteCode: json['copyPasteCode'] as String,
-    );
+  qrCode: json['qrCode'] as String,
+  copyPasteCode: json['copyPasteCode'] as String,
+);
 
 Map<String, dynamic> _$PixDataToJson(PixData instance) => <String, dynamic>{
-      'qrCode': instance.qrCode,
-      'copyPasteCode': instance.copyPasteCode,
-    };
+  'qrCode': instance.qrCode,
+  'copyPasteCode': instance.copyPasteCode,
+};

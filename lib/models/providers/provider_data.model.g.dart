@@ -7,19 +7,19 @@ part of 'provider_data.model.dart';
 // **************************************************************************
 
 ProviderData _$ProviderDataFromJson(Map<String, dynamic> json) => ProviderData(
-      id: json['id'] as String,
-      email: json['email'] as String?,
-      cnpj: json['cnpj'] as String?,
-      phoneContact: json['phoneContact'] as String?,
-      name: json['name'] as String?,
-      administratorId: json['administratorId'] as String?,
-      createdAt: json['createdAt'] == null
-          ? null
-          : DateTime.parse(json['createdAt'] as String),
-      updatedAt: json['updatedAt'] == null
-          ? null
-          : DateTime.parse(json['updatedAt'] as String),
-    );
+  id: json['id'] as String,
+  email: json['email'] as String?,
+  cnpj: json['cnpj'] as String?,
+  phoneContact: json['phoneContact'] as String?,
+  name: json['name'] as String?,
+  administratorId: json['administratorId'] as String?,
+  createdAt: json['createdAt'] == null
+      ? null
+      : DateTime.parse(json['createdAt'] as String),
+  updatedAt: json['updatedAt'] == null
+      ? null
+      : DateTime.parse(json['updatedAt'] as String),
+);
 
 Map<String, dynamic> _$ProviderDataToJson(ProviderData instance) =>
     <String, dynamic>{

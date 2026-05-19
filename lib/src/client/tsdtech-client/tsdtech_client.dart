@@ -7,10 +7,7 @@ class TsdtechClient {
   GatewayService? gateway;
   CheckoutOrchestrator? orchestrator;
 
-  TsdtechClient({
-    String? gatewayBaseUrl,
-    String? gatewayApiKey,
-  }) {
+  TsdtechClient({String? gatewayBaseUrl, String? gatewayApiKey}) {
     if (gatewayBaseUrl != null && gatewayBaseUrl.isNotEmpty) {
       final gatewayClient = GatewayClient(
         gatewayBaseUrl: gatewayBaseUrl,

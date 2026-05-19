@@ -7,14 +7,13 @@ part of 'membership.model.dart';
 // **************************************************************************
 
 Membership _$MembershipFromJson(Map<String, dynamic> json) => Membership(
-      clientUserId: json['clientUserId'] as String,
-      organizationId: json['organizationId'] as String,
-      role: (json['role'] as num).toInt(),
-      clientUser: json['clientUser'] == null
-          ? null
-          : ClientUserEntity.fromJson(
-              json['clientUser'] as Map<String, dynamic>),
-    );
+  clientUserId: json['clientUserId'] as String,
+  organizationId: json['organizationId'] as String,
+  role: (json['role'] as num).toInt(),
+  clientUser: json['clientUser'] == null
+      ? null
+      : ClientUserEntity.fromJson(json['clientUser'] as Map<String, dynamic>),
+);
 
 Map<String, dynamic> _$MembershipToJson(Membership instance) =>
     <String, dynamic>{

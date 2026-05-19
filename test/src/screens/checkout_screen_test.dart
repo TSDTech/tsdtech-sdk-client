@@ -11,19 +11,13 @@ void main() {
     required int quantity,
   }) {
     return CartItem(
-      service: Service(
-        id: name.toLowerCase(),
-        name: name,
-        price: price,
-      ),
+      service: Service(id: name.toLowerCase(), name: name, price: price),
       quantity: quantity,
     );
   }
 
   group('CheckoutScreen', () {
-    testWidgets('renderiza header, resumo, checkout e footer', (
-      tester,
-    ) async {
+    testWidgets('renderiza header, resumo, checkout e footer', (tester) async {
       var successCount = 0;
       var cancelCount = 0;
 

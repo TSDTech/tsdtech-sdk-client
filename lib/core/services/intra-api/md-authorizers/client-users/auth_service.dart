@@ -1,5 +1,4 @@
 import 'package:tsdtech_client_sdk/core/services/intra-api/intra.api.dart';
-import 'package:tsdtech_client_sdk/models/auth/client-user-token-data.model.dart';
 import 'package:tsdtech_client_sdk/models/auth/login-response-client.model.dart';
 import 'package:tsdtech_client_sdk/models/value_result.dart';
 import 'package:tsdtech_client_sdk/models/auth/signup-request-client.model.dart';
@@ -92,14 +91,18 @@ class AuthServiceClientUser extends IntraApi {
         throw Exception('administratorId is required for login');
       }
 
-      final response = await post('/auth-client-users/public/login', data: {
-        'email': email,
-        'password': password,
-        'administratorId': administratorId,
-      });
+      final response = await post(
+        '/auth-client-users/public/login',
+        data: {
+          'email': email,
+          'password': password,
+          'administratorId': administratorId,
+        },
+      );
 
-      final loginResponse =
-          LoginResponseClient.fromJson(response.data as Map<String, dynamic>);
+      final loginResponse = LoginResponseClient.fromJson(
+        response.data as Map<String, dynamic>,
+      );
 
       return ValueResult.success(loginResponse);
     } catch (e) {
@@ -152,11 +155,14 @@ class AuthServiceClientUser extends IntraApi {
       // remove legacy fullDomain param and replace by administratorId
       payload.remove('fullDomain');
       payload['administratorId'] = administratorId;
-      final response =
-          await post('/auth-client-users/public/signup', data: payload);
+      final response = await post(
+        '/auth-client-users/public/signup',
+        data: payload,
+      );
 
-      final loginResponse =
-          LoginResponseClient.fromJson(response.data as Map<String, dynamic>);
+      final loginResponse = LoginResponseClient.fromJson(
+        response.data as Map<String, dynamic>,
+      );
 
       return ValueResult.success(loginResponse);
     } catch (e) {

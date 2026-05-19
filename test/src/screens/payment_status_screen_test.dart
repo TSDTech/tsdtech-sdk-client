@@ -24,9 +24,7 @@ void main() {
     PaymentResult paymentResult,
   ) async {
     await tester.pumpWidget(
-      MaterialApp(
-        home: PaymentStatusScreen(paymentResult: paymentResult),
-      ),
+      MaterialApp(home: PaymentStatusScreen(paymentResult: paymentResult)),
     );
   }
 

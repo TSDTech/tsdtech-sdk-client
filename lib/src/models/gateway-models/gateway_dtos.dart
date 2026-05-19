@@ -36,10 +36,7 @@ class PaymentStatusResponse {
   final String depositRequestId;
   final String status;
 
-  PaymentStatusResponse({
-    required this.depositRequestId,
-    required this.status,
-  });
+  PaymentStatusResponse({required this.depositRequestId, required this.status});
 
   factory PaymentStatusResponse.fromJson(Map<String, dynamic> json) {
     return PaymentStatusResponse(

@@ -66,11 +66,13 @@ abstract class BaseApi {
       _debugLog('[BaseApi] DioError: ${e.type} ${e.message}');
       if (e.response != null) {
         _debugLog(
-            '[BaseApi] response: ${e.response?.statusCode} ${e.response?.data}');
+          '[BaseApi] response: ${e.response?.statusCode} ${e.response?.data}',
+        );
       }
       if (_isServiceUnavailable(e)) {
         throw Exception(
-            'Serviço indisponível no momento. Por favor, tente novamente mais tarde.');
+          'Serviço indisponível no momento. Por favor, tente novamente mais tarde.',
+        );
       }
       rethrow;
     }
@@ -101,11 +103,13 @@ abstract class BaseApi {
     Map<String, dynamic>? queryParameters,
     Map<String, dynamic>? headers,
   }) async {
-    return _executeRequest(() => _dio.get(
-          path,
-          queryParameters: queryParameters,
-          options: Options(headers: _mergeHeaders(headers)),
-        ));
+    return _executeRequest(
+      () => _dio.get(
+        path,
+        queryParameters: queryParameters,
+        options: Options(headers: _mergeHeaders(headers)),
+      ),
+    );
   }
 
   /// Performs a POST request to the specified [path].
@@ -114,13 +118,18 @@ abstract class BaseApi {
   /// - [data]: Optional body data to send
   /// - [headers]: Optional map of additional headers
   /// - Returns: A [Future] containing the [Response]
-  static Future<Response<dynamic>> post(String path,
-      {Object? data, Map<String, dynamic>? headers}) async {
-    return _executeRequest(() => _dio.post(
-          path,
-          data: data,
-          options: Options(headers: _mergeHeaders(headers)),
-        ));
+  static Future<Response<dynamic>> post(
+    String path, {
+    Object? data,
+    Map<String, dynamic>? headers,
+  }) async {
+    return _executeRequest(
+      () => _dio.post(
+        path,
+        data: data,
+        options: Options(headers: _mergeHeaders(headers)),
+      ),
+    );
   }
 
   /// Performs a PUT request to the specified [path].
@@ -129,13 +138,18 @@ abstract class BaseApi {
   /// - [data]: Optional body data to send
   /// - [headers]: Optional map of additional headers
   /// - Returns: A [Future] containing the [Response]
-  static Future<Response<dynamic>> put(String path,
-      {Object? data, Map<String, dynamic>? headers}) async {
-    return _executeRequest(() => _dio.put(
-          path,
-          data: data,
-          options: Options(headers: _mergeHeaders(headers)),
-        ));
+  static Future<Response<dynamic>> put(
+    String path, {
+    Object? data,
+    Map<String, dynamic>? headers,
+  }) async {
+    return _executeRequest(
+      () => _dio.put(
+        path,
+        data: data,
+        options: Options(headers: _mergeHeaders(headers)),
+      ),
+    );
   }
 
   /// Performs a PATCH request to the specified [path].
@@ -144,13 +158,18 @@ abstract class BaseApi {
   /// - [data]: Optional body data to send
   /// - [headers]: Optional map of additional headers
   /// - Returns: A [Future] containing the [Response]
-  static Future<Response<dynamic>> patch(String path,
-      {Object? data, Map<String, dynamic>? headers}) async {
-    return _executeRequest(() => _dio.patch(
-          path,
-          data: data,
-          options: Options(headers: _mergeHeaders(headers)),
-        ));
+  static Future<Response<dynamic>> patch(
+    String path, {
+    Object? data,
+    Map<String, dynamic>? headers,
+  }) async {
+    return _executeRequest(
+      () => _dio.patch(
+        path,
+        data: data,
+        options: Options(headers: _mergeHeaders(headers)),
+      ),
+    );
   }
 
   /// Performs a DELETE request to the specified [path].
@@ -159,13 +178,18 @@ abstract class BaseApi {
   /// - [data]: Optional body data to send
   /// - [headers]: Optional map of additional headers
   /// - Returns: A [Future] containing the [Response]
-  static Future<Response<dynamic>> delete(String path,
-      {Object? data, Map<String, dynamic>? headers}) async {
-    return _executeRequest(() => _dio.delete(
-          path,
-          data: data,
-          options: Options(headers: _mergeHeaders(headers)),
-        ));
+  static Future<Response<dynamic>> delete(
+    String path, {
+    Object? data,
+    Map<String, dynamic>? headers,
+  }) async {
+    return _executeRequest(
+      () => _dio.delete(
+        path,
+        data: data,
+        options: Options(headers: _mergeHeaders(headers)),
+      ),
+    );
   }
 
   /// Checks if the [DioException] represents a service unavailability condition.

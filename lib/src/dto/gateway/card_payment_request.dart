@@ -16,6 +16,7 @@ class CardPaymentRequest {
     this.installmentNumber,
   });
 
-  factory CardPaymentRequest.fromJson(Map<String, dynamic> json) => _$CardPaymentRequestFromJson(json);
+  factory CardPaymentRequest.fromJson(Map<String, dynamic> json) =>
+      _$CardPaymentRequestFromJson(json);
   Map<String, dynamic> toJson() => _$CardPaymentRequestToJson(this);
 }

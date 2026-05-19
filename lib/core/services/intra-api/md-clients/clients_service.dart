@@ -49,24 +49,29 @@ class ClientsService extends IntraApi {
   ///   print('Profile updated: ${result.value.name}');
   /// }
   /// ```
-  Future<ValueResult<ClientUserEntity>> patchClient(
-      {String? email,
-      String? password,
-      String? name,
-      String? secondName,
-      String? phone,
-      String? administratorId}) async {
+  Future<ValueResult<ClientUserEntity>> patchClient({
+    String? email,
+    String? password,
+    String? name,
+    String? secondName,
+    String? phone,
+    String? administratorId,
+  }) async {
     try {
-      final response = await patch('/clients/ms/', data: {
-        'name': name,
-        'secondName': secondName,
-        'phone': phone,
-        'email': email,
-        'password': password,
-        'administratorId': administratorId,
-      });
-      final client =
-          ClientUserEntity.fromJson(response.data as Map<String, dynamic>);
+      final response = await patch(
+        '/clients/ms/',
+        data: {
+          'name': name,
+          'secondName': secondName,
+          'phone': phone,
+          'email': email,
+          'password': password,
+          'administratorId': administratorId,
+        },
+      );
+      final client = ClientUserEntity.fromJson(
+        response.data as Map<String, dynamic>,
+      );
       return ValueResult.success(client);
     } catch (e) {
       return ValueResult.fromError(e);

@@ -208,8 +208,10 @@ class TsdtechThemeData {
           borderRadius: BorderRadius.circular(borderRadius),
           borderSide: BorderSide(color: errorColor),
         ),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 12,
+        ),
         filled: true,
         fillColor: surfaceVariantColor,
       ),

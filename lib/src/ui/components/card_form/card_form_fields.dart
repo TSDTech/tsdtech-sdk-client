@@ -8,8 +8,10 @@ import 'card_brand.dart';
 class CardFormField extends StatelessWidget {
   const CardFormField({
     super.key,
-    required this.controller,
-    required this.focusNode,
+    this.controller,
+    this.focusNode,
+    this.fieldKey,
+    this.initialValue,
     required this.label,
     required this.hint,
     this.enabled = true,
@@ -26,8 +28,10 @@ class CardFormField extends StatelessWidget {
     this.onFieldSubmitted,
   });
 
-  final TextEditingController controller;
-  final FocusNode focusNode;
+  final TextEditingController? controller;
+  final FocusNode? focusNode;
+  final Key? fieldKey;
+  final String? initialValue;
   final String label;
   final String hint;
   final bool enabled;
@@ -46,8 +50,10 @@ class CardFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      key: fieldKey,
       controller: controller,
       focusNode: focusNode,
+      initialValue: controller == null ? initialValue : null,
       enabled: enabled,
       autofocus: autofocus,
       keyboardType: keyboardType,
@@ -73,10 +79,13 @@ class CardFormField extends StatelessWidget {
           color: TsdtechColors.textDisabled,
         ),
         filled: true,
-        fillColor:
-            enabled ? TsdtechColors.surface : TsdtechColors.surfaceVariant,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        fillColor: enabled
+            ? TsdtechColors.surface
+            : TsdtechColors.surfaceVariant,
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: const BorderSide(color: TsdtechColors.outline),
@@ -87,8 +96,7 @@ class CardFormField extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide:
-              const BorderSide(color: TsdtechColors.primary, width: 2),
+          borderSide: const BorderSide(color: TsdtechColors.primary, width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
@@ -96,8 +104,7 @@ class CardFormField extends StatelessWidget {
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide:
-              const BorderSide(color: TsdtechColors.error, width: 2),
+          borderSide: const BorderSide(color: TsdtechColors.error, width: 2),
         ),
         disabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),

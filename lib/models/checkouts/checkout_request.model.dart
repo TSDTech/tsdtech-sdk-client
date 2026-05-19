@@ -8,9 +8,9 @@ class CheckoutRequest {
   final List<CalculateItem> cart;
   final String paymentMethod;
   final double totalValue;
-  @deprecated
+  @Deprecated('Será removido nas próximas versões')
   final String? encryptedCard;
-  @deprecated
+  @Deprecated('Será removido nas próximas versões')
   final CardPaymentData? card;
   final String? depositRequestId;
   final int? installmentNumber;

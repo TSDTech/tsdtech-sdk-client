@@ -556,8 +556,9 @@ class _HeroSection extends StatelessWidget {
               ),
               OutlinedButton.icon(
                 onPressed: () {
-                  final next = DemoThemePreset
-                      .values[(preset.index + 1) % DemoThemePreset.values.length];
+                  final next =
+                      DemoThemePreset.values[(preset.index + 1) %
+                          DemoThemePreset.values.length];
                   onPresetChanged(next);
                 },
                 style: OutlinedButton.styleFrom(

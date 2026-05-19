@@ -180,7 +180,8 @@ class CardForm extends StatelessWidget {
                         notifyChanged();
                       },
                       textInputAction: TextInputAction.next,
-                      onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
+                      onFieldSubmitted: (_) =>
+                          FocusScope.of(context).nextFocus(),
                     ),
                   ),
                   const SizedBox(width: 16),
@@ -207,7 +208,8 @@ class CardForm extends StatelessWidget {
                         notifyChanged();
                       },
                       textInputAction: TextInputAction.next,
-                      onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
+                      onFieldSubmitted: (_) =>
+                          FocusScope.of(context).nextFocus(),
                     ),
                   ),
                 ],
@@ -229,7 +231,9 @@ class CardForm extends StatelessWidget {
                 textInputAction: showSubmitButton
                     ? TextInputAction.done
                     : TextInputAction.next,
-                onFieldSubmitted: showSubmitButton ? (_) => handleSubmit() : null,
+                onFieldSubmitted: showSubmitButton
+                    ? (_) => handleSubmit()
+                    : null,
               ),
               if (showSubmitButton) ...[
                 const SizedBox(height: 24),

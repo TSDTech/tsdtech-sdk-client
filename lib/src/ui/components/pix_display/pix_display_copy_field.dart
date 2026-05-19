@@ -22,10 +22,7 @@ class PixCopyField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Pix Copia e Cola',
-          style: TsdtechTextStyles.titleSmall,
-        ),
+        const Text('Pix Copia e Cola', style: TsdtechTextStyles.titleSmall),
         const SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
@@ -92,20 +89,12 @@ class _VerticalDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 1,
-      height: 56,
-      color: TsdtechColors.outline,
-    );
+    return Container(width: 1, height: 56, color: TsdtechColors.outline);
   }
 }
 
 class _CopyButton extends StatelessWidget {
-  const _CopyButton({
-    required this.copied,
-    required this.disabled,
-    this.onTap,
-  });
+  const _CopyButton({required this.copied, required this.disabled, this.onTap});
 
   final bool copied;
   final bool disabled;
@@ -128,18 +117,18 @@ class _CopyButton extends StatelessWidget {
                   color: TsdtechColors.textDisabled,
                 )
               : copied
-                  ? const Icon(
-                      key: ValueKey('check'),
-                      Icons.check_rounded,
-                      size: 20,
-                      color: TsdtechColors.success,
-                    )
-                  : const Icon(
-                      key: ValueKey('copy'),
-                      Icons.copy_rounded,
-                      size: 20,
-                      color: TsdtechColors.primary,
-                    ),
+              ? const Icon(
+                  key: ValueKey('check'),
+                  Icons.check_rounded,
+                  size: 20,
+                  color: TsdtechColors.success,
+                )
+              : const Icon(
+                  key: ValueKey('copy'),
+                  Icons.copy_rounded,
+                  size: 20,
+                  color: TsdtechColors.primary,
+                ),
         ),
       ),
     );

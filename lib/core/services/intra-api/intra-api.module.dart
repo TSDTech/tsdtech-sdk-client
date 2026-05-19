@@ -11,13 +11,13 @@ import 'package:tsdtech_client_sdk/core/services/intra-api/md-administrators/bac
 class IntraApiModule extends ModuleBase {
   @override
   List<ModuleBase> get imports => [
-        BackMsAuthorizerModule(),
-        BackMsServicesModule(),
-        BackMsAdministratorsModule(),
-        BackMsVouchersModule(),
-        BackMsClientsModule(),
-        BackMsProviderRequestModule(),
-      ];
+    BackMsAuthorizerModule(),
+    BackMsServicesModule(),
+    BackMsAdministratorsModule(),
+    BackMsVouchersModule(),
+    BackMsClientsModule(),
+    BackMsProviderRequestModule(),
+  ];
 
   @override
   void inject(GetIt sl) {}

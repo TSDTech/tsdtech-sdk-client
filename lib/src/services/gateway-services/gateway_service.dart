@@ -24,7 +24,8 @@ class GatewayService {
   }
 
   Future<ValueResult<PaymentStatusResponse>> payWithCard(
-      CardPaymentRequest request) async {
+    CardPaymentRequest request,
+  ) async {
     try {
       final response = await _client.dio.post(
         '/payments/card',
@@ -40,17 +41,20 @@ class GatewayService {
   }
 
   Future<ValueResult<PaymentStatusResponse>> getPaymentStatus(
-      String depositRequestId) async {
+    String depositRequestId,
+  ) async {
     try {
-      final response =
-          await _client.dio.get('/payments/status/$depositRequestId');
+      final response = await _client.dio.get(
+        '/payments/status/$depositRequestId',
+      );
       final data = PaymentStatusResponse.fromJson(response.data);
       return ValueResult.success(data);
     } on DioException catch (e) {
       return _parseGatewayError<PaymentStatusResponse>(e);
     } catch (e) {
       return ValueResult.failure(
-          'Erro inesperado ao consultar status do pagamento.');
+        'Erro inesperado ao consultar status do pagamento.',
+      );
     }
   }
 
@@ -72,7 +76,8 @@ class GatewayService {
       return await payWithCard(request);
     } catch (e) {
       return ValueResult.failure(
-          'Erro inesperado ao criptografar ou processar o pagamento com cartão.');
+        'Erro inesperado ao criptografar ou processar o pagamento com cartão.',
+      );
     }
   }
 
@@ -87,6 +92,7 @@ class GatewayService {
     } catch (_) {}
 
     return ValueResult.failure(
-        error.message ?? 'Erro de comunicação com o gateway.');
+      error.message ?? 'Erro de comunicação com o gateway.',
+    );
   }
 }

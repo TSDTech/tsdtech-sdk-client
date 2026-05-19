@@ -55,7 +55,7 @@ class VouchersService extends IntraApi {
       final queryParams = {
         'page': pagination?.page ?? 1,
         'pageSize': pagination?.pageCount ?? 10,
-        if (status != null) 'status': status,
+        'status': ?status,
         if (clients != null) 'clients': clients.toString(),
         if (services != null) 'services': services.toString(),
         if (orders != null) 'orders': orders.toString(),

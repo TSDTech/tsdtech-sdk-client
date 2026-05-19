@@ -68,8 +68,11 @@ class ApiKeysService extends IntraApi {
 
       final Map<String, dynamic> headers = {'org-id': organizationId};
 
-      final response = await get('/api-keys/client',
-          queryParameters: queryParams, headers: headers);
+      final response = await get(
+        '/api-keys/client',
+        queryParameters: queryParams,
+        headers: headers,
+      );
 
       final paginated = PaginatedList<ApiKey>.fromJson(
         response.data as Map<String, dynamic>,
@@ -140,8 +143,11 @@ class ApiKeysService extends IntraApi {
   }) async {
     try {
       final Map<String, dynamic> headers = {'org-id': organizationId};
-      final response = await delete('/api-keys/client',
-          data: {'ids': ids}, headers: headers);
+      final response = await delete(
+        '/api-keys/client',
+        data: {'ids': ids},
+        headers: headers,
+      );
       final data = (response.data as List).map((e) => e as String).toList();
       return ValueResult.success(data);
     } catch (e) {

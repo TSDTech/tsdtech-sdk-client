@@ -8,10 +8,11 @@ class PaymentMethodModel {
   final bool isActive;
   final int? installmentNumber;
 
-  PaymentMethodModel(
-      {required this.paymentMethod,
-      required this.isActive,
-      this.installmentNumber});
+  PaymentMethodModel({
+    required this.paymentMethod,
+    required this.isActive,
+    this.installmentNumber,
+  });
 
   factory PaymentMethodModel.fromJson(Map<String, dynamic> json) =>
       _$PaymentMethodModelFromJson(json);

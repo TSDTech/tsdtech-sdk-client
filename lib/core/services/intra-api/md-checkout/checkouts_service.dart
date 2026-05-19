@@ -1,6 +1,5 @@
 import 'package:tsdtech_client_sdk/core/services/intra-api/intra.api.dart';
 import 'package:tsdtech_client_sdk/core/constants/constants.dart';
-import 'package:tsdtech_client_sdk/core/services/base.api.dart';
 import 'package:tsdtech_client_sdk/models/checkouts/calculate_request.model.dart';
 import 'package:tsdtech_client_sdk/models/checkouts/calculate_response.model.dart';
 import 'package:tsdtech_client_sdk/models/checkouts/checkout_request.model.dart';
@@ -34,8 +33,7 @@ class CheckoutsService extends IntraApi {
   static final CheckoutsService instance = CheckoutsService();
 
   /// Creates a [CheckoutsService] instance with the base URL from [Constants].
-  CheckoutsService({BaseApi? baseApi, String? baseUrl})
-      : super(baseUrl ?? Constants.getBaseUrl(), baseApi: baseApi);
+  CheckoutsService() : super(Constants.getBaseUrl());
 
   /// Retrieves the list of available payment methods for the current user.
   ///
@@ -57,8 +55,11 @@ class CheckoutsService extends IntraApi {
       final data = response.data;
       if (data is List) {
         final list = data
-            .map((e) => PaymentMethodModel.fromJson(
-                Map<String, dynamic>.from(e as Map)))
+            .map(
+              (e) => PaymentMethodModel.fromJson(
+                Map<String, dynamic>.from(e as Map),
+              ),
+            )
             .toList();
         return ValueResult.success(list);
       }
@@ -80,7 +81,8 @@ class CheckoutsService extends IntraApi {
   /// );
   /// ```
   Future<ValueResult<CalculateResponse>> calculateCart(
-      CalculateRequest request) async {
+    CalculateRequest request,
+  ) async {
     try {
       const path = '/checkouts/client/calculate';
       final response = await post(path, data: request.toJson());
@@ -124,7 +126,8 @@ class CheckoutsService extends IntraApi {
   /// }
   /// ```
   Future<ValueResult<CheckoutResponse>> createCheckout(
-      CheckoutRequest request) async {
+    CheckoutRequest request,
+  ) async {
     try {
       const path = '/checkouts/client';
       final response = await post(path, data: request.toJson());

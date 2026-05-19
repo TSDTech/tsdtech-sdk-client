@@ -59,19 +59,21 @@ class ProviderRequestsService extends IntraApi {
   ///   service: true,
   /// );
   /// ```
-  Future<ValueResult<PaginatedList<ProviderRequest>>> getProviderRequestsClient(
-      {Pagination? pagination,
-      bool? clients,
-      bool? service,
-      bool? provider,
-      bool? voucher,
-      bool? administrator,
-      String? status}) async {
+  Future<ValueResult<PaginatedList<ProviderRequest>>>
+  getProviderRequestsClient({
+    Pagination? pagination,
+    bool? clients,
+    bool? service,
+    bool? provider,
+    bool? voucher,
+    bool? administrator,
+    String? status,
+  }) async {
     try {
       final queryParams = {
         'page': pagination?.page ?? 1,
         'pageSize': pagination?.pageCount ?? 10,
-        if (status != null) 'status': status,
+        'status': ?status,
         if (clients != null) 'clients': clients.toString(),
         if (service != null) 'service': service.toString(),
         if (provider != null) 'provider': provider.toString(),
@@ -119,13 +121,14 @@ class ProviderRequestsService extends IntraApi {
         'pageSize': pagination?.pageCount ?? 10,
         if (serviceType != null) 'serviceType': serviceType.toString(),
         if (providerBool != null) 'provider': providerBool.toString(),
-        if (serviceId != null) 'serviceId': serviceId,
+        'serviceId': ?serviceId,
       };
       const path = 'provider-service-types/client';
       final response = await get(path, queryParameters: queryParams);
       final paginated = PaginatedList<ProviderModel>.fromJson(
-          response.data as Map<String, dynamic>,
-          (item) => ProviderModel.fromJson(item as Map<String, dynamic>));
+        response.data as Map<String, dynamic>,
+        (item) => ProviderModel.fromJson(item as Map<String, dynamic>),
+      );
       return ValueResult.success(paginated);
     } catch (e) {
       return ValueResult.fromError(e);

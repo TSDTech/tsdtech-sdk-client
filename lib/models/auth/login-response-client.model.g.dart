@@ -19,10 +19,10 @@ LoginResponseClient _$LoginResponseClientFromJson(Map<String, dynamic> json) =>
     );
 
 Map<String, dynamic> _$LoginResponseClientToJson(
-        LoginResponseClient instance) =>
-    <String, dynamic>{
-      'data': instance.data,
-      'entity': instance.entity,
-      'token': instance.token,
-      'expiresAt': instance.expiresAt,
-    };
+  LoginResponseClient instance,
+) => <String, dynamic>{
+  'data': instance.data,
+  'entity': instance.entity,
+  'token': instance.token,
+  'expiresAt': instance.expiresAt,
+};

@@ -6,9 +6,7 @@ class CheckoutLoadingState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: customLoading ?? const CircularProgressIndicator(),
-    );
+    return Center(child: customLoading ?? const CircularProgressIndicator());
   }
 }
 
@@ -37,7 +35,9 @@ class CheckoutErrorState extends StatelessWidget {
           Text(message, textAlign: TextAlign.center),
           const SizedBox(height: 16),
           ElevatedButton(
-              onPressed: onRetry, child: const Text('Tentar Novamente')),
+            onPressed: onRetry,
+            child: const Text('Tentar Novamente'),
+          ),
         ],
       ),
     );

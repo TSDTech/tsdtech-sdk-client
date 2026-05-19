@@ -16,7 +16,8 @@ ProviderModel _$ProviderModelFromJson(Map<String, dynamic> json) =>
       serviceType: json['serviceType'] == null
           ? null
           : ServiceTypeModel.fromJson(
-              json['serviceType'] as Map<String, dynamic>),
+              json['serviceType'] as Map<String, dynamic>,
+            ),
     );
 
 Map<String, dynamic> _$ProviderModelToJson(ProviderModel instance) =>

@@ -42,12 +42,14 @@ class AdministratorsService extends IntraApi {
   ///   (error) => print('Error: $error'),
   /// );
   /// ```
-  Future<ValueResult<Administrator>> getByFullDomain(
-      {required String fullDomain}) async {
+  Future<ValueResult<Administrator>> getByFullDomain({
+    required String fullDomain,
+  }) async {
     try {
       final response = await get('/administrators/public/$fullDomain');
-      final admin =
-          Administrator.fromJson(response.data as Map<String, dynamic>);
+      final admin = Administrator.fromJson(
+        response.data as Map<String, dynamic>,
+      );
       return ValueResult.success(admin);
     } catch (e) {
       return ValueResult.fromError(e);

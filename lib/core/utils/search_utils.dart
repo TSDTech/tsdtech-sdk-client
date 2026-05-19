@@ -14,8 +14,9 @@ class SearchUtils {
     return items.where((item) {
       final searchableFields = getSearchableFields(item);
 
-      return searchableFields
-          .any((field) => field.toLowerCase().contains(lowerSearchTerm));
+      return searchableFields.any(
+        (field) => field.toLowerCase().contains(lowerSearchTerm),
+      );
     }).toList();
   }
 
@@ -48,8 +49,9 @@ class SearchUtils {
     return items.where((item) {
       final searchableFields = getSearchableFields(item);
 
-      return searchableFields
-          .any((field) => normalizeText(field).contains(normalizedSearchTerm));
+      return searchableFields.any(
+        (field) => normalizeText(field).contains(normalizedSearchTerm),
+      );
     }).toList();
   }
 

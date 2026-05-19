@@ -74,9 +74,9 @@ class ServiceTypesService extends IntraApi {
         if (names != null && names.isNotEmpty) 'names': names,
         if (administratorIds != null && administratorIds.isNotEmpty)
           'administratorIds': administratorIds,
-        if (searchTerm != null) 'searchTerm': searchTerm,
-        if (administrator != null) 'administrator': administrator,
-        if (providers != null) 'providers': providers,
+        'searchTerm': ?searchTerm,
+        'administrator': ?administrator,
+        'providers': ?providers,
       };
 
       const path = '/service-types/public';

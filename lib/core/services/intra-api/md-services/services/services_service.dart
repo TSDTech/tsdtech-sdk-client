@@ -78,12 +78,12 @@ class ServicesService extends IntraApi {
         if (ids != null && ids.isNotEmpty) 'ids': ids,
         if (names != null && names.isNotEmpty) 'names': names,
         if (codes != null && codes.isNotEmpty) 'codes': codes,
-        if (status != null) 'status': status,
+        'status': ?status,
         if (serviceTypeIds != null && serviceTypeIds.isNotEmpty)
           'serviceTypeId': serviceTypeIds,
-        if (searchTerm != null) 'searchTerm': searchTerm,
-        if (administrator != null) 'administrator': administrator,
-        if (serviceType != null) 'serviceType': serviceType,
+        'searchTerm': ?searchTerm,
+        'administrator': ?administrator,
+        'serviceType': ?serviceType,
         if (administratorIds != null && administratorIds.isNotEmpty)
           'administratorIds': administratorIds,
       };
@@ -118,12 +118,11 @@ class ServicesService extends IntraApi {
   /// - Form not found
   /// - Invalid response format
   /// - Parsing fails
-  Future<ValueResult<ServiceForm>> getServiceFormModel(
-      {required String formId}) async {
+  Future<ValueResult<ServiceForm>> getServiceFormModel({
+    required String formId,
+  }) async {
     try {
-      final queryParams = {
-        'ids': formId,
-      };
+      final queryParams = {'ids': formId};
       const path = '/service-forms/client';
       final response = await get(path, queryParameters: queryParams);
       final data = response.data;
@@ -187,8 +186,9 @@ class ServicesService extends IntraApi {
             formJson = Map<String, dynamic>.from(first);
           }
         } else if (data.containsKey('form') && data['form'] is Map) {
-          formJson =
-              Map<String, dynamic>.from(data['form'] as Map<String, dynamic>);
+          formJson = Map<String, dynamic>.from(
+            data['form'] as Map<String, dynamic>,
+          );
           formJson['id'] = formJson['id'] ?? data['id'];
         } else {
           formJson = data;
@@ -227,11 +227,13 @@ class ServicesService extends IntraApi {
   ///   print('Form submitted successfully');
   /// }
   /// ```
-  Future<ValueResult<bool>> submitServiceForm(Map<String, dynamic> payload,
-      {String? serviceId,
-      String? administratorId,
-      String? voucherId,
-      String? providerId}) async {
+  Future<ValueResult<bool>> submitServiceForm(
+    Map<String, dynamic> payload, {
+    String? serviceId,
+    String? administratorId,
+    String? voucherId,
+    String? providerId,
+  }) async {
     try {
       const path = '/service-forms/client/submit';
       final requestData = Map<String, dynamic>.from(payload);

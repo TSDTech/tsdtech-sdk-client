@@ -56,8 +56,11 @@ kZVhIwLwo/hz061nP2/el1c=
     );
 
     test('CA-1 & CA-2: Deve criptografar e retornar um Base64 válido', () {
-      final base64Ciphertext = CardEncryptor.encrypt(testPublicKeyPem, testCardData);
-      
+      final base64Ciphertext = CardEncryptor.encrypt(
+        testPublicKeyPem,
+        testCardData,
+      );
+
       // Valida se é uma string Base64 válida
       expect(base64Ciphertext, isNotEmpty);
       expect(RegExp(r'^[A-Za-z0-9+/=]+$').hasMatch(base64Ciphertext), isTrue);
@@ -65,7 +68,7 @@ kZVhIwLwo/hz061nP2/el1c=
       // --- Validação da Descriptografia ---
       final parser = RSAKeyParser();
       final privateKey = parser.parse(testPrivateKeyPem) as RSAPrivateKey;
-      
+
       final decrypter = Encrypter(
         RSA(
           privateKey: privateKey,
@@ -81,14 +84,18 @@ kZVhIwLwo/hz061nP2/el1c=
       expect(decryptedMap['cardHolderName'], equals('JOAO DA SILVA'));
     });
 
-    test('CA-4: Deve lançar FormatException descritiva se a chave PEM for malformada', () {
-      const invalidPem = '-----BEGIN PUBLIC KEY-----\nINVALID_DATA\n-----END PUBLIC KEY-----';
-      
-      expect(
-        () => CardEncryptor.encrypt(invalidPem, testCardData),
-        throwsA(isA<FormatException>()),
-      );
-    });
+    test(
+      'CA-4: Deve lançar FormatException descritiva se a chave PEM for malformada',
+      () {
+        const invalidPem =
+            '-----BEGIN PUBLIC KEY-----\nINVALID_DATA\n-----END PUBLIC KEY-----';
+
+        expect(
+          () => CardEncryptor.encrypt(invalidPem, testCardData),
+          throwsA(isA<FormatException>()),
+        );
+      },
+    );
 
     test('Deve tratar chave vazia lançando FormatException', () {
       expect(

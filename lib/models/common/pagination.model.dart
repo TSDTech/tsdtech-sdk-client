@@ -7,10 +7,7 @@ class Pagination {
   final int page;
   final int pageCount;
 
-  Pagination({
-    required this.page,
-    required this.pageCount,
-  });
+  Pagination({required this.page, required this.pageCount});
 
   factory Pagination.fromJson(Map<String, dynamic> json) =>
       _$PaginationFromJson(json);

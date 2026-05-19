@@ -10,7 +10,7 @@ void main() {
         'status': 'pending',
         'depositRequestId': 'dep_123',
         'gatewayBaseUrl': 'https://gateway.example',
-        'publicKeyUrl': 'https://gateway.example/pub'
+        'publicKeyUrl': 'https://gateway.example/pub',
       };
 
       final resp = CheckoutResponse.fromJson(json);
@@ -25,7 +25,7 @@ void main() {
         'paymentMethod': 'pix',
         'paymentId': 'pix_123',
         'status': 'pending',
-        'pix': {'qrCode': 'QR', 'copyPasteCode': 'COPY'}
+        'pix': {'qrCode': 'QR', 'copyPasteCode': 'COPY'},
       };
 
       final resp = CheckoutResponse.fromJson(json);

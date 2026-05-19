@@ -13,8 +13,9 @@ Administrator _$AdministratorFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String?,
       cnpj: json['cnpj'] as String?,
       phoneContact: json['phoneContact'] as String?,
-      clients:
-          (json['clients'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      clients: (json['clients'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
       fullDomain: (json['fullDomain'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),

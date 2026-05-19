@@ -1,5 +1,6 @@
 import 'package:tsdtech_client_sdk/core/services/intra-api/intra.api.dart';
 import 'package:tsdtech_client_sdk/core/constants/constants.dart';
+import 'package:tsdtech_client_sdk/core/services/base.api.dart';
 import 'package:tsdtech_client_sdk/models/value_result.dart';
 import 'package:tsdtech_client_sdk/models/common/paginated_list.model.dart';
 import 'package:tsdtech_client_sdk/models/common/pagination.model.dart';
@@ -40,7 +41,8 @@ class ApiKeysService extends IntraApi {
   static final ApiKeysService instance = ApiKeysService();
 
   /// Creates an [ApiKeysService] instance with the base URL from [Constants].
-  ApiKeysService() : super(Constants.getBaseUrl());
+  ApiKeysService({BaseApi? baseApi, String? baseUrl})
+      : super(baseUrl ?? Constants.getBaseUrl(), baseApi: baseApi);
 
   /// Retrieves a list of API keys for the specified organization.
   ///

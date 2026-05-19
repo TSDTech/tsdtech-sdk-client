@@ -1,5 +1,6 @@
 import 'package:tsdtech_client_sdk/core/services/intra-api/intra.api.dart';
 import 'package:tsdtech_client_sdk/core/constants/constants.dart';
+import 'package:tsdtech_client_sdk/core/services/base.api.dart';
 import 'package:tsdtech_client_sdk/models/value_result.dart';
 import 'package:tsdtech_client_sdk/models/common/paginated_list.model.dart';
 import 'package:tsdtech_client_sdk/models/common/pagination.model.dart';
@@ -34,7 +35,8 @@ class ServiceTypesService extends IntraApi {
   static final ServiceTypesService instance = ServiceTypesService();
 
   /// Creates a [ServiceTypesService] instance with the base URL from [Constants].
-  ServiceTypesService() : super(Constants.getBaseUrl());
+  ServiceTypesService({BaseApi? baseApi, String? baseUrl})
+      : super(baseUrl ?? Constants.getBaseUrl(), baseApi: baseApi);
 
   /// Retrieves a list of public service types with optional filtering.
   ///

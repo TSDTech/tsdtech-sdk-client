@@ -44,7 +44,18 @@ class AuthServiceClientUser extends IntraApi {
   static final AuthServiceClientUser instance = AuthServiceClientUser();
 
   /// Creates an [AuthServiceClientUser] instance with the base URL from [Constants].
-  AuthServiceClientUser() : super(Constants.getBaseUrl());
+  AuthServiceClientUser({BaseApi? baseApi, String? baseUrl})
+      : super(baseUrl ?? Constants.getBaseUrl(), baseApi: baseApi);
+
+  /// Applies the auth token to the API client backing this service instance.
+  void setAuthToken(String? token) {
+    baseApi.applyToken(token);
+  }
+
+  /// Clears the auth token from the API client backing this service instance.
+  void clearAuthToken() {
+    baseApi.clearToken();
+  }
 
   /// Authenticates a client user with the provided credentials.
   ///

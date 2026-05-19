@@ -1,5 +1,6 @@
 import 'package:tsdtech_client_sdk/core/services/intra-api/intra.api.dart';
 import 'package:tsdtech_client_sdk/core/constants/constants.dart';
+import 'package:tsdtech_client_sdk/core/services/base.api.dart';
 import 'package:tsdtech_client_sdk/models/auth/client-user-entity.model.dart';
 import 'package:tsdtech_client_sdk/models/value_result.dart';
 
@@ -24,7 +25,8 @@ class ClientsService extends IntraApi {
   static final ClientsService instance = ClientsService();
 
   /// Creates a [ClientsService] instance with the base URL from [Constants].
-  ClientsService() : super(Constants.getBaseUrl());
+  ClientsService({BaseApi? baseApi, String? baseUrl})
+      : super(baseUrl ?? Constants.getBaseUrl(), baseApi: baseApi);
 
   /// Updates the authenticated client's profile information.
   ///

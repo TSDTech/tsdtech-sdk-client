@@ -25,18 +25,18 @@ import 'package:tsdtech_client_sdk/core/services/base.api.dart';
 /// - Concatenating without duplicate slashes
 class IntraApi {
   final String _baseUrl;
-  final BaseApi? _injectedBaseApi;
+  final BaseApi _baseApi;
 
   /// Creates an IntraApi instance with the specified [baseUrl].
   ///
   /// - [baseUrl]: The base URL for all API requests in this service
-  IntraApi(this._baseUrl, {BaseApi? baseApi}) : _injectedBaseApi = baseApi;
+  IntraApi(this._baseUrl, {BaseApi? baseApi}) : _baseApi = baseApi ?? BaseApiImpl();
 
   /// Returns the base URL of this service.
   String get baseUrl => _baseUrl;
 
   @protected
-  BaseApi get baseApi => _injectedBaseApi ?? BaseApi.legacyInstance;
+  BaseApi get baseApi => _baseApi;
 
   /// Performs a GET request to the specified [path] on this service's base URL.
   ///

@@ -11,6 +11,8 @@ void main() {
   group('BaseApi / IntraApi', () {
     late MockHttpClientAdapter adapter;
     late Dio dio;
+    late BaseApi api;
+    late IntraApi intra;
 
     setUp(() async {
       SharedPreferences.setMockInitialValues({});
@@ -18,11 +20,11 @@ void main() {
 
       adapter = MockHttpClientAdapter();
       dio = createDioWithAdapter(adapter);
-      BaseApi.setDioForTesting(dio);
+      api = BaseApiImpl(dio: dio);
+      intra = IntraApi('https://api.example.com/', baseApi: api);
     });
 
     test('joinUrl remove trailing slash e une os paths corretamente', () {
-      final intra = IntraApi('https://api.example.com/');
       final joined = intra.joinUrl('https://api.example.com/', 'path');
       expect(joined, equals('https://api.example.com/path'));
 
@@ -36,7 +38,7 @@ void main() {
 
       adapter.when('GET', '/test-noauth', {});
 
-      await BaseApi.get('https://example.com/test-noauth');
+  await api.getRequest('https://example.com/test-noauth');
 
       // Valida que o dio.options não foi poluído
       expect(dio.options.headers.containsKey('Authorization'), isFalse);
@@ -53,7 +55,7 @@ void main() {
       adapter.whenThrow('GET', '/timeout', dioEx);
 
       try {
-        await BaseApi.get('https://example.com/timeout');
+        await api.getRequest('https://example.com/timeout');
         fail('Deveria ter lançado uma exception amigável');
       } catch (e) {
         expect(e, isA<Exception>());

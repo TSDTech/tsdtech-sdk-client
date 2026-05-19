@@ -12,12 +12,13 @@ import 'package:tsdtech_client_sdk/core/services/base.api.dart';
 ///
 /// ## Token Management
 /// This service does NOT automatically store tokens. After successful login/signup,
-/// use [BaseApi.setToken] to set the token for subsequent authenticated requests:
+/// use `TsdtechClient.setAuthToken()` or [setAuthToken] to set the token for
+/// subsequent authenticated requests:
 ///
 /// ```dart
 /// final result = await authService.login(email: 'user@example.com', password: 'pass');
 /// if (result.isSuccess) {
-///   BaseApi.setToken(result.value.token);
+///   authService.setAuthToken(result.value.token);
 /// }
 /// ```
 ///
@@ -53,6 +54,16 @@ class AuthServiceClientUser extends IntraApi {
   AuthServiceClientUser({BaseApi? baseApi, String? baseUrl})
     : super(baseUrl ?? Constants.getBaseUrl(), baseApi: baseApi);
 
+  /// Applies the auth token to the API client backing this service instance.
+  void setAuthToken(String? token) {
+    baseApi.applyToken(token);
+  }
+
+  /// Clears the auth token from the API client backing this service instance.
+  void clearAuthToken() {
+    baseApi.clearToken();
+  }
+
   /// Authenticates a client user with the provided credentials.
   ///
   /// - [email]: The user's email address (required)
@@ -65,9 +76,10 @@ class AuthServiceClientUser extends IntraApi {
   ///
   /// ## Token Storage
   /// This method does NOT automatically store the token. After successful login,
-  /// use [BaseApi.setToken] to set the token for subsequent requests:
+  /// use `TsdtechClient.setAuthToken()` or [setAuthToken] to set the token for
+  /// subsequent requests:
   /// ```dart
-  /// BaseApi.setToken(result.value.token);
+  /// authService.setAuthToken(result.value.token);
   /// ```
   ///
   /// ## Error Handling
@@ -132,7 +144,8 @@ class AuthServiceClientUser extends IntraApi {
   ///
   /// ## Token Storage
   /// This method does NOT automatically store the token. After successful signup,
-  /// use [BaseApi.setToken] to set the token for subsequent requests.
+  /// use `TsdtechClient.setAuthToken()` or [setAuthToken] to set the token for
+  /// subsequent requests.
   ///
   /// ## Error Handling
   /// Returns [ValueResult.failure] if administratorId is not provided

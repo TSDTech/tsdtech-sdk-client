@@ -15,13 +15,14 @@ void main() {
   group('CheckoutsService', () {
     late MockHttpClientAdapter adapter;
     late Dio dio;
+    late CheckoutsService service;
 
     setUp(() async {
       SharedPreferences.setMockInitialValues({});
       await SharedPrefsHelper.init();
       adapter = MockHttpClientAdapter();
       dio = createDioWithAdapter(adapter);
-      BaseApi.setDioForTesting(dio);
+      service = CheckoutsService(baseApi: BaseApiImpl(dio: dio));
     });
 
     test(
@@ -33,33 +34,13 @@ void main() {
         ];
         adapter.when('GET', '/checkouts/client/methods', payload);
 
-        final result = await CheckoutsService.instance.getPaymentMethods();
+        final result = await service.getPaymentMethods();
         expect(result.isSuccess, isTrue);
         expect(result.value, isA<List<PaymentMethodModel>>());
         expect(result.value!.length, 2);
         expect(result.value!.first.paymentMethod, 'pix');
       },
     );
-
-    test('singleton legado usa o dio de teste atualizado dinamicamente', () async {
-      final singleton = CheckoutsService.instance;
-      final freshAdapter = MockHttpClientAdapter();
-      final freshDio = createDioWithAdapter(freshAdapter);
-      freshAdapter.when('GET', '/checkouts/client/methods', [
-        {'paymentMethod': 'pix', 'isActive': true},
-      ]);
-
-      BaseApi.setDioForTesting(freshDio);
-
-      final result = await singleton.getPaymentMethods();
-
-      expect(result.isSuccess, isTrue);
-      expect(freshAdapter.requests, hasLength(1));
-      expect(
-        freshAdapter.requests.single.path,
-        contains('/checkouts/client/methods'),
-      );
-    });
 
     test('calculateCart retorna CalculateResponse calculado', () async {
       final responseJson = {'totalValue': 123.45, 'cart': []};
@@ -68,7 +49,7 @@ void main() {
       final request = CalculateRequest(
         cart: [CalculateItem(serviceId: 's1', value: 10.0, quantity: 1)],
       );
-      final result = await CheckoutsService.instance.calculateCart(request);
+      final result = await service.calculateCart(request);
 
       expect(result.isSuccess, isTrue);
       expect(result.value!.totalValue, 123.45);
@@ -87,7 +68,7 @@ void main() {
         paymentMethod: 'pix',
         totalValue: 10.0,
       );
-      final result = await CheckoutsService.instance.createCheckout(request);
+      final result = await service.createCheckout(request);
 
       expect(result.isSuccess, isTrue);
       expect(result.value!.paymentId, 'p1');
@@ -99,7 +80,7 @@ void main() {
         'status': 'completed',
       });
 
-      final result = await CheckoutsService.instance.getPixStatus('p1');
+      final result = await service.getPixStatus('p1');
 
       expect(result.isSuccess, isTrue);
       expect(result.value, 'completed');
@@ -123,7 +104,7 @@ void main() {
       );
       adapter.whenThrow('GET', '/checkouts/client/methods', ex);
 
-      final result = await CheckoutsService.instance.getPaymentMethods();
+      final result = await service.getPaymentMethods();
       expect(result.isError, isTrue);
       // Verifica se o parser do ValueResult pegou a mensagem interna correta
       expect(result.error, contains('api error mock'));

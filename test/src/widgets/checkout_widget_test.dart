@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:tsdtech_client_sdk/src/client/tsdtech-client/tsdtech_client.dart';
 import 'package:tsdtech_client_sdk/src/ui/checkout/checkout_widget.dart';
 import 'package:tsdtech_client_sdk/src/ui/checkout/payment_method_selector.dart';
 import 'package:tsdtech_client_sdk/src/ui/stores/checkout_store.dart';
@@ -8,6 +9,8 @@ import 'package:tsdtech_client_sdk/src/ui/checkout/views/card_payment_view.dart'
 
 void main() {
   group('CheckoutWidget UI Tests', () {
+    final client = TsdtechClient(baseUrl: 'https://api.example.com');
+
     testWidgets(
       'CA-1 e CA-2: Renderiza corretamente com as opções PIX e Cartão',
       (WidgetTester tester) async {
@@ -15,6 +18,7 @@ void main() {
           MaterialApp(
             home: Scaffold(
               body: CheckoutWidget(
+                client: client,
                 store: CheckoutStore(),
                 items: [], // Simula carrinho vazio para teste de UI
                 administratorId: 'admin_123',
@@ -45,6 +49,7 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: CheckoutWidget(
+              client: client,
               store: CheckoutStore(),
               items: [],
               administratorId: 'admin_123',

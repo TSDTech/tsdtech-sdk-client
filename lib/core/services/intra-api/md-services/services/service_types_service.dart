@@ -13,7 +13,8 @@ import 'package:tsdtech_client_sdk/models/services/service_type.model.dart';
 ///
 /// ## Usage
 /// ```dart
-/// final serviceTypesService = ServiceTypesService.instance;
+/// final client = TsdtechClient();
+/// final serviceTypesService = client.serviceTypes;
 ///
 /// // List public service types
 /// final types = await serviceTypesService.getPublicServiceTypes(
@@ -28,10 +29,15 @@ import 'package:tsdtech_client_sdk/models/services/service_type.model.dart';
 /// );
 /// ```
 ///
-/// ## Singleton Pattern
-/// Access the service via [ServiceTypesService.instance].
+/// Prefer scoped access via `TsdtechClient.serviceTypes`.
+/// The legacy [ServiceTypesService.instance] singleton remains available for
+/// backward compatibility during the migration period.
 class ServiceTypesService extends IntraApi {
   /// Singleton instance of [ServiceTypesService].
+  @Deprecated(
+    'Use TsdtechClient.serviceTypes to access a scoped service instance. '
+    'This legacy singleton will be removed in a future major version.',
+  )
   static final ServiceTypesService instance = ServiceTypesService();
 
   /// Creates a [ServiceTypesService] instance with the base URL from [Constants].

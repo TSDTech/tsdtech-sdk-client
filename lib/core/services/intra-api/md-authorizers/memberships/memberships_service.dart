@@ -14,17 +14,23 @@ import 'package:tsdtech_client_sdk/models/memberships/membership.model.dart';
 ///
 /// ## Usage
 /// ```dart
-/// final membershipsService = MembershipsService.instance;
+/// final client = TsdtechClient();
+/// final membershipsService = client.memberships;
 /// final result = await membershipsService.getMemberships(
 ///   pagination: Pagination(page: 1, pageCount: 20),
 ///   clientUserIds: ['user-id-1', 'user-id-2'],
 /// );
 /// ```
 ///
-/// ## Singleton Pattern
-/// Access the service via [MembershipsService.instance].
+/// Prefer scoped access via `TsdtechClient.memberships`.
+/// The legacy [MembershipsService.instance] singleton remains available for
+/// backward compatibility during the migration period.
 class MembershipsService extends IntraApi {
   /// Singleton instance of [MembershipsService].
+  @Deprecated(
+    'Use TsdtechClient.memberships to access a scoped service instance. '
+    'This legacy singleton will be removed in a future major version.',
+  )
   static final MembershipsService instance = MembershipsService();
 
   /// Creates a [MembershipsService] instance with the base URL from [Constants].

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import '../../../core/services/intra-api/md-checkout/checkouts_service.dart';
 import '../../../models/cart/cart_item.model.dart';
 import '../../../models/checkouts/calculate_item.model.dart';
 import '../../../models/checkouts/checkout_request.model.dart';
@@ -52,7 +51,7 @@ class CheckoutWidget extends StatelessWidget {
   final bool showSubmitButton;
   final CheckoutWidgetController? controller;
   final CheckoutStore store;
-  final TsdtechClient? client;
+  final TsdtechClient client;
 
   const CheckoutWidget({
     super.key,
@@ -69,13 +68,13 @@ class CheckoutWidget extends StatelessWidget {
     this.showSubmitButton = true,
     this.controller,
     required this.store,
-    this.client,
+    required this.client,
   });
 
   @override
   Widget build(BuildContext context) {
     final effectiveStore = store;
-    final checkoutsService = client?.checkouts ?? CheckoutsService.instance;
+    final checkoutsService = client.checkouts;
 
     void notifyStatus(PaymentStatus status) {
       onStatusChange?.call(status);

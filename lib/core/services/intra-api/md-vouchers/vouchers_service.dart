@@ -14,18 +14,23 @@ import 'package:tsdtech_client_sdk/models/value_result.dart';
 ///
 /// ## Usage
 /// ```dart
-/// final vouchersService = VouchersService.instance;
+/// final client = TsdtechClient();
+/// final vouchersService = client.vouchers;
 /// final result = await vouchersService.getVouchersClient(
 ///   pagination: Pagination(page: 1, pageCount: 20),
 ///   status: 'active',
 /// );
 /// ```
 ///
-/// ## Singleton Pattern
-/// Access the service via [VouchersService.instance] to ensure a single
-/// instance is used throughout the application.
+/// Prefer scoped access via `TsdtechClient.vouchers`.
+/// The legacy [VouchersService.instance] singleton remains available for
+/// backward compatibility during the migration period.
 class VouchersService extends IntraApi {
   /// Singleton instance of [VouchersService].
+  @Deprecated(
+    'Use TsdtechClient.vouchers to access a scoped service instance. '
+    'This legacy singleton will be removed in a future major version.',
+  )
   static final VouchersService instance = VouchersService();
 
   /// Creates a [VouchersService] instance with the base URL from [Constants].

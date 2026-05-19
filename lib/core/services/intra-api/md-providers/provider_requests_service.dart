@@ -14,7 +14,8 @@ import 'package:tsdtech_client_sdk/models/value_result.dart';
 ///
 /// ## Usage
 /// ```dart
-/// final providerService = ProviderRequestsService.instance;
+/// final client = TsdtechClient();
+/// final providerService = client.providerRequests;
 ///
 /// // Get provider requests
 /// final requests = await providerService.getProviderRequestsClient(
@@ -29,10 +30,15 @@ import 'package:tsdtech_client_sdk/models/value_result.dart';
 /// );
 /// ```
 ///
-/// ## Singleton Pattern
-/// Access the service via [ProviderRequestsService.instance].
+/// Prefer scoped access via `TsdtechClient.providerRequests`.
+/// The legacy [ProviderRequestsService.instance] singleton remains available
+/// for backward compatibility during the migration period.
 class ProviderRequestsService extends IntraApi {
   /// Singleton instance of [ProviderRequestsService].
+  @Deprecated(
+    'Use TsdtechClient.providerRequests to access a scoped service instance. '
+    'This legacy singleton will be removed in a future major version.',
+  )
   static final ProviderRequestsService instance = ProviderRequestsService();
 
   /// Creates a [ProviderRequestsService] instance with the base URL from [Constants].

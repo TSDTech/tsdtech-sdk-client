@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tsdtech_client_sdk/models/cart/cart_item.model.dart';
 import 'package:tsdtech_client_sdk/models/services/service.model.dart';
+import 'package:tsdtech_client_sdk/src/client/tsdtech-client/tsdtech_client.dart';
 import 'package:tsdtech_client_sdk/src/navigation/tsdtech_ui.dart';
 import 'package:tsdtech_client_sdk/src/ui/checkout/payment_types.dart';
 
@@ -25,6 +26,7 @@ void main() {
   Widget buildHostApp() {
     final item = buildCartItem();
     final paymentResult = buildPaymentResult();
+    final client = TsdtechClient(baseUrl: 'https://api.example.com');
 
     return MaterialApp(
       home: Builder(
@@ -38,6 +40,7 @@ void main() {
                       context: context,
                       items: [item],
                       administratorId: 'admin_123',
+                      client: client,
                       onSuccess: () {},
                       onCancel: () {},
                     );
@@ -50,6 +53,7 @@ void main() {
                       context: context,
                       items: [item],
                       administratorId: 'admin_123',
+                      client: client,
                       onSuccess: () {},
                       onCancel: () {},
                     );
@@ -62,6 +66,7 @@ void main() {
                       context: context,
                       items: [item],
                       administratorId: 'admin_123',
+                      client: client,
                       onSuccess: () {},
                       onCancel: () {},
                     );

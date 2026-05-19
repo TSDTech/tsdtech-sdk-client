@@ -23,7 +23,8 @@ import 'package:tsdtech_client_sdk/core/services/base.api.dart';
 ///
 /// ## Usage
 /// ```dart
-/// final authService = AuthServiceClientUser.instance;
+/// final client = TsdtechClient();
+/// final authService = client.auth;
 ///
 /// // Login
 /// final loginResult = await authService.login(
@@ -37,10 +38,15 @@ import 'package:tsdtech_client_sdk/core/services/base.api.dart';
 /// );
 /// ```
 ///
-/// ## Singleton Pattern
-/// Access the service via [AuthServiceClientUser.instance].
+/// Prefer scoped access via `TsdtechClient.auth`.
+/// The legacy [AuthServiceClientUser.instance] singleton remains available for
+/// backward compatibility during the migration period.
 class AuthServiceClientUser extends IntraApi {
   /// Singleton instance of [AuthServiceClientUser].
+  @Deprecated(
+    'Use TsdtechClient.auth to access a scoped service instance. '
+    'This legacy singleton will be removed in a future major version.',
+  )
   static final AuthServiceClientUser instance = AuthServiceClientUser();
 
   /// Creates an [AuthServiceClientUser] instance with the base URL from [Constants].

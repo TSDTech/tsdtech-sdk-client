@@ -13,17 +13,23 @@ import 'package:tsdtech_client_sdk/models/value_result.dart';
 ///
 /// ## Usage
 /// ```dart
-/// final ordersService = OrdersService.instance;
+/// final client = TsdtechClient();
+/// final ordersService = client.orders;
 /// final result = await ordersService.getAllOrders(
 ///   pagination: Pagination(page: 1, pageCount: 20),
 ///   client: true,
 /// );
 /// ```
 ///
-/// ## Singleton Pattern
-/// Access the service via [OrdersService.instance].
+/// Prefer scoped access via `TsdtechClient.orders`.
+/// The legacy [OrdersService.instance] singleton remains available for
+/// backward compatibility during the migration period.
 class OrdersService extends IntraApi {
   /// Singleton instance of [OrdersService].
+  @Deprecated(
+    'Use TsdtechClient.orders to access a scoped service instance. '
+    'This legacy singleton will be removed in a future major version.',
+  )
   static final OrdersService instance = OrdersService();
 
   /// Creates an [OrdersService] instance with the base URL from [Constants].

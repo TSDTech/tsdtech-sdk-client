@@ -3,11 +3,9 @@ import 'package:intl/intl.dart';
 
 import '../../models/cart/cart_item.model.dart';
 import '../client/tsdtech-client/tsdtech_client.dart';
-import '../client/gateway-client/gateway_client.dart';
 import '../services/gateway-services/gateway_service.dart';
 import '../ui/checkout/checkout_widget.dart';
 import '../ui/checkout/payment_types.dart';
-import '../ui/config/tsdtech_ui_config.dart';
 import '../ui/stores/checkout_store.dart';
 
 class CheckoutScreen extends StatefulWidget {
@@ -17,21 +15,21 @@ class CheckoutScreen extends StatefulWidget {
     required this.administratorId,
     required this.onSuccess,
     required this.onCancel,
-    this.client,
+    required this.client,
   });
 
   final List<CartItem> items;
   final String administratorId;
   final VoidCallback onSuccess;
   final VoidCallback onCancel;
-  final TsdtechClient? client;
+  final TsdtechClient client;
 
   static MaterialPageRoute<void> route({
     required List<CartItem> items,
     required String administratorId,
     required VoidCallback onSuccess,
     required VoidCallback onCancel,
-    TsdtechClient? client,
+    required TsdtechClient client,
   }) {
     return MaterialPageRoute<void>(
       builder: (_) => CheckoutScreen(
@@ -62,7 +60,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   bool _isFetchingGatewayPublicKey = false;
   String? _gatewayKeyError;
 
-  GatewayService? get _gatewayService => widget.client?.gateway;
+  GatewayService? get _gatewayService => widget.client.gateway;
 
   double get _totalValue {
     return widget.items.fold<double>(0, (sum, item) {
@@ -95,10 +93,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       return;
     }
 
-    if (!TsdtechUiConfig.isInitialized) {
+    final effectiveGatewayService = _gatewayService;
+
+    if (effectiveGatewayService == null) {
       setState(() {
         _gatewayKeyError =
-            'TsdtechUiConfig.initialize precisa ser chamado antes do checkout com cartão.';
+            'Forneca um TsdtechClient com gateway configurado antes do checkout com cartão.';
       });
       return;
     }
@@ -108,15 +108,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       _gatewayKeyError = null;
     });
 
-    final config = TsdtechUiConfig.instance;
-    final service =
-        _gatewayService ??
-        GatewayService(
-          GatewayClient(
-            gatewayBaseUrl: config.gatewayBaseUrl ?? config.baseUrl,
-            apiKey: config.apiKey,
-          ),
-        );
+    final service = effectiveGatewayService;
 
     final result = await service.fetchPublicKey();
     if (!mounted) {

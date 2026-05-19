@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tsdtech_client_sdk/models/cart/cart_item.model.dart';
 import 'package:tsdtech_client_sdk/models/services/service.model.dart';
+import 'package:tsdtech_client_sdk/src/client/tsdtech-client/tsdtech_client.dart';
 import 'package:tsdtech_client_sdk/src/screens/checkout_screen.dart';
 
 void main() {
@@ -17,6 +18,8 @@ void main() {
   }
 
   group('CheckoutScreen', () {
+    final client = TsdtechClient(baseUrl: 'https://api.example.com');
+
     testWidgets('renderiza header, resumo, checkout e footer', (tester) async {
       var successCount = 0;
       var cancelCount = 0;
@@ -29,6 +32,7 @@ void main() {
               buildItem(name: 'Servico Extra', price: 5.5, quantity: 1),
             ],
             administratorId: 'admin_123',
+            client: client,
             onSuccess: () => successCount++,
             onCancel: () => cancelCount++,
           ),
@@ -68,6 +72,7 @@ void main() {
                             ),
                           ],
                           administratorId: 'admin_123',
+                          client: client,
                           onSuccess: () {},
                           onCancel: () => cancelCount++,
                         ),

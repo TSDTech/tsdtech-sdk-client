@@ -11,16 +11,22 @@ import 'package:tsdtech_client_sdk/models/administrators/administrator.model.dar
 ///
 /// ## Usage
 /// ```dart
-/// final adminsService = AdministratorsService.instance;
+/// final client = TsdtechClient();
+/// final adminsService = client.administrators;
 /// final result = await adminsService.getByFullDomain(
 ///   fullDomain: 'company.tsdtech.com',
 /// );
 /// ```
 ///
-/// ## Singleton Pattern
-/// Access the service via [AdministratorsService.instance].
+/// Prefer scoped access via `TsdtechClient.administrators`.
+/// The legacy [AdministratorsService.instance] singleton remains available for
+/// backward compatibility during the migration period.
 class AdministratorsService extends IntraApi {
   /// Singleton instance of [AdministratorsService].
+  @Deprecated(
+    'Use TsdtechClient.administrators to access a scoped service instance. '
+    'This legacy singleton will be removed in a future major version.',
+  )
   static final AdministratorsService instance = AdministratorsService();
 
   /// Creates an [AdministratorsService] instance with the base URL from [Constants].

@@ -15,7 +15,8 @@ import 'package:tsdtech_client_sdk/models/value_result.dart';
 ///
 /// ## Usage
 /// ```dart
-/// final checkoutService = CheckoutsService.instance;
+/// final client = TsdtechClient();
+/// final checkoutService = client.checkouts;
 ///
 /// // Get available payment methods
 /// final methods = await checkoutService.getPaymentMethods();
@@ -27,10 +28,15 @@ import 'package:tsdtech_client_sdk/models/value_result.dart';
 /// final result = await checkoutService.createCheckout(checkoutRequest);
 /// ```
 ///
-/// ## Singleton Pattern
-/// Access the service via [CheckoutsService.instance].
+/// Prefer scoped access via `TsdtechClient.checkouts`.
+/// The legacy [CheckoutsService.instance] singleton remains available for
+/// backward compatibility during the migration period.
 class CheckoutsService extends IntraApi {
   /// Singleton instance of [CheckoutsService].
+  @Deprecated(
+    'Use TsdtechClient.checkouts to access a scoped service instance. '
+    'This legacy singleton will be removed in a future major version.',
+  )
   static final CheckoutsService instance = CheckoutsService();
 
   /// Creates a [CheckoutsService] instance with the base URL from [Constants].

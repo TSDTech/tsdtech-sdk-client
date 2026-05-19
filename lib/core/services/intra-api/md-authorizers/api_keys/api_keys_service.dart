@@ -13,7 +13,8 @@ import 'package:tsdtech_client_sdk/models/api_keys/api_key.model.dart';
 ///
 /// ## Usage
 /// ```dart
-/// final apiKeysService = ApiKeysService.instance;
+/// final client = TsdtechClient();
+/// final apiKeysService = client.apiKeys;
 ///
 /// // List API keys
 /// final keys = await apiKeysService.getApiKeys(
@@ -34,10 +35,15 @@ import 'package:tsdtech_client_sdk/models/api_keys/api_key.model.dart';
 /// );
 /// ```
 ///
-/// ## Singleton Pattern
-/// Access the service via [ApiKeysService.instance].
+/// Prefer scoped access via `TsdtechClient.apiKeys`.
+/// The legacy [ApiKeysService.instance] singleton remains available for
+/// backward compatibility during the migration period.
 class ApiKeysService extends IntraApi {
   /// Singleton instance of [ApiKeysService].
+  @Deprecated(
+    'Use TsdtechClient.apiKeys to access a scoped service instance. '
+    'This legacy singleton will be removed in a future major version.',
+  )
   static final ApiKeysService instance = ApiKeysService();
 
   /// Creates an [ApiKeysService] instance with the base URL from [Constants].

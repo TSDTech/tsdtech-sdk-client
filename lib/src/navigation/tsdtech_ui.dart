@@ -15,7 +15,7 @@ class TsdtechUi {
     required String administratorId,
     required VoidCallback onSuccess,
     required VoidCallback onCancel,
-    TsdtechClient? client,
+    required TsdtechClient client,
     bool isScrollControlled = true,
     bool useSafeArea = true,
   }) {
@@ -44,7 +44,7 @@ class TsdtechUi {
     required String administratorId,
     required VoidCallback onSuccess,
     required VoidCallback onCancel,
-    TsdtechClient? client,
+    required TsdtechClient client,
     bool barrierDismissible = true,
   }) {
     return showDialog<T>(
@@ -77,7 +77,7 @@ class TsdtechUi {
     required String administratorId,
     required VoidCallback onSuccess,
     required VoidCallback onCancel,
-    TsdtechClient? client,
+    required TsdtechClient client,
   }) {
     return Navigator.of(context).push<void>(
       CheckoutScreen.route(

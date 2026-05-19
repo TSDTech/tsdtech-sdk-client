@@ -2,18 +2,28 @@ import 'package:flutter/material.dart';
 
 class CardPaymentView extends StatelessWidget {
   final GlobalKey<FormState> formKey;
-  final TextEditingController cardHolderController;
-  final TextEditingController cardNumberController;
-  final TextEditingController expiryController;
-  final TextEditingController securityCodeController;
+  final int formVersion;
+  final String cardHolderName;
+  final String cardNumber;
+  final String expiryDate;
+  final String securityCode;
+  final ValueChanged<String> onCardHolderChanged;
+  final ValueChanged<String> onCardNumberChanged;
+  final ValueChanged<String> onExpiryChanged;
+  final ValueChanged<String> onSecurityCodeChanged;
 
   const CardPaymentView({
     super.key,
     required this.formKey,
-    required this.cardHolderController,
-    required this.cardNumberController,
-    required this.expiryController,
-    required this.securityCodeController,
+    required this.formVersion,
+    required this.cardHolderName,
+    required this.cardNumber,
+    required this.expiryDate,
+    required this.securityCode,
+    required this.onCardHolderChanged,
+    required this.onCardNumberChanged,
+    required this.onExpiryChanged,
+    required this.onSecurityCodeChanged,
   });
 
   @override
@@ -29,36 +39,44 @@ class CardPaymentView extends StatelessWidget {
         child: Column(
           children: [
             _buildTextField(
-              cardHolderController,
-              'Nome no cartão',
-              TextInputType.name,
+              fieldKey: ValueKey('checkout-holder-$formVersion'),
+              initialValue: cardHolderName,
+              label: 'Nome no cartão',
+              keyboardType: TextInputType.name,
+              onChanged: onCardHolderChanged,
             ),
             const SizedBox(height: 12),
             _buildTextField(
-              cardNumberController,
-              'Número do cartão',
-              TextInputType.number,
+              fieldKey: ValueKey('checkout-number-$formVersion'),
+              initialValue: cardNumber,
+              label: 'Número do cartão',
+              keyboardType: TextInputType.number,
               maxLength: 19,
+              onChanged: onCardNumberChanged,
             ),
             const SizedBox(height: 12),
             Row(
               children: [
                 Expanded(
                   child: _buildTextField(
-                    expiryController,
-                    'MM/AA',
-                    TextInputType.datetime,
+                    fieldKey: ValueKey('checkout-expiry-$formVersion'),
+                    initialValue: expiryDate,
+                    label: 'MM/AA',
+                    keyboardType: TextInputType.datetime,
                     maxLength: 5,
+                    onChanged: onExpiryChanged,
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: _buildTextField(
-                    securityCodeController,
-                    'CVV',
-                    TextInputType.number,
+                    fieldKey: ValueKey('checkout-cvv-$formVersion'),
+                    initialValue: securityCode,
+                    label: 'CVV',
+                    keyboardType: TextInputType.number,
                     maxLength: 4,
                     obscureText: true,
+                    onChanged: onSecurityCodeChanged,
                   ),
                 ),
               ],
@@ -69,18 +87,22 @@ class CardPaymentView extends StatelessWidget {
     );
   }
 
-  Widget _buildTextField(
-    TextEditingController controller,
-    String label,
-    TextInputType keyboardType, {
+  Widget _buildTextField({
+    required Key fieldKey,
+    required String initialValue,
+    required String label,
+    required TextInputType keyboardType,
+    required ValueChanged<String> onChanged,
     int? maxLength,
     bool obscureText = false,
   }) {
     return TextFormField(
-      controller: controller,
+      key: fieldKey,
+      initialValue: initialValue,
       keyboardType: keyboardType,
       obscureText: obscureText,
       maxLength: maxLength,
+      onChanged: onChanged,
       validator: (value) {
         if (value == null || value.trim().isEmpty) {
           return 'Campo obrigatório';
@@ -90,7 +112,7 @@ class CardPaymentView extends StatelessWidget {
       decoration: InputDecoration(
         labelText: label,
         border: const OutlineInputBorder(),
-        counterText: '', // Oculta o contador de caracteres
+        counterText: '',
       ),
     );
   }

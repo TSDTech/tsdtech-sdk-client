@@ -76,12 +76,12 @@ class ServicesService extends IntraApi {
         if (ids != null && ids.isNotEmpty) 'ids': ids,
         if (names != null && names.isNotEmpty) 'names': names,
         if (codes != null && codes.isNotEmpty) 'codes': codes,
-        if (status != null) 'status': status,
+        'status': ?status,
         if (serviceTypeIds != null && serviceTypeIds.isNotEmpty)
           'serviceTypeId': serviceTypeIds,
-        if (searchTerm != null) 'searchTerm': searchTerm,
-        if (administrator != null) 'administrator': administrator,
-        if (serviceType != null) 'serviceType': serviceType,
+        'searchTerm': ?searchTerm,
+        'administrator': ?administrator,
+        'serviceType': ?serviceType,
         if (administratorIds != null && administratorIds.isNotEmpty)
           'administratorIds': administratorIds,
       };

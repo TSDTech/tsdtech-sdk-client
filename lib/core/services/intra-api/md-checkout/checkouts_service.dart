@@ -1,6 +1,5 @@
 import 'package:tsdtech_client_sdk/core/services/intra-api/intra.api.dart';
 import 'package:tsdtech_client_sdk/core/constants/constants.dart';
-import 'package:tsdtech_client_sdk/core/services/base.api.dart';
 import 'package:tsdtech_client_sdk/models/checkouts/calculate_request.model.dart';
 import 'package:tsdtech_client_sdk/models/checkouts/calculate_response.model.dart';
 import 'package:tsdtech_client_sdk/models/checkouts/checkout_request.model.dart';
@@ -36,11 +35,6 @@ class CheckoutsService extends IntraApi {
   /// Creates a [CheckoutsService] instance with the base URL from [Constants].
   CheckoutsService() : super(Constants.getBaseUrl());
 
-  /// Debug logger - only prints when BaseApi debug mode is enabled.
-  void _debugLog(String message) {
-    // Logging is handled by BaseApi.setDebugMode()
-  }
-
   /// Retrieves the list of available payment methods for the current user.
   ///
   /// - Returns: [ValueResult] containing a list of [PaymentMethodModel] objects
@@ -70,7 +64,7 @@ class CheckoutsService extends IntraApi {
         return ValueResult.success(list);
       }
       return ValueResult.success(<PaymentMethodModel>[]);
-    } catch (e, st) {
+    } catch (e) {
       return ValueResult.fromError(e);
     }
   }
@@ -95,7 +89,7 @@ class CheckoutsService extends IntraApi {
       final data = response.data as Map<String, dynamic>;
       final result = CalculateResponse.fromJson(data);
       return ValueResult.success(result);
-    } catch (e, st) {
+    } catch (e) {
       return ValueResult.fromError(e);
     }
   }
@@ -140,7 +134,7 @@ class CheckoutsService extends IntraApi {
       final data = response.data as Map<String, dynamic>;
       final result = CheckoutResponse.fromJson(data);
       return ValueResult.success(result);
-    } catch (e, st) {
+    } catch (e) {
       return ValueResult.fromError(e);
     }
   }
@@ -164,7 +158,7 @@ class CheckoutsService extends IntraApi {
       final data = response.data as Map<String, dynamic>;
       final status = data['status'] as String? ?? '';
       return ValueResult.success(status);
-    } catch (e, st) {
+    } catch (e) {
       return ValueResult.fromError(e);
     }
   }

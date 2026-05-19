@@ -92,7 +92,7 @@ void main() {
       final response = Response(
         requestOptions: requestOptions,
         data: {
-          'error': {'message': 'api error'},
+          'error': {'message': 'api error mock'},
         },
         statusCode: 400,
       );

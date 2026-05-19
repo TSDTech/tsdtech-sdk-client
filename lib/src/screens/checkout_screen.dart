@@ -7,6 +7,7 @@ import '../services/gateway-services/gateway_service.dart';
 import '../ui/checkout/checkout_widget.dart';
 import '../ui/checkout/payment_types.dart';
 import '../ui/config/tsdtech_ui_config.dart';
+import '../ui/stores/checkout_store.dart';
 
 class CheckoutScreen extends StatefulWidget {
   const CheckoutScreen({
@@ -46,9 +47,10 @@ class CheckoutScreen extends StatefulWidget {
 class _CheckoutScreenState extends State<CheckoutScreen> {
   final CheckoutWidgetController _checkoutController =
       CheckoutWidgetController();
+  final CheckoutStore _checkoutStore = CheckoutStore();
   final NumberFormat _currencyFormat = NumberFormat.currency(
     locale: 'pt_BR',
-    symbol: 'R4',
+    symbol: 'R\$',
   );
 
   String _gatewayPublicKey = '';
@@ -71,6 +73,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   void dispose() {
     _checkoutController.selectedMethod.removeListener(_handleMethodChange);
     _checkoutController.dispose();
+    _checkoutStore.dispose();
     super.dispose();
   }
 
@@ -117,9 +120,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         _gatewayPublicKey = result.value!.pemPublicKey;
         _gatewayKeyError = null;
       } else {
-        _gatewayKeyError =
-            result.error ??
-            'Nao foi possivel carregar a chave publica do gateway.';
+        _gatewayKeyError = result.error.isNotEmpty
+            ? result.error
+            : 'Nao foi possivel carregar a chave publica do gateway.';
       }
     });
   }
@@ -194,6 +197,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       ),
                       const SizedBox(height: 16),
                       CheckoutWidget(
+                        store: _checkoutStore,
                         controller: _checkoutController,
                         items: widget.items,
                         administratorId: widget.administratorId,
@@ -237,10 +241,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             builder: (context, isLoading, _) {
               return ValueListenableBuilder<PaymentMethodType>(
                 valueListenable: _checkoutController.selectedMethod,
-                builder: (context, method, __) {
+                builder: (context, method, _) {
                   return ValueListenableBuilder<bool>(
                     valueListenable: _checkoutController.hasGeneratedPix,
-                    builder: (context, hasGeneratedPix, ___) {
+                    builder: (context, hasGeneratedPix, _) {
                       final isDisabled =
                           isLoading ||
                           _isFetchingGatewayPublicKey ||

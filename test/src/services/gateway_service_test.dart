@@ -3,9 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:tsdtech_client_sdk/src/client/gateway-client/gateway_client.dart';
 import 'package:tsdtech_client_sdk/src/services/gateway-services/gateway_service.dart';
-import 'package:tsdtech_client_sdk/src/dto/gateway/public_key_response.dart';
 import 'package:tsdtech_client_sdk/src/dto/gateway/card_payment_request.dart';
-import 'package:tsdtech_client_sdk/src/dto/gateway/payment_status_response.dart';
 import 'package:tsdtech_client_sdk/src/dto/gateway/gateway_payment_status.dart';
 import 'package:tsdtech_client_sdk/src/utils/card-utils/card_encryptor.dart';
 

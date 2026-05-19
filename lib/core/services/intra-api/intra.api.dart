@@ -25,14 +25,18 @@ import 'package:tsdtech_client_sdk/core/services/base.api.dart';
 /// - Concatenating without duplicate slashes
 class IntraApi {
   final String _baseUrl;
+  final BaseApi? _injectedBaseApi;
 
   /// Creates an IntraApi instance with the specified [baseUrl].
   ///
   /// - [baseUrl]: The base URL for all API requests in this service
-  IntraApi(this._baseUrl);
+  IntraApi(this._baseUrl, {BaseApi? baseApi}) : _injectedBaseApi = baseApi;
 
   /// Returns the base URL of this service.
   String get baseUrl => _baseUrl;
+
+  @protected
+  BaseApi get baseApi => _injectedBaseApi ?? BaseApi.legacyInstance;
 
   /// Performs a GET request to the specified [path] on this service's base URL.
   ///
@@ -46,7 +50,7 @@ class IntraApi {
     Map<String, dynamic>? queryParameters,
     Map<String, dynamic>? headers,
   }) async {
-    return await BaseApi.get(
+    return await baseApi.getRequest(
       joinUrl(_baseUrl, path),
       queryParameters: queryParameters,
       headers: headers,
@@ -65,7 +69,7 @@ class IntraApi {
     Object? data,
     Map<String, dynamic>? headers,
   }) async {
-    return await BaseApi.post(
+    return await baseApi.postRequest(
       joinUrl(_baseUrl, path),
       data: data,
       headers: headers,
@@ -84,7 +88,7 @@ class IntraApi {
     Object? data,
     Map<String, dynamic>? headers,
   }) async {
-    return await BaseApi.put(
+    return await baseApi.putRequest(
       joinUrl(_baseUrl, path),
       data: data,
       headers: headers,
@@ -103,7 +107,7 @@ class IntraApi {
     Object? data,
     Map<String, dynamic>? headers,
   }) async {
-    return await BaseApi.patch(
+    return await baseApi.patchRequest(
       joinUrl(_baseUrl, path),
       data: data,
       headers: headers,
@@ -122,7 +126,7 @@ class IntraApi {
     Object? data,
     Map<String, dynamic>? headers,
   }) async {
-    return await BaseApi.delete(
+    return await baseApi.deleteRequest(
       joinUrl(_baseUrl, path),
       data: data,
       headers: headers,

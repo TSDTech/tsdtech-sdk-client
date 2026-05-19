@@ -30,19 +30,66 @@ import 'package:tsdtech_client_sdk/core/local_storage/shared_prefs_helper.dart';
 /// }
 /// ```
 abstract class BaseApi {
-  static Dio _dio = Dio();
+  static BaseApi _legacyInstance = BaseApiImpl(
+    tokenProvider: () => SharedPrefsHelper.authToken,
+  );
   static bool _debugMode = false;
+
+  static BaseApi get legacyInstance => _legacyInstance;
+
+  static bool get isDebugMode => _debugMode;
+
+  Future<Response<dynamic>> getRequest(
+    String path, {
+    Map<String, dynamic>? queryParameters,
+    Map<String, dynamic>? headers,
+  });
+
+  Future<Response<dynamic>> postRequest(
+    String path, {
+    Object? data,
+    Map<String, dynamic>? headers,
+  });
+
+  Future<Response<dynamic>> putRequest(
+    String path, {
+    Object? data,
+    Map<String, dynamic>? headers,
+  });
+
+  Future<Response<dynamic>> patchRequest(
+    String path, {
+    Object? data,
+    Map<String, dynamic>? headers,
+  });
+
+  Future<Response<dynamic>> deleteRequest(
+    String path, {
+    Object? data,
+    Map<String, dynamic>? headers,
+  });
+
+  void applyToken(String? token);
+
+  void clearToken();
 
   /// Sets whether to enable debug logging.
   static void setDebugMode(bool enabled) {
     _debugMode = enabled;
   }
 
+  static void setLegacyInstance(BaseApi baseApi) {
+    _legacyInstance = baseApi;
+  }
+
   /// Sets the internal Dio instance (useful for tests to inject a mocked Dio).
   ///
   /// This method is intentionally simple and intended for test usage only.
   static void setDioForTesting(Dio dio) {
-    _dio = dio;
+    _legacyInstance = BaseApiImpl(
+      dio: dio,
+      tokenProvider: () => SharedPrefsHelper.authToken,
+    );
   }
 
   static void _debugLog(String message) {
@@ -103,12 +150,10 @@ abstract class BaseApi {
     Map<String, dynamic>? queryParameters,
     Map<String, dynamic>? headers,
   }) async {
-    return _executeRequest(
-      () => _dio.get(
-        path,
-        queryParameters: queryParameters,
-        options: Options(headers: _mergeHeaders(headers)),
-      ),
+    return legacyInstance.getRequest(
+      path,
+      queryParameters: queryParameters,
+      headers: headers,
     );
   }
 
@@ -123,12 +168,10 @@ abstract class BaseApi {
     Object? data,
     Map<String, dynamic>? headers,
   }) async {
-    return _executeRequest(
-      () => _dio.post(
-        path,
-        data: data,
-        options: Options(headers: _mergeHeaders(headers)),
-      ),
+    return legacyInstance.postRequest(
+      path,
+      data: data,
+      headers: headers,
     );
   }
 
@@ -143,12 +186,10 @@ abstract class BaseApi {
     Object? data,
     Map<String, dynamic>? headers,
   }) async {
-    return _executeRequest(
-      () => _dio.put(
-        path,
-        data: data,
-        options: Options(headers: _mergeHeaders(headers)),
-      ),
+    return legacyInstance.putRequest(
+      path,
+      data: data,
+      headers: headers,
     );
   }
 
@@ -163,12 +204,10 @@ abstract class BaseApi {
     Object? data,
     Map<String, dynamic>? headers,
   }) async {
-    return _executeRequest(
-      () => _dio.patch(
-        path,
-        data: data,
-        options: Options(headers: _mergeHeaders(headers)),
-      ),
+    return legacyInstance.patchRequest(
+      path,
+      data: data,
+      headers: headers,
     );
   }
 
@@ -183,12 +222,10 @@ abstract class BaseApi {
     Object? data,
     Map<String, dynamic>? headers,
   }) async {
-    return _executeRequest(
-      () => _dio.delete(
-        path,
-        data: data,
-        options: Options(headers: _mergeHeaders(headers)),
-      ),
+    return legacyInstance.deleteRequest(
+      path,
+      data: data,
+      headers: headers,
     );
   }
 
@@ -208,15 +245,124 @@ abstract class BaseApi {
   /// - [token]: The token to set, or null to reset
   /// If null is passed, [resetToken] is called instead.
   static void setToken(String? token) {
-    if (token == null) {
-      resetToken();
-      return;
-    }
-    _dio.options.headers['Authorization'] = 'Bearer $token';
+    legacyInstance.applyToken(token);
   }
 
   /// Resets (clears) the Bearer token from all requests.
   static void resetToken() {
+    legacyInstance.clearToken();
+  }
+}
+
+class BaseApiImpl implements BaseApi {
+  BaseApiImpl({Dio? dio, String? Function()? tokenProvider})
+    : _dio = dio ?? Dio(),
+      _tokenProvider = tokenProvider;
+
+  final Dio _dio;
+  final String? Function()? _tokenProvider;
+
+  Map<String, dynamic>? _mergeHeaders(Map<String, dynamic>? headers) {
+    final merged = <String, dynamic>{};
+    if (headers != null) {
+      merged.addAll(headers);
+    }
+
+    final token = _tokenProvider?.call();
+    if (token != null && !merged.containsKey('Authorization')) {
+      merged['Authorization'] = 'Bearer $token';
+    }
+
+    return merged.isEmpty ? null : merged;
+  }
+
+  @override
+  Future<Response<dynamic>> getRequest(
+    String path, {
+    Map<String, dynamic>? queryParameters,
+    Map<String, dynamic>? headers,
+  }) async {
+    return BaseApi._executeRequest(
+      () => _dio.get(
+        path,
+        queryParameters: queryParameters,
+        options: Options(headers: _mergeHeaders(headers)),
+      ),
+    );
+  }
+
+  @override
+  Future<Response<dynamic>> postRequest(
+    String path, {
+    Object? data,
+    Map<String, dynamic>? headers,
+  }) async {
+    return BaseApi._executeRequest(
+      () => _dio.post(
+        path,
+        data: data,
+        options: Options(headers: _mergeHeaders(headers)),
+      ),
+    );
+  }
+
+  @override
+  Future<Response<dynamic>> putRequest(
+    String path, {
+    Object? data,
+    Map<String, dynamic>? headers,
+  }) async {
+    return BaseApi._executeRequest(
+      () => _dio.put(
+        path,
+        data: data,
+        options: Options(headers: _mergeHeaders(headers)),
+      ),
+    );
+  }
+
+  @override
+  Future<Response<dynamic>> patchRequest(
+    String path, {
+    Object? data,
+    Map<String, dynamic>? headers,
+  }) async {
+    return BaseApi._executeRequest(
+      () => _dio.patch(
+        path,
+        data: data,
+        options: Options(headers: _mergeHeaders(headers)),
+      ),
+    );
+  }
+
+  @override
+  Future<Response<dynamic>> deleteRequest(
+    String path, {
+    Object? data,
+    Map<String, dynamic>? headers,
+  }) async {
+    return BaseApi._executeRequest(
+      () => _dio.delete(
+        path,
+        data: data,
+        options: Options(headers: _mergeHeaders(headers)),
+      ),
+    );
+  }
+
+  @override
+  void applyToken(String? token) {
+    if (token == null) {
+      clearToken();
+      return;
+    }
+
+    _dio.options.headers['Authorization'] = 'Bearer $token';
+  }
+
+  @override
+  void clearToken() {
     _dio.options.headers.remove('Authorization');
   }
 }

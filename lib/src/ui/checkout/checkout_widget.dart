@@ -5,6 +5,7 @@ import '../../../core/services/intra-api/md-checkout/checkouts_service.dart';
 import '../../../models/cart/cart_item.model.dart';
 import '../../../models/checkouts/calculate_item.model.dart';
 import '../../../models/checkouts/checkout_request.model.dart';
+import '../../client/tsdtech-client/tsdtech_client.dart';
 import '../../crypto/card_encryptor.dart';
 import '../stores/checkout_store.dart';
 import 'checkout_states.dart';
@@ -51,6 +52,7 @@ class CheckoutWidget extends StatelessWidget {
   final bool showSubmitButton;
   final CheckoutWidgetController? controller;
   final CheckoutStore store;
+  final TsdtechClient? client;
 
   const CheckoutWidget({
     super.key,
@@ -67,11 +69,13 @@ class CheckoutWidget extends StatelessWidget {
     this.showSubmitButton = true,
     this.controller,
     required this.store,
+    this.client,
   });
 
   @override
   Widget build(BuildContext context) {
     final effectiveStore = store;
+    final checkoutsService = client?.checkouts ?? CheckoutsService.instance;
 
     void notifyStatus(PaymentStatus status) {
       onStatusChange?.call(status);
@@ -165,7 +169,7 @@ class CheckoutWidget extends StatelessWidget {
       effectiveStore.startPixPolling(
         Timer.periodic(const Duration(seconds: 5), (timer) async {
           try {
-            final statusResult = await CheckoutsService.instance.getPixStatus(
+            final statusResult = await checkoutsService.getPixStatus(
               paymentId,
             );
             if (!statusResult.isSuccess) return;
@@ -215,7 +219,7 @@ class CheckoutWidget extends StatelessWidget {
               : null,
         );
 
-        final result = await CheckoutsService.instance.createCheckout(
+        final result = await checkoutsService.createCheckout(
           checkoutRequest,
         );
 

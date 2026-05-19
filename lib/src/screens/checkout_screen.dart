@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../models/cart/cart_item.model.dart';
+import '../client/tsdtech-client/tsdtech_client.dart';
 import '../client/gateway-client/gateway_client.dart';
 import '../services/gateway-services/gateway_service.dart';
 import '../ui/checkout/checkout_widget.dart';
@@ -16,18 +17,21 @@ class CheckoutScreen extends StatefulWidget {
     required this.administratorId,
     required this.onSuccess,
     required this.onCancel,
+    this.client,
   });
 
   final List<CartItem> items;
   final String administratorId;
   final VoidCallback onSuccess;
   final VoidCallback onCancel;
+  final TsdtechClient? client;
 
   static MaterialPageRoute<void> route({
     required List<CartItem> items,
     required String administratorId,
     required VoidCallback onSuccess,
     required VoidCallback onCancel,
+    TsdtechClient? client,
   }) {
     return MaterialPageRoute<void>(
       builder: (_) => CheckoutScreen(
@@ -35,6 +39,7 @@ class CheckoutScreen extends StatefulWidget {
         administratorId: administratorId,
         onSuccess: onSuccess,
         onCancel: onCancel,
+        client: client,
       ),
       settings: const RouteSettings(name: 'checkout_screen'),
     );
@@ -56,6 +61,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   String _gatewayPublicKey = '';
   bool _isFetchingGatewayPublicKey = false;
   String? _gatewayKeyError;
+
+  GatewayService? get _gatewayService => widget.client?.gateway;
 
   double get _totalValue {
     return widget.items.fold<double>(0, (sum, item) {
@@ -102,12 +109,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     });
 
     final config = TsdtechUiConfig.instance;
-    final service = GatewayService(
-      GatewayClient(
-        gatewayBaseUrl: config.gatewayBaseUrl ?? config.baseUrl,
-        apiKey: config.apiKey,
-      ),
-    );
+    final service =
+        _gatewayService ??
+        GatewayService(
+          GatewayClient(
+            gatewayBaseUrl: config.gatewayBaseUrl ?? config.baseUrl,
+            apiKey: config.apiKey,
+          ),
+        );
 
     final result = await service.fetchPublicKey();
     if (!mounted) {
@@ -203,6 +212,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         administratorId: widget.administratorId,
                         gatewayPublicKey: _gatewayPublicKey,
                         showSubmitButton: false,
+                        client: widget.client,
                         onSuccess: (_) => widget.onSuccess(),
                       ),
                       if (_gatewayKeyError != null) ...[

@@ -119,6 +119,12 @@ MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK0M-demo-key-for-example-only-12345
 
   final ExampleShowcaseStore store;
 
+  late final TsdtechClient _client = TsdtechClient(
+    baseUrl: Constants.getBaseUrl(),
+    gatewayBaseUrl: Constants.getBaseUrl(),
+    gatewayApiKey: 'demo-api-key',
+  );
+
   late final List<CartItem> _demoItems = [
     CartItem(
       service: Service(
@@ -160,6 +166,7 @@ MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK0M-demo-key-for-example-only-12345
       CheckoutScreen.route(
         items: _demoItems,
         administratorId: _administratorId,
+        client: _client,
         onSuccess: () =>
             _showMessage(context, 'CheckoutScreen concluiu o fluxo.'),
         onCancel: () =>
@@ -209,6 +216,7 @@ MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK0M-demo-key-for-example-only-12345
                           _CartPreview(items: _demoItems, total: _total),
                           const SizedBox(height: 20),
                           CheckoutWidget(
+                            client: _client,
                             store: store.checkoutStore,
                             items: _demoItems,
                             administratorId: _administratorId,

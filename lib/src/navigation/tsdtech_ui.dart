@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../models/cart/cart_item.model.dart';
+import '../client/tsdtech-client/tsdtech_client.dart';
 import '../screens/checkout_screen.dart';
 import '../screens/payment_status_screen.dart';
 import '../ui/checkout/payment_types.dart';
@@ -14,6 +15,7 @@ class TsdtechUi {
     required String administratorId,
     required VoidCallback onSuccess,
     required VoidCallback onCancel,
+    TsdtechClient? client,
     bool isScrollControlled = true,
     bool useSafeArea = true,
   }) {
@@ -29,6 +31,7 @@ class TsdtechUi {
             administratorId: administratorId,
             onSuccess: onSuccess,
             onCancel: onCancel,
+            client: client,
           ),
         );
       },
@@ -41,6 +44,7 @@ class TsdtechUi {
     required String administratorId,
     required VoidCallback onSuccess,
     required VoidCallback onCancel,
+    TsdtechClient? client,
     bool barrierDismissible = true,
   }) {
     return showDialog<T>(
@@ -59,6 +63,7 @@ class TsdtechUi {
               administratorId: administratorId,
               onSuccess: onSuccess,
               onCancel: onCancel,
+              client: client,
             ),
           ),
         );
@@ -72,6 +77,7 @@ class TsdtechUi {
     required String administratorId,
     required VoidCallback onSuccess,
     required VoidCallback onCancel,
+    TsdtechClient? client,
   }) {
     return Navigator.of(context).push<void>(
       CheckoutScreen.route(
@@ -79,6 +85,7 @@ class TsdtechUi {
         administratorId: administratorId,
         onSuccess: onSuccess,
         onCancel: onCancel,
+        client: client,
       ),
     );
   }

@@ -41,6 +41,26 @@ void main() {
       },
     );
 
+    test('singleton legado usa o dio de teste atualizado dinamicamente', () async {
+      final singleton = CheckoutsService.instance;
+      final freshAdapter = MockHttpClientAdapter();
+      final freshDio = createDioWithAdapter(freshAdapter);
+      freshAdapter.when('GET', '/checkouts/client/methods', [
+        {'paymentMethod': 'pix', 'isActive': true},
+      ]);
+
+      BaseApi.setDioForTesting(freshDio);
+
+      final result = await singleton.getPaymentMethods();
+
+      expect(result.isSuccess, isTrue);
+      expect(freshAdapter.requests, hasLength(1));
+      expect(
+        freshAdapter.requests.single.path,
+        contains('/checkouts/client/methods'),
+      );
+    });
+
     test('calculateCart retorna CalculateResponse calculado', () async {
       final responseJson = {'totalValue': 123.45, 'cart': []};
       adapter.when('POST', '/checkouts/client/calculate', responseJson);

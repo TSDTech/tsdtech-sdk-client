@@ -1,5 +1,6 @@
 import 'package:tsdtech_client_sdk/core/services/intra-api/intra.api.dart';
 import 'package:tsdtech_client_sdk/core/constants/constants.dart';
+import 'package:tsdtech_client_sdk/core/services/base.api.dart';
 import 'package:tsdtech_client_sdk/models/vouchers/voucher.model.dart';
 import 'package:tsdtech_client_sdk/models/common/paginated_list.model.dart';
 import 'package:tsdtech_client_sdk/models/common/pagination.model.dart';
@@ -28,7 +29,8 @@ class VouchersService extends IntraApi {
   static final VouchersService instance = VouchersService();
 
   /// Creates a [VouchersService] instance with the base URL from [Constants].
-  VouchersService() : super(Constants.getBaseUrl());
+  VouchersService({BaseApi? baseApi, String? baseUrl})
+    : super(baseUrl ?? Constants.getBaseUrl(), baseApi: baseApi);
 
   /// Retrieves a paginated list of vouchers for the authenticated client.
   ///

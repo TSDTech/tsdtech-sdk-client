@@ -1,5 +1,6 @@
 import 'package:tsdtech_client_sdk/core/services/intra-api/intra.api.dart';
 import 'package:tsdtech_client_sdk/core/constants/constants.dart';
+import 'package:tsdtech_client_sdk/core/services/base.api.dart';
 import 'package:tsdtech_client_sdk/models/checkouts/calculate_request.model.dart';
 import 'package:tsdtech_client_sdk/models/checkouts/calculate_response.model.dart';
 import 'package:tsdtech_client_sdk/models/checkouts/checkout_request.model.dart';
@@ -33,7 +34,8 @@ class CheckoutsService extends IntraApi {
   static final CheckoutsService instance = CheckoutsService();
 
   /// Creates a [CheckoutsService] instance with the base URL from [Constants].
-  CheckoutsService() : super(Constants.getBaseUrl());
+  CheckoutsService({BaseApi? baseApi, String? baseUrl})
+    : super(baseUrl ?? Constants.getBaseUrl(), baseApi: baseApi);
 
   /// Retrieves the list of available payment methods for the current user.
   ///

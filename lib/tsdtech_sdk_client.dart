@@ -39,6 +39,16 @@ export 'src/client/tsdtech-client/tsdtech_client.dart';
 
 // Checkout service
 export 'core/services/intra-api/md-checkout/checkouts_service.dart';
+export 'core/services/intra-api/md-administrators/administrators_service.dart';
+export 'core/services/intra-api/md-authorizers/api_keys/api_keys_service.dart';
+export 'core/services/intra-api/md-authorizers/client-users/auth_service.dart';
+export 'core/services/intra-api/md-authorizers/memberships/memberships_service.dart';
+export 'core/services/intra-api/md-clients/clients_service.dart';
+export 'core/services/intra-api/md-orders/orders_service.dart';
+export 'core/services/intra-api/md-providers/provider_requests_service.dart';
+export 'core/services/intra-api/md-services/services/service_types_service.dart';
+export 'core/services/intra-api/md-services/services/services_service.dart';
+export 'core/services/intra-api/md-vouchers/vouchers_service.dart';
 
 // Providers / common models (convenience)
 export 'models/common/pagination.model.dart';

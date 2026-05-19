@@ -37,6 +37,9 @@ export 'src/client/gateway-client/gateway_client.dart' show GatewayClient;
 export 'src/services/gateway-services/gateway_service.dart' show GatewayService;
 export 'src/client/tsdtech-client/tsdtech_client.dart';
 
+// Checkout Orchestrator
+export 'src/services/checkout_orchestrator.dart' show CheckoutOrchestrator;
+
 // Checkout service
 export 'core/services/intra-api/md-checkout/checkouts_service.dart';
 

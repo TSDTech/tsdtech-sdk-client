@@ -1,4 +1,7 @@
 // lib/platform_origin_web.dart
-import 'dart:html' as html;
+import 'dart:js_interop';
 
-String? platformOrigin() => html.window.location.origin;
+@JS('window.location.origin')
+external String get _windowLocationOrigin;
+
+String? platformOrigin() => _windowLocationOrigin;

@@ -35,8 +35,15 @@ void main() {
     });
 
     test('malformed json throws', () {
-      final malformed = {'depositRequestId': 123, 'encryptedCard': 'x', 'keyId': 'k'};
-      expect(() => CardPaymentRequest.fromJson(malformed), throwsA(isA<TypeError>()));
+      final malformed = {
+        'depositRequestId': 123,
+        'encryptedCard': 'x',
+        'keyId': 'k',
+      };
+      expect(
+        () => CardPaymentRequest.fromJson(malformed),
+        throwsA(isA<TypeError>()),
+      );
     });
   });
 }

@@ -19,14 +19,14 @@ SignupRequestClient _$SignupRequestClientFromJson(Map<String, dynamic> json) =>
     );
 
 Map<String, dynamic> _$SignupRequestClientToJson(
-        SignupRequestClient instance) =>
-    <String, dynamic>{
-      'firstName': instance.firstName,
-      'lastName': instance.lastName,
-      'email': instance.email,
-      'password': instance.password,
-      'document': instance.document,
-      'cellphone': instance.cellphone,
-      'documentType': instance.documentType,
-      'administratorId': instance.administratorId,
-    };
+  SignupRequestClient instance,
+) => <String, dynamic>{
+  'firstName': instance.firstName,
+  'lastName': instance.lastName,
+  'email': instance.email,
+  'password': instance.password,
+  'document': instance.document,
+  'cellphone': instance.cellphone,
+  'documentType': instance.documentType,
+  'administratorId': instance.administratorId,
+};

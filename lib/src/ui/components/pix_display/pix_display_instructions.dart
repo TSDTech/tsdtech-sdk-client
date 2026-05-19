@@ -31,10 +31,7 @@ class PixInstructions extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         ...steps.indexed.map(
-          (entry) => _InstructionStep(
-            number: entry.$1 + 1,
-            text: entry.$2,
-          ),
+          (entry) => _InstructionStep(number: entry.$1 + 1, text: entry.$2),
         ),
       ],
     );
@@ -71,12 +68,7 @@ class _InstructionStep extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              text,
-              style: TsdtechTextStyles.bodySmall,
-            ),
-          ),
+          Expanded(child: Text(text, style: TsdtechTextStyles.bodySmall)),
         ],
       ),
     );

@@ -94,10 +94,7 @@ class PaymentStatusScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 16),
-                      _DetailRow(
-                        label: 'Status',
-                        value: presentation.label,
-                      ),
+                      _DetailRow(label: 'Status', value: presentation.label),
                       _DetailRow(
                         label: 'Transacao',
                         value: paymentResult.transactionId,
@@ -185,12 +182,7 @@ class _DetailRow extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              value,
-              textAlign: TextAlign.right,
-            ),
-          ),
+          Expanded(child: Text(value, textAlign: TextAlign.right)),
         ],
       ),
     );
@@ -219,7 +211,8 @@ class _StatusPresentation {
       case PaymentStatus.processing:
         return const _StatusPresentation(
           title: 'Processando pagamento',
-          description: 'Seu pagamento esta sendo processado. Aguarde a confirmacao.',
+          description:
+              'Seu pagamento esta sendo processado. Aguarde a confirmacao.',
           label: 'Processing',
           icon: Icons.sync_rounded,
           color: Colors.blue,

@@ -9,8 +9,12 @@ class ApiKey {
   final String name;
   final String? rawKey;
 
-  ApiKey(
-      {required this.id, this.organizationId, required this.name, this.rawKey});
+  ApiKey({
+    required this.id,
+    this.organizationId,
+    required this.name,
+    this.rawKey,
+  });
 
   factory ApiKey.fromJson(Map<String, dynamic> json) => _$ApiKeyFromJson(json);
 

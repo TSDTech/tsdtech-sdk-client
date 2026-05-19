@@ -15,7 +15,10 @@ class CheckoutSuccessState extends StatelessWidget {
         children: [
           const Icon(Icons.check_circle_outline, color: Colors.green, size: 64),
           const SizedBox(height: 12),
-          Text(message ?? 'Pagamento realizado com sucesso!', textAlign: TextAlign.center),
+          Text(
+            message ?? 'Pagamento realizado com sucesso!',
+            textAlign: TextAlign.center,
+          ),
         ],
       ),
     );

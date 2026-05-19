@@ -35,9 +35,7 @@ class PaymentMethodChip extends StatelessWidget {
       side: BorderSide(
         color: selected ? TsdtechColors.primary : TsdtechColors.outline,
       ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(999),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(999)),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
       avatar: Icon(
         method.chipIcon,
@@ -77,9 +75,7 @@ class PaymentSubmitButton extends StatelessWidget {
         textStyle: TsdtechTextStyles.titleMedium.copyWith(
           color: TsdtechColors.textOnPrimary,
         ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
       icon: loading
           ? const SizedBox(

@@ -13,17 +13,17 @@ class GatewayClient {
     Duration receiveTimeout = const Duration(seconds: 30),
     Duration sendTimeout = const Duration(seconds: 30),
   }) : _dio = Dio(
-          BaseOptions(
-            baseUrl: gatewayBaseUrl,
-            connectTimeout: connectTimeout,
-            receiveTimeout: receiveTimeout,
-            sendTimeout: sendTimeout,
-            headers: {
-              'accept': 'application/json',
-              'content-type': 'application/json',
-            },
-          ),
-        ) {
+         BaseOptions(
+           baseUrl: gatewayBaseUrl,
+           connectTimeout: connectTimeout,
+           receiveTimeout: receiveTimeout,
+           sendTimeout: sendTimeout,
+           headers: {
+             'accept': 'application/json',
+             'content-type': 'application/json',
+           },
+         ),
+       ) {
     if (apiKey != null) {
       _dio.options.headers['X-API-Key'] = apiKey;
     }

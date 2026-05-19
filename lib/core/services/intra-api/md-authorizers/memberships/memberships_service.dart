@@ -71,8 +71,10 @@ class MembershipsService extends IntraApi {
         if (organization != null) 'organization': organization,
       };
 
-      final response =
-          await get('/memberships/client', queryParameters: queryParams);
+      final response = await get(
+        '/memberships/client',
+        queryParameters: queryParams,
+      );
 
       final paginated = PaginatedList<Membership>.fromJson(
         response.data as Map<String, dynamic>,

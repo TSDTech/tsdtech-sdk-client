@@ -5,11 +5,7 @@ class PixPaymentView extends StatelessWidget {
   final String? qrCode;
   final String? copyPasteCode;
 
-  const PixPaymentView({
-    super.key,
-    this.qrCode,
-    this.copyPasteCode,
-  });
+  const PixPaymentView({super.key, this.qrCode, this.copyPasteCode});
 
   @override
   Widget build(BuildContext context) {

@@ -30,8 +30,10 @@ class PixCountdown extends StatelessWidget {
               )
             : Container(
                 key: const ValueKey('countdown'),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 10,
+                ),
                 decoration: BoxDecoration(
                   color: timerColor.withAlpha(20),
                   borderRadius: BorderRadius.circular(10),
@@ -40,11 +42,7 @@ class PixCountdown extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
-                      Icons.timer_outlined,
-                      size: 18,
-                      color: timerColor,
-                    ),
+                    Icon(Icons.timer_outlined, size: 18, color: timerColor),
                     const SizedBox(width: 8),
                     Text(
                       'Expira em ',

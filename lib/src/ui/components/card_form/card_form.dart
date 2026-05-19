@@ -91,13 +91,13 @@ class _CardFormState extends State<CardForm> implements CardFormScope {
 
   @override
   CardFormData buildData() => CardFormData(
-        cardNumber: _cardNumberCtrl.text,
-        cardholderName: _nameCtrl.text,
-        expiryDate: _expiryCtrl.text,
-        cvv: _cvvCtrl.text,
-        taxId: _taxIdCtrl.text,
-        brand: _brand,
-      );
+    cardNumber: _cardNumberCtrl.text,
+    cardholderName: _nameCtrl.text,
+    expiryDate: _expiryCtrl.text,
+    cvv: _cvvCtrl.text,
+    taxId: _taxIdCtrl.text,
+    brand: _brand,
+  );
 
   @override
   void resetForm() {
@@ -128,8 +128,10 @@ class _CardFormState extends State<CardForm> implements CardFormScope {
   }
 
   String? _validateName(String? value) {
-    if (value == null || value.trim().isEmpty) return 'Nome do titular obrigatório';
-    if (value.trim().split(RegExp(r'\s+')).length < 2) return 'Informe o nome completo';
+    if (value == null || value.trim().isEmpty)
+      return 'Nome do titular obrigatório';
+    if (value.trim().split(RegExp(r'\s+')).length < 2)
+      return 'Informe o nome completo';
     return null;
   }
 
@@ -143,7 +145,8 @@ class _CardFormState extends State<CardForm> implements CardFormScope {
     if (month < 1 || month > 12) return 'Mês inválido';
     final now = DateTime.now();
     final expiry = DateTime(2000 + year, month + 1);
-    if (expiry.isBefore(DateTime(now.year, now.month))) return 'Cartão expirado';
+    if (expiry.isBefore(DateTime(now.year, now.month)))
+      return 'Cartão expirado';
     return null;
   }
 
@@ -271,8 +274,9 @@ class _CardFormState extends State<CardForm> implements CardFormScope {
             textInputAction: widget.showSubmitButton
                 ? TextInputAction.done
                 : TextInputAction.next,
-            onFieldSubmitted:
-                widget.showSubmitButton ? (_) => _handleSubmit() : null,
+            onFieldSubmitted: widget.showSubmitButton
+                ? (_) => _handleSubmit()
+                : null,
           ),
           if (widget.showSubmitButton) ...[
             const SizedBox(height: 24),

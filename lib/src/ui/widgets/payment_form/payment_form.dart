@@ -66,10 +66,7 @@ class _PaymentFormState extends State<PaymentForm> {
     }
 
     widget.onSubmit(
-      PaymentFormData(
-        method: _selectedMethod,
-        cardData: cardData,
-      ),
+      PaymentFormData(method: _selectedMethod, cardData: cardData),
     );
   }
 

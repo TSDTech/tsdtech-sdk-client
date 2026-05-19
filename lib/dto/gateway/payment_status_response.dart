@@ -1,1 +1,2 @@
-export '../../src/dto/gateway/payment_status_response.dart' show PaymentStatusResponse;
+export '../../src/dto/gateway/payment_status_response.dart'
+    show PaymentStatusResponse;

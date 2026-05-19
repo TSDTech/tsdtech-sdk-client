@@ -15,7 +15,7 @@ void main() {
     setUp(() async {
       SharedPreferences.setMockInitialValues({});
       await SharedPrefsHelper.init();
-      
+
       adapter = MockHttpClientAdapter();
       dio = createDioWithAdapter(adapter);
       BaseApi.setDioForTesting(dio);
@@ -37,17 +37,19 @@ void main() {
       adapter.when('GET', '/test-noauth', {});
 
       await BaseApi.get('https://example.com/test-noauth');
-      
+
       // Valida que o dio.options não foi poluído
       expect(dio.options.headers.containsKey('Authorization'), isFalse);
     });
 
     test('timeout errors mapped to friendly message', () async {
-      final requestOptions =
-          RequestOptions(path: 'https://example.com/timeout');
+      final requestOptions = RequestOptions(
+        path: 'https://example.com/timeout',
+      );
       final dioEx = DioException(
-          requestOptions: requestOptions,
-          type: DioExceptionType.connectionTimeout);
+        requestOptions: requestOptions,
+        type: DioExceptionType.connectionTimeout,
+      );
       adapter.whenThrow('GET', '/timeout', dioEx);
 
       try {

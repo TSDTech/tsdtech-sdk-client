@@ -74,7 +74,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
   late final ValueNotifier<PaymentMethodType> _selectedMethod;
   final ValueNotifier<bool> _isLoading = ValueNotifier(false);
   final ValueNotifier<String?> _errorMessage = ValueNotifier(null);
-  
+
   // Controllers do Cartão (O pai precisa gerenciar para acessar os dados)
   final _formKey = GlobalKey<FormState>();
   final _cardHolderController = TextEditingController();
@@ -187,21 +187,23 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
             : null,
       );
 
-      final result = await CheckoutsService.instance.createCheckout(checkoutRequest);
-      
+      final result = await CheckoutsService.instance.createCheckout(
+        checkoutRequest,
+      );
+
       if (!result.isSuccess) {
         _showError(result.error.toString());
         return;
       }
 
       final response = result.value!;
-      
+
       if (_selectedMethod.value == PaymentMethodType.pix) {
         _paymentId = response.paymentId;
         _pixQrCode = response.pix?.qrCode;
         _pixCopyPasteCode = response.pix?.copyPasteCode;
         _notifyStatus(PaymentStatus.waitingPayment);
-        
+
         if (_paymentId != null) {
           _startPixPolling(_paymentId!);
         }
@@ -209,7 +211,9 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
         _syncControllerState();
       } else if (_selectedMethod.value == PaymentMethodType.card) {
         _handleSuccess(
-          response.paymentId ?? response.depositRequestId ?? 'card_${DateTime.now().millisecondsSinceEpoch}',
+          response.paymentId ??
+              response.depositRequestId ??
+              'card_${DateTime.now().millisecondsSinceEpoch}',
           depositRequestId: response.depositRequestId,
         );
       }
@@ -233,7 +237,9 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
     final cardData = CardPaymentData(
       cardHolderName: _cardHolderController.text.trim(),
       cardNumber: _cardNumberController.text.trim(),
-      cardExpiryDate: _toBackendCardExpiry(_expiryController.text.trim()), // <-- Correção aqui
+      cardExpiryDate: _toBackendCardExpiry(
+        _expiryController.text.trim(),
+      ), // <-- Correção aqui
       securityCode: _securityCodeController.text.trim(),
     );
     return CardEncryptor.encrypt(widget.gatewayPublicKey, cardData);
@@ -248,11 +254,15 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
 
   void _startPixPolling(String paymentId) {
     _pixPollingTimer?.cancel();
-    _pixPollingTimer = Timer.periodic(const Duration(seconds: 5), (timer) async {
+    _pixPollingTimer = Timer.periodic(const Duration(seconds: 5), (
+      timer,
+    ) async {
       try {
-        final statusResult = await CheckoutsService.instance.getPixStatus(paymentId);
+        final statusResult = await CheckoutsService.instance.getPixStatus(
+          paymentId,
+        );
         if (!statusResult.isSuccess) return;
-        
+
         final status = statusResult.value?.toLowerCase() ?? '';
         if (status == 'paid' || status == 'completed' || status == 'success') {
           timer.cancel();
@@ -271,14 +281,16 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
     String? message,
   }) {
     _notifyStatus(PaymentStatus.success);
-    widget.onSuccess?.call(PaymentResult(
-      transactionId: transactionId,
-      method: _selectedMethod.value,
-      status: PaymentStatus.success,
-      pixQrCode: pixQrCode,
-      depositRequestId: depositRequestId,
-      message: message,
-    ));
+    widget.onSuccess?.call(
+      PaymentResult(
+        transactionId: transactionId,
+        method: _selectedMethod.value,
+        status: PaymentStatus.success,
+        pixQrCode: pixQrCode,
+        depositRequestId: depositRequestId,
+        message: message,
+      ),
+    );
   }
 
   @override
@@ -323,34 +335,37 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                       showCard: widget.showCard,
                     ),
                     const SizedBox(height: 24),
-                    
+
                     // Renderização elegante via Switch case utilizando nossos novos widgets
                     switch (method) {
                       PaymentMethodType.pix => PixPaymentView(
-                          qrCode: _pixQrCode,
-                          copyPasteCode: _pixCopyPasteCode,
-                        ),
+                        qrCode: _pixQrCode,
+                        copyPasteCode: _pixCopyPasteCode,
+                      ),
                       PaymentMethodType.card => CardPaymentView(
-                          formKey: _formKey,
-                          cardHolderController: _cardHolderController,
-                          cardNumberController: _cardNumberController,
-                          expiryController: _expiryController,
-                          securityCodeController: _securityCodeController,
-                        ),
+                        formKey: _formKey,
+                        cardHolderController: _cardHolderController,
+                        cardNumberController: _cardNumberController,
+                        expiryController: _expiryController,
+                        securityCodeController: _securityCodeController,
+                      ),
                     },
 
                     const SizedBox(height: 24),
-                    
+
                     // Oculta o botão se o PIX já foi gerado
                     if (widget.showSubmitButton &&
-                        !(method == PaymentMethodType.pix && _pixQrCode != null))
+                        !(method == PaymentMethodType.pix &&
+                            _pixQrCode != null))
                       ElevatedButton(
                         onPressed: _processPayment,
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),
                         ),
                         child: Text(
-                          method == PaymentMethodType.card ? 'Pagar Agora' : 'Gerar Pagamento',
+                          method == PaymentMethodType.card
+                              ? 'Pagar Agora'
+                              : 'Gerar Pagamento',
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),

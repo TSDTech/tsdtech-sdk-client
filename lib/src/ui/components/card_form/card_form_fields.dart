@@ -73,10 +73,13 @@ class CardFormField extends StatelessWidget {
           color: TsdtechColors.textDisabled,
         ),
         filled: true,
-        fillColor:
-            enabled ? TsdtechColors.surface : TsdtechColors.surfaceVariant,
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        fillColor: enabled
+            ? TsdtechColors.surface
+            : TsdtechColors.surfaceVariant,
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 14,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: const BorderSide(color: TsdtechColors.outline),
@@ -87,8 +90,7 @@ class CardFormField extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide:
-              const BorderSide(color: TsdtechColors.primary, width: 2),
+          borderSide: const BorderSide(color: TsdtechColors.primary, width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
@@ -96,8 +98,7 @@ class CardFormField extends StatelessWidget {
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide:
-              const BorderSide(color: TsdtechColors.error, width: 2),
+          borderSide: const BorderSide(color: TsdtechColors.error, width: 2),
         ),
         disabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),

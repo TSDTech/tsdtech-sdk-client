@@ -126,9 +126,7 @@ class _PixDisplayState extends State<PixDisplay> {
           onCopy: _copyCode,
         ),
         const SizedBox(height: 24),
-        PixInstructions(
-          steps: widget.instructions ?? defaultPixInstructions,
-        ),
+        PixInstructions(steps: widget.instructions ?? defaultPixInstructions),
       ],
     );
   }

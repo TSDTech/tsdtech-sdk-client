@@ -1,1 +1,2 @@
-export '../../src/dto/gateway/gateway_payment_status.dart' show GatewayPaymentStatus;
+export '../../src/dto/gateway/gateway_payment_status.dart'
+    show GatewayPaymentStatus;

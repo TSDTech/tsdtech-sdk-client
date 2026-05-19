@@ -7,11 +7,11 @@ part of 'cart_item.model.dart';
 // **************************************************************************
 
 CartItem _$CartItemFromJson(Map<String, dynamic> json) => CartItem(
-      service: Service.fromJson(json['service'] as Map<String, dynamic>),
-      quantity: (json['quantity'] as num).toInt(),
-    );
+  service: Service.fromJson(json['service'] as Map<String, dynamic>),
+  quantity: (json['quantity'] as num).toInt(),
+);
 
 Map<String, dynamic> _$CartItemToJson(CartItem instance) => <String, dynamic>{
-      'service': instance.service.toJson(),
-      'quantity': instance.quantity,
-    };
+  'service': instance.service.toJson(),
+  'quantity': instance.quantity,
+};

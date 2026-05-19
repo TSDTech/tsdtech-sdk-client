@@ -6,7 +6,8 @@ void main() {
     test('round-trip', () {
       final iso = DateTime.now().toUtc().toIso8601String();
       final json = {
-        'pemPublicKey': '-----BEGIN PUBLIC KEY-----\nabc\n-----END PUBLIC KEY-----',
+        'pemPublicKey':
+            '-----BEGIN PUBLIC KEY-----\nabc\n-----END PUBLIC KEY-----',
         'keyId': 'key-123',
         'expiresAt': iso,
       };
@@ -22,7 +23,8 @@ void main() {
 
     test('null optional fields', () {
       final json = {
-        'pemPublicKey': '-----BEGIN PUBLIC KEY-----\nabc\n-----END PUBLIC KEY-----',
+        'pemPublicKey':
+            '-----BEGIN PUBLIC KEY-----\nabc\n-----END PUBLIC KEY-----',
         'keyId': 'key-123',
         'expiresAt': null,
       };
@@ -35,7 +37,10 @@ void main() {
 
     test('malformed json throws', () {
       final malformed = {'pemPublicKey': 123, 'keyId': 'k'};
-      expect(() => PublicKeyResponse.fromJson(malformed), throwsA(isA<TypeError>()));
+      expect(
+        () => PublicKeyResponse.fromJson(malformed),
+        throwsA(isA<TypeError>()),
+      );
     });
   });
 }

@@ -28,18 +28,38 @@ class CardPaymentView extends StatelessWidget {
         ),
         child: Column(
           children: [
-            _buildTextField(cardHolderController, 'Nome no cartão', TextInputType.name),
+            _buildTextField(
+              cardHolderController,
+              'Nome no cartão',
+              TextInputType.name,
+            ),
             const SizedBox(height: 12),
-            _buildTextField(cardNumberController, 'Número do cartão', TextInputType.number, maxLength: 19),
+            _buildTextField(
+              cardNumberController,
+              'Número do cartão',
+              TextInputType.number,
+              maxLength: 19,
+            ),
             const SizedBox(height: 12),
             Row(
               children: [
                 Expanded(
-                  child: _buildTextField(expiryController, 'MM/AA', TextInputType.datetime, maxLength: 5),
+                  child: _buildTextField(
+                    expiryController,
+                    'MM/AA',
+                    TextInputType.datetime,
+                    maxLength: 5,
+                  ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
-                  child: _buildTextField(securityCodeController, 'CVV', TextInputType.number, maxLength: 4, obscureText: true),
+                  child: _buildTextField(
+                    securityCodeController,
+                    'CVV',
+                    TextInputType.number,
+                    maxLength: 4,
+                    obscureText: true,
+                  ),
                 ),
               ],
             ),

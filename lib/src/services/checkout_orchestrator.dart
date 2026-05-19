@@ -1,5 +1,6 @@
 import '../../models/value_result.dart';
-import '../../models/checkouts/checkout_request.model.dart' hide CardPaymentData;
+import '../../models/checkouts/checkout_request.model.dart'
+    hide CardPaymentData;
 import '../../models/checkouts/checkout_response.model.dart';
 import '../../core/services/intra-api/md-checkout/checkouts_service.dart';
 import '../dto/gateway/payment_status_response.dart';
@@ -30,8 +31,8 @@ class CheckoutOrchestrator {
   CheckoutOrchestrator({
     required CheckoutsService checkoutService,
     required GatewayService gatewayService,
-  })  : _checkoutService = checkoutService,
-        _gatewayService = gatewayService;
+  }) : _checkoutService = checkoutService,
+       _gatewayService = gatewayService;
 
   /// Executes the full two-step card payment flow.
   ///

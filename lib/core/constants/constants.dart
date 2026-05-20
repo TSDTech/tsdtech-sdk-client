@@ -20,6 +20,8 @@ class Constants {
 
   static String getBaseUrl() => backendUrl;
 
+  static String getMsUrl(String msName) => 'https://$stage-$msName-415041877599.southamerica-east1.run.app';
+
   static String get fullDomain {
     if (frontendUrl.isNotEmpty) return Uri.parse(frontendUrl).host;
 

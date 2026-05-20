@@ -1,15 +1,33 @@
 import 'package:dio/dio.dart';
+import 'package:tsdtech_client_sdk/models/checkouts/checkout_request.model.dart';
+import 'package:tsdtech_client_sdk/src/crypto/card_encryptor.dart';
 import '../../../models/value_result.dart';
 import '../../client/gateway-client/gateway_client.dart';
 import '../../dto/gateway/public_key_response.dart';
 import '../../dto/gateway/card_payment_request.dart';
 import '../../dto/gateway/payment_status_response.dart';
-import '../../utils/card-utils/card_encryptor.dart';
+// import '../../utils/card-utils/card_encryptor.dart';
 
 class GatewayService {
   final GatewayClient _client;
 
+  GatewayService._(this._client);
   GatewayService(this._client);
+
+  static GatewayService? _instance;
+
+  // 3. Getter público para você chamar 'GatewayService.instance' em qualquer lugar
+  static GatewayService get instance {
+    if (_instance == null) {
+      throw Exception('GatewayService não foi inicializado! Chame GatewayService.init() primeiro.');
+    }
+    return _instance!;
+  }
+
+  // 4. Método para inicializar o Singleton passando o Client
+  static void init(GatewayClient client) {
+    _instance ??= GatewayService._(client);
+  }
 
   Future<ValueResult<PublicKeyResponse>> fetchPublicKey() async {
     try {
@@ -65,7 +83,7 @@ class GatewayService {
     String keyId,
   ) async {
     try {
-      final encryptedCard = CardEncryptor.encrypt(cardData, pemPublicKey);
+      final encryptedCard = CardEncryptor.encrypt(pemPublicKey, cardData);
 
       final request = CardPaymentRequest(
         depositRequestId: depositRequestId,

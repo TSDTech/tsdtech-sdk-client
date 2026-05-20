@@ -1,11 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:tsdtech_client_sdk/models/checkouts/checkout_request.model.dart';
 
 import 'package:tsdtech_client_sdk/src/client/gateway-client/gateway_client.dart';
 import 'package:tsdtech_client_sdk/src/services/gateway-services/gateway_service.dart';
 import 'package:tsdtech_client_sdk/src/dto/gateway/card_payment_request.dart';
 import 'package:tsdtech_client_sdk/src/dto/gateway/gateway_payment_status.dart';
-import 'package:tsdtech_client_sdk/src/utils/card-utils/card_encryptor.dart';
+// import 'package:tsdtech_client_sdk/src/utils/card-utils/card_encryptor.dart';
 
 class MockInterceptor extends Interceptor {
   final void Function(RequestOptions options, RequestInterceptorHandler handler)
@@ -127,9 +128,11 @@ void main() {
       final cardData = CardPaymentData(
         cardNumber: '1111222233334444',
         cardHolderName: 'TEST USER',
-        expirationMonth: '12',
-        expirationYear: '2030',
-        cvv: '123',
+        cardExpiryDate: '12/30',
+        securityCode: '123',
+        // expirationMonth: '12',
+        // expirationYear: '2030',
+        // cvv: '123',
       );
 
       final result = await service.payWithEncryptedCard(

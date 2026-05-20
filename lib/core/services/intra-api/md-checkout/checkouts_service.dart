@@ -6,6 +6,8 @@ import 'package:tsdtech_client_sdk/models/checkouts/checkout_request.model.dart'
 import 'package:tsdtech_client_sdk/models/checkouts/checkout_response.model.dart';
 import 'package:tsdtech_client_sdk/models/checkouts/payment_method.model.dart';
 import 'package:tsdtech_client_sdk/models/value_result.dart';
+import 'package:tsdtech_client_sdk/src/models/checkout-mock/checkout_mock_response.model.dart';
+import 'package:tsdtech_client_sdk/src/ui/checkout/payment_types.dart';
 
 /// Service for handling checkout and payment operations.
 ///
@@ -33,7 +35,10 @@ class CheckoutsService extends IntraApi {
   static final CheckoutsService instance = CheckoutsService();
 
   /// Creates a [CheckoutsService] instance with the base URL from [Constants].
-  CheckoutsService() : super(Constants.getBaseUrl());
+  CheckoutsService() : super(Constants.getMsUrl('back-ms-subaccount'));
+
+  // @override
+  // String get msAuthorizerUrl => Constants.getMsUrl('back-ms-authorizer');
 
   /// Retrieves the list of available payment methods for the current user.
   ///
@@ -139,6 +144,39 @@ class CheckoutsService extends IntraApi {
     }
   }
 
+  Future<ValueResult<CheckoutResponse>> createDepositCard(
+    CheckoutRequest request,
+  ) async {
+    try {
+      const path = '/deposit-request/api-key/card';
+      final response = await post(path, data: request.toJson());
+      final data = response.data as Map<String, dynamic>;
+      final result = CheckoutResponse.fromJson(data);
+      return ValueResult.success(result);
+    } catch (e) {
+      return ValueResult.fromError(e);
+    }
+  }
+
+  Future<ValueResult<CheckoutMockResponse>> createDepositPix(
+    String depositRequestId,
+  ) async {
+    try {
+
+      final path = '/deposit-request/public/qr/$depositRequestId';
+      final response = await get(path);
+      final mockData = response.data as Map<String, dynamic>;
+
+      // 3. Converte o map pro seu objeto CheckoutResponse exatamente como antes
+      final result = CheckoutMockResponse.fromJson(mockData);
+      
+      // 4. Retorna o sucesso mockado!
+      return ValueResult.success(result);
+    } catch (e) {
+      return ValueResult.fromError(e);
+    }
+  }
+
   /// Retrieves the status of a PIX payment by its [paymentId].
   ///
   /// - [paymentId]: The unique identifier of the payment
@@ -162,4 +200,16 @@ class CheckoutsService extends IntraApi {
       return ValueResult.fromError(e);
     }
   }
+
+  Future<ValueResult<String>> getMockPixStatus(String paymentId) async {
+  try {
+    // 1. Simula o tempo de rede (1 segundo) para testar os loadings da tela
+    await Future.delayed(const Duration(seconds: 1));
+
+    // 2. Retorna o status mockado que você precisa direto!
+    return ValueResult.success(PaymentStatus.waitingPayment.name);
+  } catch (e) {
+    return ValueResult.fromError(e);
+  }
+}
 }

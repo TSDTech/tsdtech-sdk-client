@@ -2,24 +2,31 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tsdtech_client_sdk/src/client/tsdtech-client/tsdtech_client.dart';
 
 void main() {
+  // Teste 1: Garante que o app grita se alguém tentar usar o client sem inicializar no main
   test(
-    'TsdtechClient does not initialize GatewayService when gatewayBaseUrl is null',
+    'TsdtechClient.instance lança Exception se acessado antes do initialize',
     () {
-      final client = TsdtechClient();
-      expect(client.gateway, isNull);
+      // Usamos uma função anônima () => para o expect conseguir capturar o erro
+      expect(() => TsdtechClient.instance, throwsException);
     },
   );
 
+  // Teste 2: O caminho feliz
   test(
-    'TsdtechClient initializes GatewayService when gatewayBaseUrl is provided',
+    'TsdtechClient inicializa o GatewayService e o Orchestrator quando o gatewayBaseUrl é fornecido',
     () {
-      final client = TsdtechClient(
+      // Inicializamos o Singleton
+      TsdtechClient.initialize(
         gatewayBaseUrl: 'https://gateway.tsdtech.com',
         gatewayApiKey: 'secret_key',
       );
 
+      // Pegamos a instância gerada
+      final client = TsdtechClient.instance;
+
+      // Verificamos se os serviços foram criados com sucesso
       expect(client.gateway, isNotNull);
-      // You can also add more specific reflection over the gateway's inner client if needed
+      expect(client.orchestrator, isNotNull);
     },
   );
 }

@@ -1,10 +1,12 @@
+import 'package:tsdtech_client_sdk/src/crypto/card_encryptor.dart';
+import 'package:tsdtech_client_sdk/src/models/checkout-mock/checkout_mock_response.model.dart';
+
 import '../../models/value_result.dart';
 import '../../models/checkouts/checkout_request.model.dart'
-    hide CardPaymentData;
+    show CardPaymentData, CheckoutRequest;
 import '../../models/checkouts/checkout_response.model.dart';
 import '../../core/services/intra-api/md-checkout/checkouts_service.dart';
 import '../dto/gateway/payment_status_response.dart';
-import '../utils/card-utils/card_encryptor.dart' show CardPaymentData;
 import 'gateway-services/gateway_service.dart';
 
 /// Orchestrates the full card payment flow: checkout → fetch public key → encrypt → pay.
@@ -96,10 +98,10 @@ class CheckoutOrchestrator {
   ///
   /// Delegates directly to [CheckoutsService.createCheckout]. The gateway is
   /// not involved — the response will contain a [CheckoutResponse.pix] payload.
-  Future<ValueResult<CheckoutResponse>> payWithPix(
-    CheckoutRequest request,
+  Future<ValueResult<CheckoutMockResponse>> payWithPix(
+    String depositRequestId,
   ) async {
-    return _checkoutService.createCheckout(request);
+    return _checkoutService.createDepositPix(depositRequestId);
   }
 
   /// Convenience method for bill (boleto) payments (one-step flow).

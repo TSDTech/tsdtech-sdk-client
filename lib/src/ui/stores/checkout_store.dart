@@ -2,6 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
+import 'package:tsdtech_client_sdk/core/services/intra-api/md-checkout/checkouts_service.dart';
+import 'package:tsdtech_client_sdk/models/value_result.dart';
+import 'package:tsdtech_client_sdk/src/models/checkout-mock/checkout_mock_response.model.dart';
 
 import '../checkout/payment_types.dart';
 
@@ -17,6 +20,8 @@ abstract class CheckoutStoreBase with Store {
   final PaymentMethodType _initialMethod;
   final GlobalKey<FormState> cardFormKey = GlobalKey<FormState>();
   Timer? _pixPollingTimer;
+
+  CheckoutsService get _checkoutService => CheckoutsService.instance;
 
   @observable
   PaymentMethodType selectedMethod;
@@ -54,6 +59,9 @@ abstract class CheckoutStoreBase with Store {
   @observable
   int cardFormVersion = 0;
 
+  @observable
+  String taxId = '';
+
   @computed
   bool get hasError => errorMessage != null && errorMessage!.isNotEmpty;
 
@@ -79,6 +87,9 @@ abstract class CheckoutStoreBase with Store {
 
   @action
   void updateSecurityCode(String value) => securityCode = value;
+
+  @action
+  void updateTaxId(String value) => taxId = value;  
 
   @action
   void resetCardForm() {
@@ -160,6 +171,17 @@ abstract class CheckoutStoreBase with Store {
     cancelPixPolling();
     resetCardForm();
   }
+
+  @action
+  Future<ValueResult<CheckoutMockResponse?>> getQrCode(String depositRequestId) async {
+    final result = (await _checkoutService.createDepositPix(depositRequestId));
+    if (result.isError) {
+      return ValueResult.fromError(result.error);
+    }
+    return ValueResult.success(result.value);
+    // setPixData(paymentId: result.value?.pixPaymentIntentId, qrCode: result.value?.textQrCode, copyPasteCode: result.value?.textQrCode);
+  } 
+
 
   void dispose() {
     cancelPixPolling();

@@ -5,14 +5,14 @@ import 'package:tsdtech_client_sdk/core/local_storage/shared_prefs_helper.dart';
 import 'package:tsdtech_client_sdk/core/services/base.api.dart';
 import 'package:tsdtech_client_sdk/core/services/intra-api/md-checkout/checkouts_service.dart';
 import 'package:tsdtech_client_sdk/models/checkouts/checkout_request.model.dart'
-    hide CardPaymentData;
+    show CardPaymentData, CheckoutRequest;
 import 'package:tsdtech_client_sdk/src/client/gateway-client/gateway_client.dart';
 import 'package:tsdtech_client_sdk/src/client/tsdtech-client/tsdtech_client.dart';
 import 'package:tsdtech_client_sdk/src/dto/gateway/gateway_payment_status.dart';
 import 'package:tsdtech_client_sdk/src/services/checkout_orchestrator.dart';
 import 'package:tsdtech_client_sdk/src/services/gateway-services/gateway_service.dart';
 import 'package:tsdtech_client_sdk/src/utils/card-utils/card_encryptor.dart'
-    show CardPaymentData;
+    hide CardPaymentData;
 
 import '../../helpers/mock_dio.dart';
 
@@ -38,9 +38,11 @@ void main() {
   final cardData = CardPaymentData(
     cardNumber: '4111111111111111',
     cardHolderName: 'JOHN DOE',
-    expirationMonth: '12',
-    expirationYear: '2030',
-    cvv: '123',
+    cardExpiryDate: '12/30',
+    securityCode: '123',
+    // expirationMonth: '12',
+    // expirationYear: '2030',
+    // cvv: '123',
   );
 
   final checkoutRequest = CheckoutRequest(
@@ -49,17 +51,29 @@ void main() {
     totalValue: 100.0,
   );
 
-  setUp(() async {
+  // setUpAll roda UMA VEZ antes de toda a suíte de testes
+  setUpAll(() async {
     SharedPreferences.setMockInitialValues({});
     await SharedPrefsHelper.init();
 
+    // Inicializamos o Singleton do Gateway APENAS UMA VEZ
+    gatewayClient = GatewayClient(gatewayBaseUrl: 'http://test-gateway.local');
+    GatewayService.init(gatewayClient);
+  });
+
+  // setUp roda ANTES DE CADA teste individual
+  setUp(() {
     checkoutAdapter = MockHttpClientAdapter();
     final checkoutDio = createDioWithAdapter(checkoutAdapter);
     BaseApi.setDioForTesting(checkoutDio);
 
-    gatewayClient = GatewayClient(gatewayBaseUrl: 'http://test-gateway.local');
-    gatewayService = GatewayService(gatewayClient);
+    // Limpamos os interceptors do Gateway para não vazar estado entre os testes
+    gatewayClient.dio.interceptors.clear();
+
+    // Pegamos a instância já populada no setUpAll
+    gatewayService = GatewayService.instance;
     checkoutService = CheckoutsService();
+    
     orchestrator = CheckoutOrchestrator(
       checkoutService: checkoutService,
       gatewayService: gatewayService,
@@ -259,18 +273,13 @@ void main() {
         'pix': {'qrCode': 'qr_code_value', 'copyPasteCode': '00020126...'},
       });
 
-      final request = CheckoutRequest(
-        cart: [],
-        paymentMethod: 'pix',
-        totalValue: 50.0,
-      );
+      const depositRequestId = 'dep_123';
 
-      final result = await orchestrator.payWithPix(request);
+      final result = await orchestrator.payWithPix(depositRequestId);
 
       expect(result.isSuccess, true);
       expect(result.value!.paymentMethod, 'pix');
-      expect(result.value!.paymentId, 'pix_001');
-      expect(result.value!.pix, isNotNull);
+      expect(result.value!.pixPaymentIntentId, 'pix_001');
     });
   });
 
@@ -297,14 +306,11 @@ void main() {
   });
 
   group('TsdtechClient', () {
-    test('sem gatewayBaseUrl → orchestrator é null', () {
-      final client = TsdtechClient();
-      expect(client.orchestrator, isNull);
-      expect(client.gateway, isNull);
-    });
+    test('initialize cria a instância corretamente com os serviços', () {
+      // Usamos a nova sintaxe do Singleton que refatoramos
+      TsdtechClient.initialize(gatewayBaseUrl: 'http://gateway.local');
+      final client = TsdtechClient.instance;
 
-    test('com gatewayBaseUrl → orchestrator não é null', () {
-      final client = TsdtechClient(gatewayBaseUrl: 'http://gateway.local');
       expect(client.orchestrator, isNotNull);
       expect(client.gateway, isNotNull);
     });

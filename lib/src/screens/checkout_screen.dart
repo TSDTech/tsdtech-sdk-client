@@ -101,13 +101,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       _gatewayKeyError = null;
     });
 
-    final config = TsdtechUiConfig.instance;
-    final service = GatewayService(
-      GatewayClient(
-        gatewayBaseUrl: config.gatewayBaseUrl ?? config.baseUrl,
-        apiKey: config.apiKey,
-      ),
-    );
+    // final config = TsdtechUiConfig.instance;
+    final service = GatewayService.instance;
 
     final result = await service.fetchPublicKey();
     if (!mounted) {

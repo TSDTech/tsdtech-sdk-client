@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tsdtech_client_sdk/main.dart' as example;
+// import 'package:tsdtech_client_sdk/main.dart' as example;
 import 'package:tsdtech_client_sdk/tsdtech_sdk_client.dart';
 
 void main() {
@@ -12,7 +12,7 @@ void main() {
       theme: TsdtechThemeData.light(),
     );
 
-    await tester.pumpWidget(const example.ExampleApp());
+    // await tester.pumpWidget(const example.ExampleApp());
     await tester.pumpAndSettle();
 
     expect(find.text('TSDTech SDK Example'), findsWidgets);

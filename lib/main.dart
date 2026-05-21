@@ -99,8 +99,8 @@ class ExampleApp extends StatelessWidget {
             Locale('es'),
           ],
           home: ExampleHomePage(
-            store: _exampleShowcaseStore,
             key: ValueKey(preset),
+            store: _exampleShowcaseStore,
           ),
         );
       },

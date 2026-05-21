@@ -1,6 +1,8 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+
 import '../../../core/services/intra-api/md-checkout/checkouts_service.dart';
 import '../../../models/cart/cart_item.model.dart';
 import '../../../models/checkouts/calculate_item.model.dart';

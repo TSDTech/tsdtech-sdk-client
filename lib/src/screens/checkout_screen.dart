@@ -50,7 +50,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   final CheckoutStore _checkoutStore = CheckoutStore();
   final NumberFormat _currencyFormat = NumberFormat.currency(
     locale: 'pt_BR',
-    symbol: 'R4',
+    symbol: 'R\$',
   );
 
   String _gatewayPublicKey = '';

@@ -112,7 +112,7 @@ class CardPaymentView extends StatelessWidget {
       decoration: InputDecoration(
         labelText: label,
         border: const OutlineInputBorder(),
-        counterText: '', // Oculta o contador de caracteres
+        counterText: '',
       ),
     );
   }

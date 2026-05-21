@@ -6,6 +6,7 @@ import 'package:tsdtech_client_sdk/models/checkouts/checkout_request.model.dart'
 import 'package:tsdtech_client_sdk/models/checkouts/checkout_response.model.dart';
 import 'package:tsdtech_client_sdk/models/checkouts/payment_method.model.dart';
 import 'package:tsdtech_client_sdk/models/value_result.dart';
+import 'package:tsdtech_client_sdk/src/dto/gateway/deposit_request.dart';
 import 'package:tsdtech_client_sdk/src/models/checkout-mock/checkout_mock_response.model.dart';
 import 'package:tsdtech_client_sdk/src/ui/checkout/payment_types.dart';
 
@@ -144,6 +145,20 @@ class CheckoutsService extends IntraApi {
     }
   }
 
+   Future<ValueResult<CheckoutResponse>> createCheckoutDeposit(
+    DepositRequest request,
+  ) async {
+    try {
+      const path = '/checkouts/client';
+      final response = await post(path, data: request.toJson());
+      final data = response.data as Map<String, dynamic>;
+      final result = CheckoutResponse.fromJson(data);
+      return ValueResult.success(result);
+    } catch (e) {
+      return ValueResult.fromError(e);
+    }
+  }
+
   Future<ValueResult<CheckoutResponse>> createDepositCard(
     CheckoutRequest request,
   ) async {
@@ -204,10 +219,10 @@ class CheckoutsService extends IntraApi {
   Future<ValueResult<String>> getMockPixStatus(String paymentId) async {
   try {
     // 1. Simula o tempo de rede (1 segundo) para testar os loadings da tela
-    await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 10));
 
     // 2. Retorna o status mockado que você precisa direto!
-    return ValueResult.success(PaymentStatus.waitingPayment.name);
+    return ValueResult.success(PaymentStatus.success.name);
   } catch (e) {
     return ValueResult.fromError(e);
   }

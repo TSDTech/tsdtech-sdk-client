@@ -19,7 +19,7 @@ abstract class CheckoutStoreBase with Store {
 
   final PaymentMethodType _initialMethod;
   final GlobalKey<FormState> cardFormKey = GlobalKey<FormState>();
-  Timer? _pixPollingTimer;
+  Object? _pixPollingToken;
 
   CheckoutsService get _checkoutService => CheckoutsService.instance;
 
@@ -141,14 +141,19 @@ abstract class CheckoutStoreBase with Store {
     pixCopyPasteCode = null;
   }
 
-  void startPixPolling(Timer timer) {
+  Object startPixPolling() {
     cancelPixPolling();
-    _pixPollingTimer = timer;
+    final token = Object();
+    _pixPollingToken = token;
+    return token;
   }
 
   void cancelPixPolling() {
-    _pixPollingTimer?.cancel();
-    _pixPollingTimer = null;
+    _pixPollingToken = null;
+  }
+
+  bool isPixPollingActive(Object token) {
+    return identical(_pixPollingToken, token);
   }
 
   @action

@@ -254,6 +254,36 @@ mixin _$CheckoutStore on CheckoutStoreBase, Store {
     });
   }
 
+  late final _$taxIdAtom = Atom(
+    name: 'CheckoutStoreBase.taxId',
+    context: context,
+  );
+
+  @override
+  String get taxId {
+    _$taxIdAtom.reportRead();
+    return super.taxId;
+  }
+
+  @override
+  set taxId(String value) {
+    _$taxIdAtom.reportWrite(value, super.taxId, () {
+      super.taxId = value;
+    });
+  }
+
+  late final _$getQrCodeAsyncAction = AsyncAction(
+    'CheckoutStoreBase.getQrCode',
+    context: context,
+  );
+
+  @override
+  Future<ValueResult<CheckoutMockResponse?>> getQrCode(
+    String depositRequestId,
+  ) {
+    return _$getQrCodeAsyncAction.run(() => super.getQrCode(depositRequestId));
+  }
+
   late final _$CheckoutStoreBaseActionController = ActionController(
     name: 'CheckoutStoreBase',
     context: context,
@@ -302,6 +332,18 @@ mixin _$CheckoutStore on CheckoutStoreBase, Store {
     );
     try {
       return super.updateSecurityCode(value);
+    } finally {
+      _$CheckoutStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void updateTaxId(String value) {
+    final _$actionInfo = _$CheckoutStoreBaseActionController.startAction(
+      name: 'CheckoutStoreBase.updateTaxId',
+    );
+    try {
+      return super.updateTaxId(value);
     } finally {
       _$CheckoutStoreBaseActionController.endAction(_$actionInfo);
     }
@@ -434,6 +476,7 @@ cardNumber: ${cardNumber},
 expiryDate: ${expiryDate},
 securityCode: ${securityCode},
 cardFormVersion: ${cardFormVersion},
+taxId: ${taxId},
 hasError: ${hasError},
 hasGeneratedPix: ${hasGeneratedPix},
 isPixSelected: ${isPixSelected},

@@ -150,28 +150,46 @@ class CheckoutWidget extends StatelessWidget {
       String paymentId,
       Future<void> Function() submitPayment,
     ) {
-      effectiveStore.startPixPolling(
-        Timer.periodic(const Duration(seconds: 5), (timer) async {
-          try {
-            final statusResult = await CheckoutsService.instance.getMockPixStatus(
-              paymentId,
-            );
-            if (!statusResult.isSuccess) return;
+      final pollingToken = effectiveStore.startPixPolling();
 
-            final status = statusResult.value?.toLowerCase() ?? '';
-            if (status == PaymentStatus.success.name) {
-              timer.cancel();
-              handleSuccess(
-                paymentId,
-                submitPayment,
-                pixQrCode: effectiveStore.pixQrCode,
-              );
-            }
-          } catch (_) {
-            // Ignored: manter polling
+      Future<void> pollStatus() async {
+        await Future.delayed(const Duration(seconds: 10));
+        if (!effectiveStore.isPixPollingActive(pollingToken)) {
+          return;
+        }
+
+        try {
+          final statusResult = await CheckoutsService.instance.getMockPixStatus(
+            paymentId,
+          );
+          if (!effectiveStore.isPixPollingActive(pollingToken)) {
+            return;
           }
-        }),
-      );
+          if (!statusResult.isSuccess) {
+            unawaited(pollStatus());
+            return;
+          }
+
+          final status = statusResult.value?.toLowerCase() ?? '';
+          if (status == PaymentStatus.success.name) {
+            effectiveStore.cancelPixPolling();
+            handleSuccess(
+              paymentId,
+              submitPayment,
+              pixQrCode: effectiveStore.pixQrCode,
+            );
+            return;
+          }
+        } catch (_) {
+          effectiveStore.errorMessage = 'Erro ao verificar status do pagamento.';
+        }
+
+        if (effectiveStore.isPixPollingActive(pollingToken)) {
+          unawaited(pollStatus());
+        }
+      }
+
+      unawaited(pollStatus());
     }
 
     Future<void> processPayment() async {

@@ -217,6 +217,9 @@ Todas as operações do SDK retornam `ValueResult<T>`:
 ```dart
 final result = await service.someOperation();
 
+````watch command
+dart run build_runner watch --delete-conflicting-outputs
+
 // Usando fold
 result.fold(
   (value) => print('Sucesso: $value'),

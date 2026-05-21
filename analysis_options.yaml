@@ -10,11 +10,6 @@ analyzer:
     constant_identifier_names: ignore
     todo: ignore
     library_private_types_in_public_api: ignore  # MobX gerado
-    unawaited_futures: ignore                    # Futures intentional em callbacks
-    deprecated_member_use: ignore                # APIs deprecated do Flutter
-    avoid_print: ignore                          # print em produção
-    non_constant_identifier_names: ignore         # Variáveis de widget
-    unused_field: ignore                         # Campo intencionalmente em polling
 
 include: package:lints/recommended.yaml
 

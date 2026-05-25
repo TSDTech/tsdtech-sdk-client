@@ -6,22 +6,22 @@ part of 'checkout_mock_response.model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-CheckoutMockResponse _$CheckoutMockResponseFromJson(
-  Map<String, dynamic> json,
-) => CheckoutMockResponse(
-  id: json['id'] as String,
-  paymentMethod: json['paymentMethod'] as String,
-  status: json['status'] as String,
-  textQrCode: json['textQrCode'] as String,
-  pixPaymentIntentId: json['pixPaymentIntentId'] as String,
-);
+DepositPixResponse _$DepositPixResponseFromJson(Map<String, dynamic> json) =>
+    DepositPixResponse(
+      id: json['id'] as String,
+      paymentMethod: json['paymentMethod'] as String,
+      status: json['status'] as String,
+      textQrCode: json['textQrCode'] as String,
+      pixPaymentIntentId: json['pixPaymentIntentId'] as String,
+      expirationDate: json['expirationDate'] as String?,
+    );
 
-Map<String, dynamic> _$CheckoutMockResponseToJson(
-  CheckoutMockResponse instance,
-) => <String, dynamic>{
-  'id': instance.id,
-  'paymentMethod': instance.paymentMethod,
-  'status': instance.status,
-  'textQrCode': instance.textQrCode,
-  'pixPaymentIntentId': instance.pixPaymentIntentId,
-};
+Map<String, dynamic> _$DepositPixResponseToJson(DepositPixResponse instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'paymentMethod': instance.paymentMethod,
+      'status': instance.status,
+      'textQrCode': instance.textQrCode,
+      'pixPaymentIntentId': instance.pixPaymentIntentId,
+      'expirationDate': instance.expirationDate,
+    };

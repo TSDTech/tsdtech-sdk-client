@@ -128,6 +128,24 @@ mixin _$CheckoutStore on CheckoutStoreBase, Store {
     });
   }
 
+  late final _$pixExpirationDateAtom = Atom(
+    name: 'CheckoutStoreBase.pixExpirationDate',
+    context: context,
+  );
+
+  @override
+  String? get pixExpirationDate {
+    _$pixExpirationDateAtom.reportRead();
+    return super.pixExpirationDate;
+  }
+
+  @override
+  set pixExpirationDate(String? value) {
+    _$pixExpirationDateAtom.reportWrite(value, super.pixExpirationDate, () {
+      super.pixExpirationDate = value;
+    });
+  }
+
   late final _$paymentIdAtom = Atom(
     name: 'CheckoutStoreBase.paymentId',
     context: context,
@@ -272,16 +290,22 @@ mixin _$CheckoutStore on CheckoutStoreBase, Store {
     });
   }
 
-  late final _$getQrCodeAsyncAction = AsyncAction(
-    'CheckoutStoreBase.getQrCode',
+  late final _$processPaymentAsyncAction = AsyncAction(
+    'CheckoutStoreBase.processPayment',
     context: context,
   );
 
   @override
-  Future<ValueResult<CheckoutMockResponse?>> getQrCode(
-    String depositRequestId,
-  ) {
-    return _$getQrCodeAsyncAction.run(() => super.getQrCode(depositRequestId));
+  Future<ValueResult<dynamic>> processPayment({
+    required String depositRequestId,
+    required checkout_request.CheckoutRequest request,
+  }) {
+    return _$processPaymentAsyncAction.run(
+      () => super.processPayment(
+        depositRequestId: depositRequestId,
+        request: request,
+      ),
+    );
   }
 
   late final _$CheckoutStoreBaseActionController = ActionController(
@@ -410,7 +434,12 @@ mixin _$CheckoutStore on CheckoutStoreBase, Store {
   }
 
   @override
-  void setPixData({String? paymentId, String? qrCode, String? copyPasteCode}) {
+  void setPixData({
+    String? paymentId,
+    String? qrCode,
+    String? copyPasteCode,
+    String? expirationDate,
+  }) {
     final _$actionInfo = _$CheckoutStoreBaseActionController.startAction(
       name: 'CheckoutStoreBase.setPixData',
     );
@@ -419,6 +448,7 @@ mixin _$CheckoutStore on CheckoutStoreBase, Store {
         paymentId: paymentId,
         qrCode: qrCode,
         copyPasteCode: copyPasteCode,
+        expirationDate: expirationDate,
       );
     } finally {
       _$CheckoutStoreBaseActionController.endAction(_$actionInfo);
@@ -462,6 +492,33 @@ mixin _$CheckoutStore on CheckoutStoreBase, Store {
   }
 
   @override
+  void startPixPollingWithBackoff(
+    String paymentId, {
+    required VoidCallback onSuccess,
+  }) {
+    final _$actionInfo = _$CheckoutStoreBaseActionController.startAction(
+      name: 'CheckoutStoreBase.startPixPollingWithBackoff',
+    );
+    try {
+      return super.startPixPollingWithBackoff(paymentId, onSuccess: onSuccess);
+    } finally {
+      _$CheckoutStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void cancelPixPolling() {
+    final _$actionInfo = _$CheckoutStoreBaseActionController.startAction(
+      name: 'CheckoutStoreBase.cancelPixPolling',
+    );
+    try {
+      return super.cancelPixPolling();
+    } finally {
+      _$CheckoutStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 selectedMethod: ${selectedMethod},
@@ -469,6 +526,7 @@ isLoading: ${isLoading},
 errorMessage: ${errorMessage},
 pixQrCode: ${pixQrCode},
 pixCopyPasteCode: ${pixCopyPasteCode},
+pixExpirationDate: ${pixExpirationDate},
 paymentId: ${paymentId},
 paymentResult: ${paymentResult},
 cardHolderName: ${cardHolderName},

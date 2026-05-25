@@ -1,10 +1,14 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:intl/intl.dart'; // Import necessário para o NumberFormat
+import 'package:tsdtech_client_sdk/src/ui/components/checkout/order_summary_card.dart';
 import 'package:tsdtech_client_sdk/src/ui/components/demo/demo_components.dart';
 import 'package:tsdtech_client_sdk/tsdtech_sdk_client.dart';
-// Lá nos imports (topo do arquivo):
-import 'package:tsdtech_client_sdk/models/checkouts/checkout_request.model.dart' as cardPayment;
+import 'package:tsdtech_client_sdk/models/checkouts/checkout_request.model.dart' as checkoutRequest;
+
+// IMPORTANTE: Ajuste o import do OrderSummaryCard para onde você salvou ele no projeto
+// import 'caminho_do_seu_arquivo/order_summary_card.dart';
 
 class CheckoutWidgetController {
   CheckoutWidgetController()
@@ -30,9 +34,10 @@ class CheckoutWidgetController {
   }
 }
 
-class CheckoutWidget extends StatelessWidget {
+class CheckoutWidget extends StatefulWidget {
   final List<CartItem> items;
   final String administratorId;
+  final String? depositRequestId;
   final String? gatewayPublicKey;
   final void Function(PaymentResult)? onSuccess;
   final void Function(String)? onError;
@@ -43,12 +48,13 @@ class CheckoutWidget extends StatelessWidget {
   final Widget? errorWidget;
   final bool showSubmitButton;
   final CheckoutWidgetController? controller;
-  final CheckoutStore store;
+  final CheckoutStore? store;
 
   const CheckoutWidget({
     super.key,
     required this.items,
     required this.administratorId,
+    this.depositRequestId,
     this.gatewayPublicKey,
     this.onSuccess,
     this.onError,
@@ -59,19 +65,47 @@ class CheckoutWidget extends StatelessWidget {
     this.errorWidget,
     this.showSubmitButton = true,
     this.controller,
-    required this.store,
+    this.store,
   });
 
   @override
+  State<CheckoutWidget> createState() => _CheckoutWidgetState();
+}
+
+class _CheckoutWidgetState extends State<CheckoutWidget> {
+  // Variável local de estado para renderizar a tela de sucesso
+  PaymentStatus? _currentStatus;
+  late final CheckoutStore _internalStore;
+
+  @override
+  void initState() {
+    super.initState();
+    // A store nasce junto com o Widget e mantém os dados seguros
+    _internalStore = CheckoutStore(); 
+  }
+
+  @override
+  void dispose() {
+    // 3. Quando o SPA fechar a tela, a gente limpa a memória automaticamente
+    _internalStore.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final effectiveStore = store;
+    final effectiveStore = widget.store ?? _internalStore;
+    final theme = TsdtechUiConfig.instance.theme;
+    
+    // Formatador oficial pra injetar no OrderSummaryCard
+    final currencyFormat = NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$');
 
     void notifyStatus(PaymentStatus status) {
-      onStatusChange?.call(status);
+      setState(() => _currentStatus = status);
+      widget.onStatusChange?.call(status);
     }
 
     void syncControllerState(Future<void> Function() submitPayment) {
-      final checkoutController = controller;
+      final checkoutController = widget.controller;
       if (checkoutController == null) {
         return;
       }
@@ -83,7 +117,7 @@ class CheckoutWidget extends StatelessWidget {
     }
 
     List<CalculateItem> buildCalculateItems() {
-      return items.map((item) {
+      return widget.items.map((item) {
         return CalculateItem(
           serviceId: item.service.id ?? '',
           value: item.service.price ?? 0.0,
@@ -92,14 +126,9 @@ class CheckoutWidget extends StatelessWidget {
       }).toList();
     }
 
-    final totalValue = items.fold<double>(0.0, (sum, item) {
+    final totalValue = widget.items.fold<double>(0.0, (sum, item) {
       return sum + (item.service.price ?? 0.0) * item.quantity;
     });
-
-    // Helper para formatar moeda de forma simples
-    String formatCurrency(double value) {
-      return 'R\$ ${value.toStringAsFixed(2).replaceAll('.', ',')}';
-    }
 
     String methodToApiString(PaymentMethodType method) {
       switch (method) {
@@ -110,17 +139,9 @@ class CheckoutWidget extends StatelessWidget {
       }
     }
 
-    String toBackendCardExpiry(String value) {
-      final parts = value.split('/');
-      if (parts.length != 2) return '';
-      final month = parts[0].padLeft(2, '0');
-      final year = parts[1];
-      return '20$year$month';
-    }
-
     void showError(String message, Future<void> Function() submitPayment) {
       effectiveStore.setError(message);
-      onError?.call(message);
+      widget.onError?.call(message);
       notifyStatus(PaymentStatus.failed);
       syncControllerState(submitPayment);
     }
@@ -142,67 +163,13 @@ class CheckoutWidget extends StatelessWidget {
         message: message,
       );
       effectiveStore.setPaymentResult(result);
-      onSuccess?.call(result);
+      widget.onSuccess?.call(result);
       syncControllerState(submitPayment);
     }
 
-    void startPixPolling(
-      String paymentId,
-      Future<void> Function() submitPayment,
-    ) {
-      final pollingToken = effectiveStore.startPixPolling();
-
-      Future<void> pollStatus() async {
-        await Future.delayed(const Duration(seconds: 10));
-        if (!effectiveStore.isPixPollingActive(pollingToken)) {
-          return;
-        }
-
-        try {
-          final statusResult = await CheckoutsService.instance.getMockPixStatus(
-            paymentId,
-          );
-          if (!effectiveStore.isPixPollingActive(pollingToken)) {
-            return;
-          }
-          if (!statusResult.isSuccess) {
-            unawaited(pollStatus());
-            return;
-          }
-
-          final status = statusResult.value?.toLowerCase() ?? '';
-          if (status == PaymentStatus.success.name) {
-            effectiveStore.cancelPixPolling();
-            handleSuccess(
-              paymentId,
-              submitPayment,
-              pixQrCode: effectiveStore.pixQrCode,
-            );
-            return;
-          }
-        } catch (_) {
-          effectiveStore.errorMessage = 'Erro ao verificar status do pagamento.';
-        }
-
-        if (effectiveStore.isPixPollingActive(pollingToken)) {
-          unawaited(pollStatus());
-        }
-      }
-
-      unawaited(pollStatus());
-    }
-
     Future<void> processPayment() async {
-      // Validação restaurada exatamente como você pediu
       if (effectiveStore.isCardSelected) {
         if (!effectiveStore.validateCardForm()) return;
-        // if ((gatewayPublicKey ?? '').trim().isEmpty) {
-        //   showError(
-        //     'A chave pública do gateway não pode ficar vazia.',
-        //     processPayment,
-        //   );
-        //   return;
-        // }
       } 
 
       effectiveStore.setLoading(true);
@@ -211,35 +178,20 @@ class CheckoutWidget extends StatelessWidget {
       notifyStatus(PaymentStatus.processing);
 
       try {
-        // Chamada do Mock para obter o depositRequestId
-        final depositRequestId = await MockBackendSpaService.createOrderAndGetDepositId();
+        final depositRequestId = widget.depositRequestId ?? await MockBackendSpaService.createOrderAndGetDepositId();
+        // final dynamic result;
 
-        final orchestrator = TsdtechClient.instance.orchestrator!;  
+        final request = checkoutRequest.CheckoutRequest(
+          cart: buildCalculateItems(),
+          paymentMethod: methodToApiString(effectiveStore.selectedMethod),
+          totalValue: totalValue,
+          depositRequestId: depositRequestId,
+        );
 
-        final dynamic result;
-
-        if (effectiveStore.isCardSelected) {
-          result = await orchestrator.payWithCard(
-            CheckoutRequest(
-              cart: buildCalculateItems(),
-              paymentMethod: methodToApiString(effectiveStore.selectedMethod),
-              totalValue: totalValue,
-              depositRequestId: depositRequestId, // Passando o ID gerado pelo Mock
-            ),
-            cardPayment.CardPaymentData(
-              cardHolderName: effectiveStore.cardHolderName.trim(),
-              cardNumber: effectiveStore.cardNumber.trim(),
-              cardExpiryDate: toBackendCardExpiry(effectiveStore.expiryDate.trim()),
-              securityCode: effectiveStore.securityCode.trim(),
-            ),
-          );
-        } else if (effectiveStore.isPixSelected) {
-          // Passando o ID gerado pelo Mock em vez da string fixa
-          result = await orchestrator.payWithPix(depositRequestId);
-        } else {
-          showError('Nenhum método de pagamento selecionado.', processPayment);
-          return;
-        }
+        final result = await effectiveStore.processPayment(
+          depositRequestId: depositRequestId,
+          request: request,
+        );
 
         if (!result.isSuccess) {
           showError(result.error.toString(), processPayment);
@@ -249,15 +201,21 @@ class CheckoutWidget extends StatelessWidget {
         final response = result.value!;
 
         if (effectiveStore.isPixSelected) {
-          effectiveStore.setPixData(
-            paymentId: response.id,
-            qrCode: response.textQrCode,
-            copyPasteCode: response.textQrCode,
-          );
           notifyStatus(PaymentStatus.waitingPayment);
 
           if (effectiveStore.paymentId != null) {
-            startPixPolling(effectiveStore.paymentId!, processPayment);
+            // 🚀 CHAMA O POLLING INTELIGENTE DA STORE!
+            effectiveStore.startPixPollingWithBackoff(
+              effectiveStore.paymentId!,
+              onSuccess: () {
+                handleSuccess(
+                  effectiveStore.paymentId!, // Aqui pode ser o transactionId da Store
+                  processPayment,
+                  depositRequestId: depositRequestId,
+                  pixQrCode: effectiveStore.pixQrCode,
+                );
+              },
+            );
           }
           syncControllerState(processPayment);
         } else if (effectiveStore.isCardSelected) {
@@ -277,75 +235,158 @@ class CheckoutWidget extends StatelessWidget {
 
     syncControllerState(processPayment);
 
+    // ==========================================
+    // BUILDER PRINCIPAL DA TELA
+    // ==========================================
     return Observer(
       builder: (_) {
         syncControllerState(processPayment);
+        
+        // 1. Tratamento de Loading 
         if (effectiveStore.isLoading) {
-          return CheckoutLoadingState(customLoading: loadingWidget);
-        }
-
-        if (effectiveStore.hasError) {
-          return CheckoutErrorState(
-            message: effectiveStore.errorMessage!,
-            onRetry: processPayment,
-            customError: errorWidget,
+          return widget.loadingWidget ?? const Center(
+            child: Padding(
+              padding: EdgeInsets.all(32.0),
+              child: CircularProgressIndicator(),
+            )
           );
         }
 
+        // 2. Tela de Sucesso Amigável (Fim do fluxo)
+        if (_currentStatus == PaymentStatus.success) {
+          return Container(
+             padding: const EdgeInsets.all(32),
+             decoration: BoxDecoration(
+               color: theme.successColor.withOpacity(0.1),
+               borderRadius: BorderRadius.circular(16),
+               border: Border.all(color: theme.successColor.withOpacity(0.3)),
+             ),
+             child: Column(
+               mainAxisAlignment: MainAxisAlignment.center,
+               children: [
+                 Icon(Icons.check_circle_outline, color: theme.successColor, size: 64),
+                 const SizedBox(height: 16),
+                 Text(
+                   'Pagamento Concluído!',
+                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                     color: theme.successColor,
+                     fontWeight: FontWeight.bold,
+                   ),
+                 ),
+                 const SizedBox(height: 8),
+                 Text(
+                   'Seu pedido foi processado com sucesso e já está sendo preparado.',
+                   textAlign: TextAlign.center,
+                   style: Theme.of(context).textTheme.bodyMedium,
+                 ),
+               ],
+             ),
+          );
+        }
+
+        // 3. Tela de Erro Amigável (Fim do fluxo ruim)
+        // OBS: Você pode adicionar um botão de "Tentar Novamente" aqui depois se quiser
+        if (_currentStatus == PaymentStatus.failed || effectiveStore.hasError) {
+           if (effectiveStore.hasError) {
+            return CheckoutErrorState(
+              message: effectiveStore.errorMessage!,
+              onRetry: () => { effectiveStore.clearError(), effectiveStore.clearPixData() },
+              // customError: errorWidget,
+            );
+          }
+        }
+
+        // 4. Fluxo Normal de Checkout (Formulário)
         final method = effectiveStore.selectedMethod;
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CartPreview(items: items, total: totalValue),
-            const SizedBox(height: 24), 
-            PaymentMethodSelector(
-              selectedMethod: method,
-              onChanged: (newMethod) {
-                effectiveStore.selectMethod(newMethod);
-                syncControllerState(processPayment);
-              },
-              showPix: showPix,
-              showCard: showCard,
-            ),
-            const SizedBox(height: 24),
-            switch (method) {
-              PaymentMethodType.pix => PixPaymentView(
-                qrCode: effectiveStore.pixQrCode,
-                copyPasteCode: effectiveStore.pixCopyPasteCode,
+        return SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Resumo do pedido externo (o novo componente que você mandou)
+              OrderSummaryCard(
+                items: widget.items, 
+                totalValue: totalValue, 
+                currencyFormat: currencyFormat,
               ),
-              PaymentMethodType.card => CardPaymentView(
-                formKey: effectiveStore.cardFormKey,
-                formVersion: effectiveStore.cardFormVersion,
-                cardHolderName: effectiveStore.cardHolderName,
-                cardNumber: effectiveStore.cardNumber,
-                expiryDate: effectiveStore.expiryDate,
-                securityCode: effectiveStore.securityCode,
-                onCardHolderChanged: effectiveStore.updateCardHolderName,
-                onCardNumberChanged: effectiveStore.updateCardNumber,
-                onExpiryChanged: effectiveStore.updateExpiryDate,
-                onSecurityCodeChanged: effectiveStore.updateSecurityCode,
-                taxId: effectiveStore.taxId,
-                onTaxIdChanged: effectiveStore.updateTaxId,
-              ),
-            },
-            const SizedBox(height: 24),
-            if (showSubmitButton &&
-                !(method == PaymentMethodType.pix &&
-                    effectiveStore.hasGeneratedPix))
-              ElevatedButton(
-                onPressed: processPayment,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
+              const SizedBox(height: 24), 
+              
+              // Container que envelopa o pagamento
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).cardColor,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ]
                 ),
-                // Botão dinâmico: Pagar Agora (Cartão) ou Gerar Pagamento (Pix)
-                child: Text(
-                  method == PaymentMethodType.card ? 'Pagar Agora' : 'Gerar Pagamento',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Pagamento', style: Theme.of(context).textTheme.titleLarge),
+                    const SizedBox(height: 16),
+                    
+                    PaymentMethodSelector(
+                      selectedMethod: method,
+                      onChanged: (newMethod) {
+                        effectiveStore.selectMethod(newMethod);
+                        syncControllerState(processPayment);
+                      },
+                      showPix: widget.showPix,
+                      showCard: widget.showCard,
+                    ),
+                    const SizedBox(height: 24),
+                    
+                    switch (method) {
+                      PaymentMethodType.pix => PixPaymentView(
+                        qrCode: effectiveStore.pixQrCode,
+                        copyPasteCode: effectiveStore.pixCopyPasteCode,
+                        expiresAt: effectiveStore.pixExpirationDate,
+
+                      ),
+                      PaymentMethodType.card => CardPaymentView(
+                        formKey: effectiveStore.cardFormKey,
+                        formVersion: effectiveStore.cardFormVersion,
+                        cardHolderName: effectiveStore.cardHolderName,
+                        cardNumber: effectiveStore.cardNumber,
+                        expiryDate: effectiveStore.expiryDate,
+                        securityCode: effectiveStore.securityCode,
+                        onCardHolderChanged: effectiveStore.updateCardHolderName,
+                        onCardNumberChanged: effectiveStore.updateCardNumber,
+                        onExpiryChanged: effectiveStore.updateExpiryDate,
+                        onSecurityCodeChanged: effectiveStore.updateSecurityCode,
+                        taxId: effectiveStore.taxId,
+                        onTaxIdChanged: effectiveStore.updateTaxId,
+                      ),
+                    },
+                  ],
                 ),
               ),
-          ],
+              
+              const SizedBox(height: 24),
+              
+              if (widget.showSubmitButton && !(method == PaymentMethodType.pix && effectiveStore.hasGeneratedPix))
+                ElevatedButton(
+                  onPressed: processPayment,
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
+                  child: Text(
+                    method == PaymentMethodType.card ? 'Pagar Agora' : 'Gerar Pagamento',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+              const SizedBox(height: 24),
+              StatusBanner(status: _currentStatus),
+            ],
+          ),
         );
       },
     );
@@ -353,12 +394,8 @@ class CheckoutWidget extends StatelessWidget {
 }
 
 class MockBackendSpaService {
-  // Simula a chamada POST /orders (Passos 2 a 8 do seu diagrama)
   static Future<String> createOrderAndGetDepositId() async {
-    // Finge que o servidor tá processando regras de Split, chamando o Server SDK, etc.
-    await Future.delayed(const Duration(seconds: 2)); 
-    
-    // Retorna o depositRequestId mockado gerado pelo "TSDTECH"
-    return '88406839-b6d0-48c8-8778-168ef7762d17'; 
+    await Future.delayed(const Duration(seconds: 1)); 
+    return 'acaa27a1-ade2-45ea-a8b0-3f619ba5ae8f'; 
   }
 }

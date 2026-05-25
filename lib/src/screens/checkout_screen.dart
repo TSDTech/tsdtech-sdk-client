@@ -171,48 +171,57 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              _OrderSummaryCard(
+              // _OrderSummaryCard(
+              //   items: widget.items,
+              //   totalValue: _totalValue,
+              //   currencyFormat: _currencyFormat,
+              // ),
+              CheckoutWidget(
+                store: _checkoutStore,
+                controller: _checkoutController,
                 items: widget.items,
-                totalValue: _totalValue,
-                currencyFormat: _currencyFormat,
+                administratorId: widget.administratorId,
+                // gatewayPublicKey: _gatewayPublicKey,
+                showSubmitButton: false,
+                onSuccess: (_) => widget.onSuccess(),
               ),
               const SizedBox(height: 16),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const Text(
-                        'Metodo de pagamento',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      CheckoutWidget(
-                        store: _checkoutStore,
-                        controller: _checkoutController,
-                        items: widget.items,
-                        administratorId: widget.administratorId,
-                        gatewayPublicKey: _gatewayPublicKey,
-                        showSubmitButton: false,
-                        onSuccess: (_) => widget.onSuccess(),
-                      ),
-                      if (_gatewayKeyError != null) ...[
-                        const SizedBox(height: 12),
-                        Text(
-                          _gatewayKeyError!,
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.error,
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-              ),
+              // Card(
+              //   child: Padding(
+              //     padding: const EdgeInsets.all(16),
+              //     child: Column(
+              //       crossAxisAlignment: CrossAxisAlignment.stretch,
+              //       children: [
+              //         const Text(
+              //           'Metodo de pagamento',
+              //           style: TextStyle(
+              //             fontSize: 18,
+              //             fontWeight: FontWeight.w600,
+              //           ),
+              //         ),
+              //         const SizedBox(height: 16),
+              //         CheckoutWidget(
+              //           store: _checkoutStore,
+              //           controller: _checkoutController,
+              //           items: widget.items,
+              //           administratorId: widget.administratorId,
+              //           gatewayPublicKey: _gatewayPublicKey,
+              //           showSubmitButton: false,
+              //           onSuccess: (_) => widget.onSuccess(),
+              //         ),
+              //         if (_gatewayKeyError != null) ...[
+              //           const SizedBox(height: 12),
+              //           Text(
+              //             _gatewayKeyError!,
+              //             style: TextStyle(
+              //               color: Theme.of(context).colorScheme.error,
+              //             ),
+              //           ),
+              //         ],
+              //       ],
+              //     ),
+              //   ),
+              // ),
             ],
           ),
         ),

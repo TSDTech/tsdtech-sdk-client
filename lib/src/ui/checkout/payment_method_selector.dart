@@ -12,7 +12,7 @@ class PaymentMethodSelector extends StatelessWidget {
     required this.selectedMethod,
     required this.onChanged,
     this.showPix = true,
-    this.showCard = true,
+    this.showCard = false,
   });
 
   @override
@@ -20,8 +20,9 @@ class PaymentMethodSelector extends StatelessWidget {
     return Row(
       children: [
         if (showPix) _buildOption(PaymentMethodType.pix, 'PIX', Icons.qr_code),
-        if (showCard)
-          _buildOption(PaymentMethodType.card, 'Cartão', Icons.credit_card),
+        //TODO - implementar cartão
+        // if (showCard)
+        //   _buildOption(PaymentMethodType.card, 'Cartão', Icons.credit_card),
       ],
     );
   }

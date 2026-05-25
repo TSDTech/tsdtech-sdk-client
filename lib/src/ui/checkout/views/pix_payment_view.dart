@@ -4,14 +4,13 @@ import 'package:tsdtech_client_sdk/tsdtech_sdk_client.dart';
 class PixPaymentView extends StatelessWidget {
   final String? qrCode;
   final String? copyPasteCode;
-  // Adicionei o expiresAt aqui caso você queira passar o tempo pro contador rodar
-  // final DateTime? expiresAt; 
+  final String? expiresAt; 
 
   const PixPaymentView({
     super.key, 
     this.qrCode, 
     this.copyPasteCode,
-    // this.expiresAt,
+    this.expiresAt,
   });
 
   @override
@@ -42,7 +41,7 @@ class PixPaymentView extends StatelessWidget {
             qrCode: qrCode!,
             copyPasteCode: copyPasteCode ?? qrCode!,
           ),
-          expiresAt: DateTime.now().add(const Duration(minutes: 25)),
+          expiresAt: expiresAt != null ? DateTime.parse(expiresAt!) : DateTime.now().add(const Duration(minutes: 25)),
           onCopied: () => showMessage('Código PIX copiado.'),
         ),
         

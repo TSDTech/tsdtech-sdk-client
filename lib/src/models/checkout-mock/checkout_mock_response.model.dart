@@ -4,23 +4,25 @@ import 'package:json_annotation/json_annotation.dart';
 part 'checkout_mock_response.model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class CheckoutMockResponse {
+class DepositPixResponse {
   final String id;
   final String paymentMethod;
   final String status;
   final String textQrCode;
   final String pixPaymentIntentId;
+  final String? expirationDate;
 
-  CheckoutMockResponse({
+  DepositPixResponse({
     required this.id,
     required this.paymentMethod,
     required this.status,
     required this.textQrCode,
     required this.pixPaymentIntentId,
+    this.expirationDate,
   });
 
-  factory CheckoutMockResponse.fromJson(Map<String, dynamic> json) =>
-      _$CheckoutMockResponseFromJson(json);
+  factory DepositPixResponse.fromJson(Map<String, dynamic> json) =>
+      _$DepositPixResponseFromJson(json);
       
-  Map<String, dynamic> toJson() => _$CheckoutMockResponseToJson(this);
+  Map<String, dynamic> toJson() => _$DepositPixResponseToJson(this);
 }

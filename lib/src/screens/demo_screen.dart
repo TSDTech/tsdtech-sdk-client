@@ -111,7 +111,7 @@ class _DemoScreenState extends State<DemoScreen> {
                     _buildWidgetDemoSection(),
                     const SizedBox(height: 20),
                     _buildScreenDemoSection(),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 50),
                     // if (isWide)
                     //   Row(
                     //     crossAxisAlignment: CrossAxisAlignment.start,
@@ -220,9 +220,10 @@ class _DemoScreenState extends State<DemoScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           CheckoutWidget(
-            store: _checkoutStore,
+            // store: _checkoutStore,
             items: _demoItems,
             administratorId: _administratorId,
+            
             // A publicKey foi removida, pois o orquestrador cuida disso!
             onStatusChange: (s) => setState(() => _checkoutStatus = s),
             onSuccess: (result) =>
@@ -230,7 +231,7 @@ class _DemoScreenState extends State<DemoScreen> {
             onError: (message) => _showMessage('Erro: $message'),
           ),
           const SizedBox(height: 16),
-          StatusBanner(status: _checkoutStatus),
+          // StatusBanner(status: _checkoutStatus),
         ],  
       ),
     );

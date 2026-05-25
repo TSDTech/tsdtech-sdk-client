@@ -37,6 +37,7 @@ class CheckoutsService extends IntraApi {
 
   /// Creates a [CheckoutsService] instance with the base URL from [Constants].
   CheckoutsService() : super(Constants.getMsUrl('back-ms-subaccount'));
+  final depositRequestPath = '/deposit-request/public';
 
   // @override
   // String get msAuthorizerUrl => Constants.getMsUrl('back-ms-authorizer');
@@ -173,17 +174,17 @@ class CheckoutsService extends IntraApi {
     }
   }
 
-  Future<ValueResult<CheckoutMockResponse>> createDepositPix(
+  Future<ValueResult<DepositPixResponse>> createDepositPix(
     String depositRequestId,
   ) async {
     try {
 
-      final path = '/deposit-request/public/qr/$depositRequestId';
-      final response = await get(path);
+      final path = '$depositRequestPath/$depositRequestId/convert-to-pix';
+      final response = await post(path);
       final mockData = response.data as Map<String, dynamic>;
 
       // 3. Converte o map pro seu objeto CheckoutResponse exatamente como antes
-      final result = CheckoutMockResponse.fromJson(mockData);
+      final result = DepositPixResponse.fromJson(mockData);
       
       // 4. Retorna o sucesso mockado!
       return ValueResult.success(result);
@@ -204,9 +205,21 @@ class CheckoutsService extends IntraApi {
   ///   print('PIX Status: ${status.value}');
   /// }
   /// ```
-  Future<ValueResult<String>> getPixStatus(String paymentId) async {
+  // Future<ValueResult<String>> getPixStatus(String paymentId) async {
+  //   try {
+  //     final path = '/checkouts/client/pix/status/$paymentId';
+  //     final response = await get(path);
+  //     final data = response.data as Map<String, dynamic>;
+  //     final status = data['status'] as String? ?? '';
+  //     return ValueResult.success(status);
+  //   } catch (e) {
+  //     return ValueResult.fromError(e);
+  //   }
+  // }
+
+  Future<ValueResult<String>> getPixStatus(String depositRequestId) async {
     try {
-      final path = '/checkouts/client/pix/status/$paymentId';
+      final path = '$depositRequestPath/status-pix/$depositRequestId';
       final response = await get(path);
       final data = response.data as Map<String, dynamic>;
       final status = data['status'] as String? ?? '';
@@ -216,15 +229,17 @@ class CheckoutsService extends IntraApi {
     }
   }
 
-  Future<ValueResult<String>> getMockPixStatus(String paymentId) async {
-  try {
-    // 1. Simula o tempo de rede (1 segundo) para testar os loadings da tela
-    await Future.delayed(const Duration(seconds: 10));
 
-    // 2. Retorna o status mockado que você precisa direto!
-    return ValueResult.success(PaymentStatus.success.name);
-  } catch (e) {
-    return ValueResult.fromError(e);
+
+  Future<ValueResult<String>> notifyPixExpired(String depositRequestId) async {
+    try {
+      final path = '$depositRequestPath/$depositRequestId/expire';
+      final response = await post(path);
+      final data = response.data as Map<String, dynamic>;
+      final status = data['status'] as String? ?? '';
+      return ValueResult.success(status);
+    } catch (e) {
+      return ValueResult.fromError(e);
+    }
   }
-}
 }

@@ -98,7 +98,7 @@ class CheckoutOrchestrator {
   ///
   /// Delegates directly to [CheckoutsService.createCheckout]. The gateway is
   /// not involved — the response will contain a [CheckoutResponse.pix] payload.
-  Future<ValueResult<CheckoutMockResponse>> payWithPix(
+  Future<ValueResult<DepositPixResponse>> payWithPix(
     String depositRequestId,
   ) async {
     return _checkoutService.createDepositPix(depositRequestId);

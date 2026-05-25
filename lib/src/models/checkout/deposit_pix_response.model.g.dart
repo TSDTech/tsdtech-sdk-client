@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'checkout_mock_response.model.dart';
+part of 'deposit_pix_response.model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator

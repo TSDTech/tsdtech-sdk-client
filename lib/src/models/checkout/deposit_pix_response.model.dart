@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
 // Lembre-se de rodar o build_runner para gerar esse arquivo .g.dart
-part 'checkout_mock_response.model.g.dart';
+part 'deposit_pix_response.model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class DepositPixResponse {

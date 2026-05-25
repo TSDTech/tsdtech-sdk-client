@@ -2,9 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:tsdtech_client_sdk/core/services/intra-api/md-checkout/checkouts_service.dart';
+import 'package:tsdtech_client_sdk/src/models/checkout/deposit_pix_response.model.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:tsdtech_client_sdk/models/value_result.dart';
-import 'package:tsdtech_client_sdk/src/models/checkout-mock/checkout_mock_response.model.dart';
 import 'package:tsdtech_client_sdk/src/client/tsdtech-client/tsdtech_client.dart';
 import 'package:tsdtech_client_sdk/models/checkouts/checkout_request.model.dart' as checkout_request;
 
@@ -246,14 +246,13 @@ abstract class CheckoutStoreBase with Store {
   // POLLING INTELIGENTE (Backoff & Timeout)
   // ==========================================
 
-  @action
   // ==========================================
-  // POLLING INTELIGENTE (Backoff + Expiration Date)
+  // POLLING INTELIGENTE (Backoff Dinâmico & Expirador Casado)
   // ==========================================
 
   @action
   void startPixPollingWithBackoff(String paymentId, {required VoidCallback onSuccess}) {
-    cancelPixPolling(); // Garante que não tem dois loops concorrentes rodando
+    cancelPixPolling(); // Garante que não existam dois loops concorrentes rodando
     
     final token = Object();
     _pixPollingToken = token;
@@ -268,16 +267,16 @@ abstract class CheckoutStoreBase with Store {
         final totalDurationSeconds = expiryTime.difference(now).inSeconds;
 
         if (totalDurationSeconds <= 0) {
-          // O PIX já nasceu morto ou o relógio tá dessincronizado
+          // O PIX já nasceu morto ou o relógio está dessincronizado
           setError('O tempo limite para o pagamento deste PIX expirou.');
           _checkoutService.notifyPixExpired(paymentId).catchError((error) {
             debugPrint('Erro ao notificar expiração do PIX: $error');
-            return ValueResult<String>.failure(error);
+            return ValueResult<String>.failure(error.toString());
           });
           return;
         }
 
-        // 2. CALCULA QUANTAS TENTATIVAS CABEM DENTRO DO TEMPO RESTANTE (Simulando o Backoff)
+        // 2. CALCULA MATEMATICAMENTE QUANTAS TENTATIVAS CABEM NO TEMPO RESTANTE
         int remainingSeconds = totalDurationSeconds;
         int virtualAttempt = 0;
         
@@ -290,11 +289,10 @@ abstract class CheckoutStoreBase with Store {
           remainingSeconds -= nextDelay;
         }
         
-        // Adiciona uma margem de segurança de 2 tentativas adicionais
+        // Adiciona uma pequena margem de segurança de 2 tentativas adicionais
         calculatedMaxAttempts = virtualAttempt + 2;
         
       } catch (_) {
-        // Fallback caso o parse da string falhe
         calculatedMaxAttempts = 50;
       }
     }
@@ -305,10 +303,17 @@ abstract class CheckoutStoreBase with Store {
       // Verifica se o usuário mudou de aba, cancelou ou saiu do fluxo
       if (!isPixPollingActive(token)) return;
 
-      // 🔥 CASO 1: VALIDAÇÃO PELO RELÓGIO (O tempo estourou na timeline)
+      // 3. PEGA OS SEGUNDOS REAIS RESTANTES ANTES DE APLICAR O DELAY
+      int remainingSeconds = 9999; 
+      
       if (pixExpirationDate != null) {
         try {
-          if (DateTime.now().isAfter(DateTime.parse(pixExpirationDate!))) {
+          final expiryTime = DateTime.parse(pixExpirationDate!);
+          final now = DateTime.now();
+          remainingSeconds = expiryTime.difference(now).inSeconds;
+
+          // Se bateu ou estourou o tempo, encerra imediatamente
+          if (remainingSeconds <= 0) {
             _encerrarPorTimeout(paymentId, token);
             return;
           }
@@ -317,24 +322,29 @@ abstract class CheckoutStoreBase with Store {
 
       attempt++;
 
-      // 🔥 CASO 2: VALIDAÇÃO POR TENTATIVAS DINÂMICAS (Sincronizado com o tempo)
+      // VALIDAÇÃO POR LIMITE DINÂMICO DE TENTATIVAS
       if (attempt > calculatedMaxAttempts) {
         _encerrarPorTimeout(paymentId, token);
         return;
       }
 
-      // DETERMINA O INTERVALO ATUAL DO BACKOFF
-      int waitTimeSeconds = 5; 
-      if (attempt > 5) waitTimeSeconds = 10;  
-      if (attempt > 15) waitTimeSeconds = 15; 
+      // DETERMINA O INTERVALO ATUAL SEGUINDO O BACKOFF
+      int backoffWaitTime = 5; 
+      if (attempt > 5) backoffWaitTime = 10;  
+      if (attempt > 15) backoffWaitTime = 15; 
 
-      // Aguarda o intervalo antes da chamada de rede
-      await Future.delayed(Duration(seconds: waitTimeSeconds));
+      // 🔥 O PULO DO GATO: Se o tempo restante for menor que o backoff, 
+      // o app espera apenas o tempo exato que falta para o PIX expirar!
+      int actualWaitTime = (remainingSeconds < backoffWaitTime) ? remainingSeconds : backoffWaitTime;
 
-      // Checa novamente após o delay
+      // Aguarda o intervalo exato calculado
+      await Future.delayed(Duration(seconds: actualWaitTime));
+
+      // Checa novamente após sair do delay
       if (!isPixPollingActive(token)) return;
 
       try {
+        // Bate na API pra checar se já mudou o status
         final statusResult = await _checkoutService.getPixStatus(paymentId);
 
         if (!isPixPollingActive(token)) return;
@@ -342,9 +352,9 @@ abstract class CheckoutStoreBase with Store {
         if (statusResult.isSuccess) {
           final status = statusResult.value?.toLowerCase() ?? '';
 
-          if (status == 'success') {
+          if (status == 'success' || status == 'paid' || status == 'approved') {
             cancelPixPolling();
-            onSuccess(); // Sucesso, muda o widget para verde
+            onSuccess(); // Sucesso, muda o widget para verde e fecha a conta
             return;
           } else if (status == 'expired' || status == 'cancelled' || status == 'failed') {
             cancelPixPolling();
@@ -353,11 +363,23 @@ abstract class CheckoutStoreBase with Store {
           }
         }
       } catch (e) {
-        // Erros oscilantes de internet não quebram o loop, apenas aguardam a próxima rodada
+        // Erros oscilantes de rede ou internet piscando não quebram o fluxo,
+        // apenas deixam agendar a próxima rodada
       }
 
-      // Continua o loop de forma recursiva
+      // 4. RECURSIVIDADE COERENTE
       if (isPixPollingActive(token)) {
+        // Se aplicamos uma espera curta final, o tempo provavelmente zerou agora.
+        // Forçamos uma checagem rápida no relógio antes de disparar a próxima chamada de rede à toa.
+        if (pixExpirationDate != null) {
+          try {
+            if (DateTime.now().isAfter(DateTime.parse(pixExpirationDate!))) {
+              _encerrarPorTimeout(paymentId, token);
+              return;
+            }
+          } catch (_) {}
+        }
+        
         pollStatus();
       }
     }
@@ -374,9 +396,10 @@ abstract class CheckoutStoreBase with Store {
     setError('O tempo limite para o pagamento deste PIX expirou.');
     
     // Dispara de forma assíncrona ("fire and forget") para avisar o seu backend
+    // Adicionado tipo genérico explícito <String> exigido pelo linter no catchError
     _checkoutService.notifyPixExpired(paymentId).catchError((error) {
       debugPrint('Erro ao notificar expiração do PIX: $error');
-      return ValueResult<String>.failure(error);
+      return ValueResult<String>.failure(error.toString());
     });
   }
 

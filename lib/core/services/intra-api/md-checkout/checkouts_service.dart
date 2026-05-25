@@ -7,7 +7,7 @@ import 'package:tsdtech_client_sdk/models/checkouts/checkout_response.model.dart
 import 'package:tsdtech_client_sdk/models/checkouts/payment_method.model.dart';
 import 'package:tsdtech_client_sdk/models/value_result.dart';
 import 'package:tsdtech_client_sdk/src/dto/gateway/deposit_request.dart';
-import 'package:tsdtech_client_sdk/src/models/checkout-mock/checkout_mock_response.model.dart';
+import 'package:tsdtech_client_sdk/src/models/checkout/deposit_pix_response.model.dart';
 
 /// Service for handling checkout and payment operations.
 ///

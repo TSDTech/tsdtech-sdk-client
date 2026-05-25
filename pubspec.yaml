@@ -2,8 +2,6 @@ name: tsdtech_client_sdk
 
 description: SDK Dart para integração com a plataforma TsdTech de pagamentos.
 
-publish_to: 'none'
-
 repository: https://github.com/tsdtech/tsdtech-client-sdk
 homepage: https://github.com/tsdtech/tsdtech-client-sdk
 issue_tracker: https://github.com/tsdtech/tsdtech-client-sdk/issues
@@ -73,7 +71,7 @@ dev_dependencies:
 
 false_secrets:
   - /test/src/crypto/card_encryptor_test.dart
-  
+
 flutter:
   uses-material-design: true
 

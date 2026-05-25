@@ -373,7 +373,10 @@ abstract class CheckoutStoreBase with Store {
     setError('O tempo limite para o pagamento deste PIX expirou.');
     
     // Dispara de forma assíncrona ("fire and forget") para avisar o seu backend
-    _checkoutService.notifyPixExpired(paymentId).catchError((_) {});
+    _checkoutService.notifyPixExpired(paymentId).catchError((error) {
+      debugPrint('Erro ao notificar expiração do PIX: $error');
+      return ValueResult<String>.failure(error);
+    });
   }
 
   @action

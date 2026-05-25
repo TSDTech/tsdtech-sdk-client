@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:tsdtech_client_sdk/models/services/service.model.dart';
-import 'package:tsdtech_client_sdk/models/cart/cart_item.model.dart';
 import 'package:tsdtech_client_sdk/tsdtech_sdk_client.dart'; // Puxando do seu barrel file
 
 class HomeScreen extends StatefulWidget {

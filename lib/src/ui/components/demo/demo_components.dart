@@ -119,11 +119,13 @@ class StatusBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = TsdtechUiConfig.instance.theme;
-    if (status == null)
+    if (status == null) {
       return const InfoTile(
         title: 'Status do CheckoutWidget',
         content: 'Aguardando ação.',
       );
+    }
+
 
     final map = switch (status!) {
       PaymentStatus.processing => ('Processando', theme.warningColor),

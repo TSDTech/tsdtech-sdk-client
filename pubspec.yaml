@@ -71,6 +71,9 @@ dev_dependencies:
   auto_route_generator: ^10.3.1
   test: ^1.29.0
 
+false_secrets:
+  - /test/src/crypto/card_encryptor_test.dart
+  
 flutter:
   uses-material-design: true
 

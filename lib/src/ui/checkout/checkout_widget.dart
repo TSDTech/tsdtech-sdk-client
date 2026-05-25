@@ -5,7 +5,7 @@ import 'package:intl/intl.dart'; // Import necessário para o NumberFormat
 import 'package:tsdtech_client_sdk/src/ui/components/checkout/order_summary_card.dart';
 import 'package:tsdtech_client_sdk/src/ui/components/demo/demo_components.dart';
 import 'package:tsdtech_client_sdk/tsdtech_sdk_client.dart';
-import 'package:tsdtech_client_sdk/models/checkouts/checkout_request.model.dart' as checkoutRequest;
+import 'package:tsdtech_client_sdk/models/checkouts/checkout_request.model.dart' as checkout_request;
 
 // IMPORTANTE: Ajuste o import do OrderSummaryCard para onde você salvou ele no projeto
 // import 'caminho_do_seu_arquivo/order_summary_card.dart';
@@ -181,7 +181,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
         final depositRequestId = widget.depositRequestId ?? await MockBackendSpaService.createOrderAndGetDepositId();
         // final dynamic result;
 
-        final request = checkoutRequest.CheckoutRequest(
+        final request = checkout_request.CheckoutRequest(
           cart: buildCalculateItems(),
           paymentMethod: methodToApiString(effectiveStore.selectedMethod),
           totalValue: totalValue,

@@ -88,7 +88,7 @@ class _DemoScreenState extends State<DemoScreen> {
     return Observer(
       builder: (_) {
         final theme = TsdtechUiConfig.instance.theme;
-        final isWide = MediaQuery.sizeOf(context).width >= 980;
+        // final isWide = MediaQuery.sizeOf(context).width >= 980;
 
         return Scaffold(
           appBar: AppBar(title: const Text('TSDTech SDK Example')),

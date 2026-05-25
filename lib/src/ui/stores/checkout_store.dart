@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:tsdtech_client_sdk/core/services/intra-api/md-checkout/checkouts_service.dart';
@@ -272,7 +270,10 @@ abstract class CheckoutStoreBase with Store {
         if (totalDurationSeconds <= 0) {
           // O PIX já nasceu morto ou o relógio tá dessincronizado
           setError('O tempo limite para o pagamento deste PIX expirou.');
-          _checkoutService.notifyPixExpired(paymentId).catchError((_) {});
+          _checkoutService.notifyPixExpired(paymentId).catchError((error) {
+            debugPrint('Erro ao notificar expiração do PIX: $error');
+            return ValueResult<String>.failure(error);
+          });
           return;
         }
 

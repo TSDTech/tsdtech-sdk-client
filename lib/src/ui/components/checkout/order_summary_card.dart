@@ -27,7 +27,7 @@ class OrderSummaryCard extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             if (items.isEmpty)
-              const Text('Nenhum item selecionado.')
+              const Text('Nenhum resumo encontrado para o pedido.')
             else
               ...items.map((item) {
                 final unitValue = item.service.price ?? 0;

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:intl/intl.dart';
@@ -252,31 +253,34 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
 
         // 2. Tela de Sucesso Amigável (Fim do fluxo)
         if (_currentStatus == PaymentStatus.success) {
-          return Scaffold(
-            appBar: AppBar(title: const Text('Sucesso')),
-            body: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.check_circle_outline, color: Colors.green, size: 72),
-                    const SizedBox(height: 16),
-                    const Text('Pagamento realizado com sucesso!', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 8),
-                    Text('Pedido: $widget.depositRequestId', style: Theme.of(context).textTheme.bodyMedium),
-                    const SizedBox(height: 24),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.popUntil(context, (route) => route.isFirst);
-                      },
-                      child: const Text('Voltar ao catálogo'),
-                    ),
-                  ],
+          return CheckoutSuccessState(
+            customSuccess: Scaffold(
+              body: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.check_circle_outline, color: Colors.green, size: 72),
+                      const SizedBox(height: 16),
+                      const Text('Pagamento realizado com sucesso!', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      // const SizedBox(height: 8),
+                      // Text('Pedido: ${widget.depositRequestId}', style: Theme.of(context).textTheme.bodyMedium),
+                      const SizedBox(height: 24),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.popUntil(context, (route) => route.isFirst);
+                        },
+                        child: const Text('Voltar ao catálogo'),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
+            message:  'Pagamento realizado com sucesso!',
           );
+          
         }
 
         // 3. Tela de Erro Amigável (Fim do fluxo ruim)
@@ -284,8 +288,8 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
            if (effectiveStore.hasError) {
             return CheckoutErrorState(
               message: effectiveStore.errorMessage!,
-              onRetry: () => { effectiveStore.clearError(), effectiveStore.clearPixData() },
-              // customError: errorWidget,
+              onRetry: () => Navigator.popUntil(context, (route) => route.isFirst),
+              // onRetry: () => { effectiveStore.clearError(), effectiveStore.clearPixData() },
             );
           }
         }

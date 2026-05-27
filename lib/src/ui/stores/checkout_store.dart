@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:tsdtech_client_sdk/core/services/intra-api/md-checkout/checkouts_service.dart';
+import 'package:tsdtech_client_sdk/models/deposit-request/deposit_request_summary.model.dart';
+import 'package:tsdtech_client_sdk/models/deposit-request/deposit_request_summary_item.model.dart';
 import 'package:tsdtech_client_sdk/src/models/checkout/deposit_pix_response.model.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:tsdtech_client_sdk/models/value_result.dart';
@@ -69,6 +71,12 @@ abstract class CheckoutStoreBase with Store {
 
   @observable
   String taxId = '';
+
+  @observable
+  double amount = 0;
+
+  @observable
+  ObservableList<DepositRequestItemSummary> items = ObservableList<DepositRequestItemSummary>();
 
   @computed
   bool get hasError => errorMessage != null && errorMessage!.isNotEmpty;
@@ -160,6 +168,15 @@ abstract class CheckoutStoreBase with Store {
   }
 
   @action
+  void setAmount(double value) => amount = value;
+
+  @action
+  void setItems(List<DepositRequestItemSummary> newItems) {
+    items.clear();
+    items.addAll(newItems);
+  }
+
+  @action
   void reset() {
     selectedMethod = _initialMethod;
     isLoading = false;
@@ -189,7 +206,7 @@ abstract class CheckoutStoreBase with Store {
   @action
   Future<ValueResult<dynamic>> processPayment({
     required String depositRequestId,
-    required checkout_request.CheckoutRequest request,
+    checkout_request.CheckoutRequest?  request,
   }) async {
     setLoading(true);
     clearError();
@@ -211,7 +228,7 @@ abstract class CheckoutStoreBase with Store {
           securityCode: securityCode.trim(),
         );
 
-        result = await orchestrator.payWithCard(request, cardData);
+        result = await orchestrator.payWithCard(request!, cardData);
 
       } else if (isPixSelected) {
         result = await orchestrator.payWithPix(depositRequestId);
@@ -242,9 +259,26 @@ abstract class CheckoutStoreBase with Store {
     }
   }
 
-  // ==========================================
-  // POLLING INTELIGENTE (Backoff & Timeout)
-  // ==========================================
+  @action
+  Future<ValueResult<DepositRequestSummaryResponse>> fetchOrderSummary(String depositRequestId) async {
+    setLoading(true);
+    clearError();
+
+    try {
+      final result = await _checkoutService.getOrderSummary(depositRequestId);
+      if (result.isError) {
+        setError(result.error);
+      }
+      setItems(result.value!.itemsSummary);
+      setAmount(result.value!.amount);
+      return result;
+    } catch (e) {
+      setError(e.toString());
+      return ValueResult.failure(e.toString());
+    } finally {
+      setLoading(false);
+    }
+  }
 
   // ==========================================
   // POLLING INTELIGENTE (Backoff Dinâmico & Expirador Casado)

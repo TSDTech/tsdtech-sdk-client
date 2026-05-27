@@ -290,6 +290,42 @@ mixin _$CheckoutStore on CheckoutStoreBase, Store {
     });
   }
 
+  late final _$amountAtom = Atom(
+    name: 'CheckoutStoreBase.amount',
+    context: context,
+  );
+
+  @override
+  double get amount {
+    _$amountAtom.reportRead();
+    return super.amount;
+  }
+
+  @override
+  set amount(double value) {
+    _$amountAtom.reportWrite(value, super.amount, () {
+      super.amount = value;
+    });
+  }
+
+  late final _$itemsAtom = Atom(
+    name: 'CheckoutStoreBase.items',
+    context: context,
+  );
+
+  @override
+  ObservableList<DepositRequestItemSummary> get items {
+    _$itemsAtom.reportRead();
+    return super.items;
+  }
+
+  @override
+  set items(ObservableList<DepositRequestItemSummary> value) {
+    _$itemsAtom.reportWrite(value, super.items, () {
+      super.items = value;
+    });
+  }
+
   late final _$processPaymentAsyncAction = AsyncAction(
     'CheckoutStoreBase.processPayment',
     context: context,
@@ -298,13 +334,27 @@ mixin _$CheckoutStore on CheckoutStoreBase, Store {
   @override
   Future<ValueResult<dynamic>> processPayment({
     required String depositRequestId,
-    required checkout_request.CheckoutRequest request,
+    checkout_request.CheckoutRequest? request,
   }) {
     return _$processPaymentAsyncAction.run(
       () => super.processPayment(
         depositRequestId: depositRequestId,
         request: request,
       ),
+    );
+  }
+
+  late final _$fetchOrderSummaryAsyncAction = AsyncAction(
+    'CheckoutStoreBase.fetchOrderSummary',
+    context: context,
+  );
+
+  @override
+  Future<ValueResult<DepositRequestSummaryResponse>> fetchOrderSummary(
+    String depositRequestId,
+  ) {
+    return _$fetchOrderSummaryAsyncAction.run(
+      () => super.fetchOrderSummary(depositRequestId),
     );
   }
 
@@ -480,6 +530,30 @@ mixin _$CheckoutStore on CheckoutStoreBase, Store {
   }
 
   @override
+  void setAmount(double value) {
+    final _$actionInfo = _$CheckoutStoreBaseActionController.startAction(
+      name: 'CheckoutStoreBase.setAmount',
+    );
+    try {
+      return super.setAmount(value);
+    } finally {
+      _$CheckoutStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setItems(List<DepositRequestItemSummary> newItems) {
+    final _$actionInfo = _$CheckoutStoreBaseActionController.startAction(
+      name: 'CheckoutStoreBase.setItems',
+    );
+    try {
+      return super.setItems(newItems);
+    } finally {
+      _$CheckoutStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void reset() {
     final _$actionInfo = _$CheckoutStoreBaseActionController.startAction(
       name: 'CheckoutStoreBase.reset',
@@ -535,6 +609,8 @@ expiryDate: ${expiryDate},
 securityCode: ${securityCode},
 cardFormVersion: ${cardFormVersion},
 taxId: ${taxId},
+amount: ${amount},
+items: ${items},
 hasError: ${hasError},
 hasGeneratedPix: ${hasGeneratedPix},
 isPixSelected: ${isPixSelected},

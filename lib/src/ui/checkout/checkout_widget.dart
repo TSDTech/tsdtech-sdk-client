@@ -1,14 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:intl/intl.dart'; // Import necessário para o NumberFormat
+import 'package:intl/intl.dart';
 import 'package:tsdtech_client_sdk/src/ui/components/checkout/order_summary_card.dart';
 import 'package:tsdtech_client_sdk/src/ui/components/demo/demo_components.dart';
 import 'package:tsdtech_client_sdk/tsdtech_sdk_client.dart';
-import 'package:tsdtech_client_sdk/models/checkouts/checkout_request.model.dart' as checkout_request;
-
-// IMPORTANTE: Ajuste o import do OrderSummaryCard para onde você salvou ele no projeto
-// import 'caminho_do_seu_arquivo/order_summary_card.dart';
+// import 'package:tsdtech_client_sdk/models/checkouts/checkout_request.model.dart' as checkout_request;
+import 'package:tsdtech_client_sdk/models/services/service.model.dart';
 
 class CheckoutWidgetController {
   CheckoutWidgetController()
@@ -35,8 +33,8 @@ class CheckoutWidgetController {
 }
 
 class CheckoutWidget extends StatefulWidget {
-  final List<CartItem> items;
-  final String administratorId;
+  final List<CartItem>? items;
+  final String? administratorId;
   final String? depositRequestId;
   final String? gatewayPublicKey;
   final void Function(PaymentResult)? onSuccess;
@@ -52,8 +50,8 @@ class CheckoutWidget extends StatefulWidget {
 
   const CheckoutWidget({
     super.key,
-    required this.items,
-    required this.administratorId,
+    this.items,
+    this.administratorId,
     this.depositRequestId,
     this.gatewayPublicKey,
     this.onSuccess,
@@ -82,6 +80,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
     super.initState();
     // A store nasce junto com o Widget e mantém os dados seguros
     _internalStore = CheckoutStore(); 
+    _internalStore.fetchOrderSummary(widget.depositRequestId!);
   }
 
   @override
@@ -116,28 +115,28 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
       checkoutController.hasGeneratedPix.value = effectiveStore.hasGeneratedPix;
     }
 
-    List<CalculateItem> buildCalculateItems() {
-      return widget.items.map((item) {
-        return CalculateItem(
-          serviceId: item.service.id ?? '',
-          value: item.service.price ?? 0.0,
-          quantity: item.quantity,
-        );
-      }).toList();
-    }
+    // List<CalculateItem> buildCalculateItems() {
+    //   return _internalStore.items.map((item) {
+    //     return CalculateItem(
+    //       serviceId: item.name,
+    //       value: item.price,
+    //       quantity: item.quantity,
+    //     );
+    //   }).toList();
+    // }
 
-    final totalValue = widget.items.fold<double>(0.0, (sum, item) {
-      return sum + (item.service.price ?? 0.0) * item.quantity;
-    });
+    // final totalValue = _internalStore.items.fold<double>(0.0, (sum, item) {
+    //   return sum + (item.price) * item.quantity;
+    // });
 
-    String methodToApiString(PaymentMethodType method) {
-      switch (method) {
-        case PaymentMethodType.pix:
-          return 'pix';
-        case PaymentMethodType.card:
-          return 'card';
-      }
-    }
+    // String methodToApiString(PaymentMethodType method) {
+    //   switch (method) {
+    //     case PaymentMethodType.pix:
+    //       return 'pix';
+    //     case PaymentMethodType.card:
+    //       return 'card';
+    //   }
+    // }
 
     void showError(String message, Future<void> Function() submitPayment) {
       effectiveStore.setError(message);
@@ -181,16 +180,16 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
         final depositRequestId = widget.depositRequestId ?? await MockBackendSpaService.createOrderAndGetDepositId();
         // final dynamic result;
 
-        final request = checkout_request.CheckoutRequest(
-          cart: buildCalculateItems(),
-          paymentMethod: methodToApiString(effectiveStore.selectedMethod),
-          totalValue: totalValue,
-          depositRequestId: depositRequestId,
-        );
+        // final request = checkout_request.CheckoutRequest(
+        //   cart: buildCalculateItems(),
+        //   paymentMethod: methodToApiString(effectiveStore.selectedMethod),
+        //   totalValue: totalValue,
+        //   depositRequestId: depositRequestId,
+        // );
 
         final result = await effectiveStore.processPayment(
           depositRequestId: depositRequestId,
-          request: request,
+          // request: request,
         );
 
         if (!result.isSuccess) {
@@ -204,7 +203,6 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
           notifyStatus(PaymentStatus.waitingPayment);
 
           if (effectiveStore.paymentId != null) {
-            // 🚀 CHAMA O POLLING INTELIGENTE DA STORE!
             effectiveStore.startPixPollingWithBackoff(
               effectiveStore.paymentId!,
               onSuccess: () {
@@ -254,38 +252,34 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
 
         // 2. Tela de Sucesso Amigável (Fim do fluxo)
         if (_currentStatus == PaymentStatus.success) {
-          return Container(
-             padding: const EdgeInsets.all(32),
-             decoration: BoxDecoration(
-               color: theme.successColor.withOpacity(0.1),
-               borderRadius: BorderRadius.circular(16),
-               border: Border.all(color: theme.successColor.withOpacity(0.3)),
-             ),
-             child: Column(
-               mainAxisAlignment: MainAxisAlignment.center,
-               children: [
-                 Icon(Icons.check_circle_outline, color: theme.successColor, size: 64),
-                 const SizedBox(height: 16),
-                 Text(
-                   'Pagamento Concluído!',
-                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                     color: theme.successColor,
-                     fontWeight: FontWeight.bold,
-                   ),
-                 ),
-                 const SizedBox(height: 8),
-                 Text(
-                   'Seu pedido foi processado com sucesso e já está sendo preparado.',
-                   textAlign: TextAlign.center,
-                   style: Theme.of(context).textTheme.bodyMedium,
-                 ),
-               ],
-             ),
+          return Scaffold(
+            appBar: AppBar(title: const Text('Sucesso')),
+            body: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.check_circle_outline, color: Colors.green, size: 72),
+                    const SizedBox(height: 16),
+                    const Text('Pagamento realizado com sucesso!', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 8),
+                    Text('Pedido: $widget.depositRequestId', style: Theme.of(context).textTheme.bodyMedium),
+                    const SizedBox(height: 24),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.popUntil(context, (route) => route.isFirst);
+                      },
+                      child: const Text('Voltar ao catálogo'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           );
         }
 
         // 3. Tela de Erro Amigável (Fim do fluxo ruim)
-        // OBS: Você pode adicionar um botão de "Tentar Novamente" aqui depois se quiser
         if (_currentStatus == PaymentStatus.failed || effectiveStore.hasError) {
            if (effectiveStore.hasError) {
             return CheckoutErrorState(
@@ -305,10 +299,12 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Resumo do pedido externo (o novo componente que você mandou)
               OrderSummaryCard(
-                items: widget.items, 
-                totalValue: totalValue, 
+                items: _internalStore.items.map((item) => CartItem(
+                  service: Service(name: item.name, price: item.price),
+                  quantity: item.quantity,
+                )).toList(),
+                totalValue: _internalStore.amount, 
                 currencyFormat: currencyFormat,
               ),
               const SizedBox(height: 24), 

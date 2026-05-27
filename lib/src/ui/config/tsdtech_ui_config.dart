@@ -41,7 +41,7 @@ class TsdtechUiConfig {
   // ---------------------------------------------------------------------------
 
   /// Base URL of the TSDTech backend (SPA endpoint).
-  late final String baseUrl;
+  late final String? baseUrl;
 
   /// Optional base URL of the payment gateway. Defaults to [baseUrl] when null.
   late final String? gatewayBaseUrl;
@@ -68,13 +68,13 @@ class TsdtechUiConfig {
   /// - [theme]: Optional. Custom [TsdtechThemeData]. Defaults to [TsdtechThemeData.light].
   /// - [locale]: Optional. UI locale. Defaults to [TsdtechLocale.pt].
   static void initialize({
-    required String baseUrl,
+    String? baseUrl,
     String? gatewayBaseUrl,
     String? apiKey,
-    TsdtechThemeData? theme,
+  TsdtechThemeData? theme,
     TsdtechLocale locale = TsdtechLocale.pt,
   }) {
-    assert(baseUrl.isNotEmpty, 'baseUrl must not be empty.');
+    // assert(baseUrl.isNotEmpty, 'baseUrl must not be empty.');
     _instance = TsdtechUiConfig._()
       ..baseUrl = baseUrl
       ..gatewayBaseUrl = gatewayBaseUrl

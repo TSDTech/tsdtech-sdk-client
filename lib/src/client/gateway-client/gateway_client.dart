@@ -3,18 +3,18 @@ import 'package:dio/dio.dart';
 class GatewayClient {
   final Dio _dio;
 
-  final String gatewayBaseUrl;
+  final String? gatewayBaseUrl;
   final String? apiKey;
 
   GatewayClient({
-    required this.gatewayBaseUrl,
+    this.gatewayBaseUrl,
     this.apiKey,
     Duration connectTimeout = const Duration(seconds: 30),
     Duration receiveTimeout = const Duration(seconds: 30),
     Duration sendTimeout = const Duration(seconds: 30),
   }) : _dio = Dio(
          BaseOptions(
-           baseUrl: gatewayBaseUrl,
+           baseUrl: gatewayBaseUrl ?? '', // Pode ser setado depois, mas precisa ser inicializado com algo
            connectTimeout: connectTimeout,
            receiveTimeout: receiveTimeout,
            sendTimeout: sendTimeout,

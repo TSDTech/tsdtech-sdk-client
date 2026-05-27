@@ -10,8 +10,7 @@ class TsdtechClient {
   CheckoutOrchestrator? orchestrator;
 
   // Construtor privado
-  TsdtechClient._({required String gatewayBaseUrl, String? gatewayApiKey}) {
-    if (gatewayBaseUrl.isNotEmpty) {
+  TsdtechClient._({String? gatewayBaseUrl, String? gatewayApiKey}) {
       final gatewayClient = GatewayClient(
         gatewayBaseUrl: gatewayBaseUrl,
         apiKey: gatewayApiKey,
@@ -26,11 +25,10 @@ class TsdtechClient {
         checkoutService: CheckoutsService.instance,
         gatewayService: gateway!,
       );
-    }
   }
 
   // Método para inicializar o SDK (Vamos chamar no main)
-  static void initialize({required String gatewayBaseUrl, String? gatewayApiKey}) {
+  static void initialize({String? gatewayBaseUrl, String? gatewayApiKey}) {
     _instance ??= TsdtechClient._(
       gatewayBaseUrl: gatewayBaseUrl, 
       gatewayApiKey: gatewayApiKey,

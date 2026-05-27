@@ -14,8 +14,10 @@ import 'package:tsdtech_client_sdk/core/local_storage/shared_prefs_helper.dart';
 /// ```
 ///
 /// ## Token Management
-/// Tokens can be set via [setToken] to be automatically injected as Bearer
-/// tokens in the Authorization header. Use [resetToken] to clear it.
+/// Call [setToken] after login to persist the Bearer token in [SharedPrefsHelper].
+/// [_mergeHeaders] is the single injection point: it reads the token on every
+/// request so the correct value is always used. Call [resetToken] on logout.
+/// Register callbacks via [addTokenListener] to react to token changes.
 ///
 /// ## Error Handling
 /// Connection timeouts and service unavailability are caught and converted
@@ -32,6 +34,7 @@ import 'package:tsdtech_client_sdk/core/local_storage/shared_prefs_helper.dart';
 abstract class BaseApi {
   static Dio _dio = Dio();
   static bool _debugMode = false;
+  static final List<void Function(String?)> _tokenListeners = [];
 
   /// Sets whether to enable debug logging.
   static void setDebugMode(bool enabled) {
@@ -205,18 +208,50 @@ abstract class BaseApi {
 
   /// Sets the Bearer token for all subsequent requests.
   ///
-  /// - [token]: The token to set, or null to reset
+  /// Persists [token] in [SharedPrefsHelper] so that [_mergeHeaders] — the
+  /// single injection point — always reads the authoritative value.
+  /// Notifies any registered token listeners after persisting.
+  ///
   /// If null is passed, [resetToken] is called instead.
-  static void setToken(String? token) {
+  ///
+  /// ```dart
+  /// await BaseApi.setToken(loginResponse.token);
+  /// ```
+  static Future<void> setToken(String? token) async {
     if (token == null) {
-      resetToken();
+      await resetToken();
       return;
     }
-    _dio.options.headers['Authorization'] = 'Bearer $token';
+    await SharedPrefsHelper.setAuthToken(token);
+    for (final fn in List.of(_tokenListeners)) {
+      fn(token);
+    }
   }
 
-  /// Resets (clears) the Bearer token from all requests.
-  static void resetToken() {
-    _dio.options.headers.remove('Authorization');
+  /// Resets (clears) the Bearer token from [SharedPrefsHelper].
+  ///
+  /// Notifies any registered token listeners with `null` after clearing.
+  ///
+  /// ```dart
+  /// await BaseApi.resetToken();
+  /// ```
+  static Future<void> resetToken() async {
+    await SharedPrefsHelper.clearAuthToken();
+    for (final fn in List.of(_tokenListeners)) {
+      fn(null);
+    }
+  }
+
+  /// Registers a [listener] to be called whenever the token changes.
+  ///
+  /// The listener receives the new token value, or `null` when the token
+  /// is cleared via [resetToken].
+  static void addTokenListener(void Function(String?) listener) {
+    _tokenListeners.add(listener);
+  }
+
+  /// Removes a previously registered token [listener].
+  static void removeTokenListener(void Function(String?) listener) {
+    _tokenListeners.remove(listener);
   }
 }

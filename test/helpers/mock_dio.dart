@@ -69,7 +69,9 @@ class MockHttpClientAdapter implements HttpClientAdapter {
       final parts = key.split(' ');
       final kMethod = parts[0];
       final suffix = key.substring(kMethod.length + 1);
-      if (kMethod == method && path.endsWith(suffix) && _queue[key]!.isNotEmpty) {
+      if (kMethod == method &&
+          path.endsWith(suffix) &&
+          _queue[key]!.isNotEmpty) {
         final entry = _queue[key]!.removeFirst();
         final bodyString = jsonEncode(entry['data']);
         return ResponseBody.fromString(

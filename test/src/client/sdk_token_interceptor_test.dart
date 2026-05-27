@@ -49,7 +49,9 @@ void main() {
 
     group('auto-init (sem token no SharedPrefs)', () {
       test('busca token do pix-token antes da primeira request', () async {
-        tokenAdapter.when('POST', '/auth/sdk/pix-token', {'token': 'jwt-inicial'});
+        tokenAdapter.when('POST', '/auth/sdk/pix-token', {
+          'token': 'jwt-inicial',
+        });
         mainAdapter.when('GET', '/recurso', {'data': 'ok'});
 
         await mainDio.get('$_baseUrl/recurso');
@@ -71,26 +73,25 @@ void main() {
         expect(tokenReq.data, containsPair('orgId', _orgId));
       });
 
-      test('chama onSessionExpired e rejeita request se pix-token falha',
-          () async {
-        // Token endpoint retorna 500 → DioException → _doRefresh retorna null
-        tokenAdapter.when(
-          'POST',
-          '/auth/sdk/pix-token',
-          {'error': 'server error'},
-          statusCode: 500,
-        );
+      test(
+        'chama onSessionExpired e rejeita request se pix-token falha',
+        () async {
+          // Token endpoint retorna 500 → DioException → _doRefresh retorna null
+          tokenAdapter.when('POST', '/auth/sdk/pix-token', {
+            'error': 'server error',
+          }, statusCode: 500);
 
-        try {
-          await mainDio.get('$_baseUrl/recurso');
-          fail('Deveria lançar DioException');
-        } catch (e) {
-          expect(e, isA<DioException>());
-        }
+          try {
+            await mainDio.get('$_baseUrl/recurso');
+            fail('Deveria lançar DioException');
+          } catch (e) {
+            expect(e, isA<DioException>());
+          }
 
-        expect(sessionExpiredCalled, isTrue);
-        expect(SharedPrefsHelper.authToken, isNull);
-      });
+          expect(sessionExpiredCalled, isTrue);
+          expect(SharedPrefsHelper.authToken, isNull);
+        },
+      );
     });
 
     // -------------------------------------------------------------------------
@@ -134,14 +135,13 @@ void main() {
         await SharedPrefsHelper.setAuthToken('token-expirado');
 
         // Primeira chamada: 401. Segunda (retry pelo interceptor): 200.
-        mainAdapter.whenOnce(
-          'GET',
-          '/protegido',
-          {'error': 'Unauthorized'},
-          statusCode: 401,
-        );
+        mainAdapter.whenOnce('GET', '/protegido', {
+          'error': 'Unauthorized',
+        }, statusCode: 401);
         mainAdapter.when('GET', '/protegido', {'ok': true});
-        tokenAdapter.when('POST', '/auth/sdk/pix-token', {'token': 'token-novo'});
+        tokenAdapter.when('POST', '/auth/sdk/pix-token', {
+          'token': 'token-novo',
+        });
 
         final response = await mainDio.get('$_baseUrl/protegido');
 
@@ -149,47 +149,49 @@ void main() {
         expect(SharedPrefsHelper.authToken, equals('token-novo'));
         // Retry deve ter enviado o novo token
         final retryReq = mainAdapter.requests.last;
-        expect(
-          retryReq.headers['Authorization'],
-          equals('Bearer token-novo'),
-        );
+        expect(retryReq.headers['Authorization'], equals('Bearer token-novo'));
       });
 
-      test('401 no retry (marcado com _retryKey) limpa token e notifica', () async {
-        await SharedPrefsHelper.setAuthToken('token-qualquer');
-        tokenAdapter.when('POST', '/auth/sdk/pix-token', {'token': 'renovado'});
+      test(
+        '401 no retry (marcado com _retryKey) limpa token e notifica',
+        () async {
+          await SharedPrefsHelper.setAuthToken('token-qualquer');
+          tokenAdapter.when('POST', '/auth/sdk/pix-token', {
+            'token': 'renovado',
+          });
 
-        // Ambas as chamadas ao /protegido retornam 401
-        mainAdapter.whenOnce('GET', '/protegido', {}, statusCode: 401);
-        mainAdapter.when('GET', '/protegido', {}, statusCode: 401);
+          // Ambas as chamadas ao /protegido retornam 401
+          mainAdapter.whenOnce('GET', '/protegido', {}, statusCode: 401);
+          mainAdapter.when('GET', '/protegido', {}, statusCode: 401);
 
-        try {
-          await mainDio.get('$_baseUrl/protegido');
-        } on DioException catch (_) {}
+          try {
+            await mainDio.get('$_baseUrl/protegido');
+          } on DioException catch (_) {}
 
-        expect(sessionExpiredCalled, isTrue);
-        expect(SharedPrefsHelper.authToken, isNull);
-      });
+          expect(sessionExpiredCalled, isTrue);
+          expect(SharedPrefsHelper.authToken, isNull);
+        },
+      );
 
-      test('refresh falho em 401 limpa token e chama onSessionExpired', () async {
-        await SharedPrefsHelper.setAuthToken('expirado');
+      test(
+        'refresh falho em 401 limpa token e chama onSessionExpired',
+        () async {
+          await SharedPrefsHelper.setAuthToken('expirado');
 
-        mainAdapter.when('GET', '/protegido', {}, statusCode: 401);
-        // Token endpoint lança erro
-        tokenAdapter.when(
-          'POST',
-          '/auth/sdk/pix-token',
-          {'error': 'fail'},
-          statusCode: 500,
-        );
+          mainAdapter.when('GET', '/protegido', {}, statusCode: 401);
+          // Token endpoint lança erro
+          tokenAdapter.when('POST', '/auth/sdk/pix-token', {
+            'error': 'fail',
+          }, statusCode: 500);
 
-        try {
-          await mainDio.get('$_baseUrl/protegido');
-        } on DioException catch (_) {}
+          try {
+            await mainDio.get('$_baseUrl/protegido');
+          } on DioException catch (_) {}
 
-        expect(sessionExpiredCalled, isTrue);
-        expect(SharedPrefsHelper.authToken, isNull);
-      });
+          expect(sessionExpiredCalled, isTrue);
+          expect(SharedPrefsHelper.authToken, isNull);
+        },
+      );
 
       test('401 no próprio pix-token não tenta refresh recursivo', () async {
         // Simula pix-token retornando 401
@@ -211,23 +213,27 @@ void main() {
     // -------------------------------------------------------------------------
 
     group('concorrência', () {
-      test('múltiplos refreshes simultâneos disparam apenas 1 chamada ao pix-token',
-          () async {
-        tokenAdapter.when('POST', '/auth/sdk/pix-token', {'token': 'refreshed'});
+      test(
+        'múltiplos refreshes simultâneos disparam apenas 1 chamada ao pix-token',
+        () async {
+          tokenAdapter.when('POST', '/auth/sdk/pix-token', {
+            'token': 'refreshed',
+          });
 
-        // Dispara 3 refreshes concorrentes — apenas 1 deve chegar ao adapter.
-        await Future.wait([
-          interceptor.refreshTokenForTesting(),
-          interceptor.refreshTokenForTesting(),
-          interceptor.refreshTokenForTesting(),
-        ]);
+          // Dispara 3 refreshes concorrentes — apenas 1 deve chegar ao adapter.
+          await Future.wait([
+            interceptor.refreshTokenForTesting(),
+            interceptor.refreshTokenForTesting(),
+            interceptor.refreshTokenForTesting(),
+          ]);
 
-        final pixTokenCalls = tokenAdapter.requests
-            .where((r) => r.path.contains('pix-token'))
-            .length;
-        expect(pixTokenCalls, equals(1));
-        expect(SharedPrefsHelper.authToken, equals('refreshed'));
-      });
+          final pixTokenCalls = tokenAdapter.requests
+              .where((r) => r.path.contains('pix-token'))
+              .length;
+          expect(pixTokenCalls, equals(1));
+          expect(SharedPrefsHelper.authToken, equals('refreshed'));
+        },
+      );
     });
 
     // -------------------------------------------------------------------------

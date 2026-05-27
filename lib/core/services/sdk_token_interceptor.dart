@@ -49,13 +49,13 @@ class SdkTokenInterceptor extends Interceptor {
     required this.pixTokenUrl,
     this.onSessionExpired,
     this.onTokenChanged,
-  })  : _mainDio = mainDio,
-        _tokenDio = Dio(
-          BaseOptions(
-            connectTimeout: const Duration(seconds: 10),
-            receiveTimeout: const Duration(seconds: 10),
-          ),
-        );
+  }) : _mainDio = mainDio,
+       _tokenDio = Dio(
+         BaseOptions(
+           connectTimeout: const Duration(seconds: 10),
+           receiveTimeout: const Duration(seconds: 10),
+         ),
+       );
 
   /// Named constructor for unit tests — allows injecting a custom [tokenDio]
   /// so the token endpoint can be mocked independently.
@@ -67,8 +67,8 @@ class SdkTokenInterceptor extends Interceptor {
     required this.pixTokenUrl,
     this.onSessionExpired,
     this.onTokenChanged,
-  })  : _mainDio = mainDio,
-        _tokenDio = tokenDio;
+  }) : _mainDio = mainDio,
+       _tokenDio = tokenDio;
 
   // ---------------------------------------------------------------------------
   // Interceptor overrides

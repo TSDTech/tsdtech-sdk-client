@@ -21,6 +21,10 @@ void main() {
       BaseApi.setDioForTesting(dio);
     });
 
+    tearDown(() async {
+      await BaseApi.resetToken();
+    });
+
     test('joinUrl remove trailing slash e une os paths corretamente', () {
       final intra = IntraApi('https://api.example.com/');
       final joined = intra.joinUrl('https://api.example.com/', 'path');
@@ -59,6 +63,79 @@ void main() {
         expect(e, isA<Exception>());
         expect(e.toString(), contains('Serviço indisponível no momento'));
       }
+    });
+  });
+
+  group('Token management', () {
+    setUp(() async {
+      SharedPreferences.setMockInitialValues({});
+      await SharedPrefsHelper.init();
+    });
+
+    tearDown(() async {
+      await BaseApi.resetToken();
+    });
+
+    test('setToken persiste o token no SharedPrefsHelper', () async {
+      await BaseApi.setToken('my-token');
+      expect(SharedPrefsHelper.authToken, equals('my-token'));
+    });
+
+    test('resetToken limpa o token do SharedPrefsHelper', () async {
+      await BaseApi.setToken('to-clear');
+      await BaseApi.resetToken();
+      expect(SharedPrefsHelper.authToken, isNull);
+    });
+
+    test('setToken(null) comporta-se como resetToken', () async {
+      await BaseApi.setToken('will-be-cleared');
+      await BaseApi.setToken(null);
+      expect(SharedPrefsHelper.authToken, isNull);
+    });
+
+    test('listener é notificado quando token é definido', () async {
+      String? received;
+      void listener(String? t) => received = t;
+      BaseApi.addTokenListener(listener);
+      addTearDown(() => BaseApi.removeTokenListener(listener));
+
+      await BaseApi.setToken('listener-token');
+      expect(received, equals('listener-token'));
+    });
+
+    test('listener é notificado com null quando token é removido', () async {
+      String? received = 'initial';
+      void listener(String? t) => received = t;
+      BaseApi.addTokenListener(listener);
+      addTearDown(() => BaseApi.removeTokenListener(listener));
+
+      await BaseApi.resetToken();
+      expect(received, isNull);
+    });
+
+    test('removeTokenListener para de notificar', () async {
+      int callCount = 0;
+      void listener(String? t) => callCount++;
+      BaseApi.addTokenListener(listener);
+      BaseApi.removeTokenListener(listener);
+
+      await BaseApi.setToken('no-notification');
+      expect(callCount, equals(0));
+    });
+
+    test('múltiplos listeners são todos notificados', () async {
+      final received = <String?>[];
+      void l1(String? t) => received.add('l1:$t');
+      void l2(String? t) => received.add('l2:$t');
+      BaseApi.addTokenListener(l1);
+      BaseApi.addTokenListener(l2);
+      addTearDown(() {
+        BaseApi.removeTokenListener(l1);
+        BaseApi.removeTokenListener(l2);
+      });
+
+      await BaseApi.setToken('multi');
+      expect(received, containsAll(['l1:multi', 'l2:multi']));
     });
   });
 }

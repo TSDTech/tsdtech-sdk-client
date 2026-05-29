@@ -11,8 +11,6 @@ import 'package:tsdtech_client_sdk/src/client/tsdtech-client/tsdtech_client.dart
 import 'package:tsdtech_client_sdk/src/dto/gateway/gateway_payment_status.dart';
 import 'package:tsdtech_client_sdk/src/services/checkout_orchestrator.dart';
 import 'package:tsdtech_client_sdk/src/services/gateway-services/gateway_service.dart';
-import 'package:tsdtech_client_sdk/src/utils/card-utils/card_encryptor.dart'
-    hide CardPaymentData;
 
 import '../../helpers/mock_dio.dart';
 
@@ -308,7 +306,7 @@ void main() {
   group('TsdtechClient', () {
     test('initialize cria a instância corretamente com os serviços', () {
       // Usamos a nova sintaxe do Singleton que refatoramos
-      TsdtechClient.initialize(gatewayBaseUrl: 'http://gateway.local');
+      TsdtechClient.initialize(baseUrl: 'http://api.local', gatewayBaseUrl: 'http://gateway.local');
       final client = TsdtechClient.instance;
 
       expect(client.orchestrator, isNotNull);

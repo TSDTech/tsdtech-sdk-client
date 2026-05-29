@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tsdtech_client_sdk/tsdtech_sdk_client.dart';
+import 'package:tsdtech_client_sdk/tsdtech_sdk_ui.dart';
 
 import 'pix_display_defaults.dart';
 import 'pix_display_copy_field.dart';

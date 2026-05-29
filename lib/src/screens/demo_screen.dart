@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:tsdtech_client_sdk/src/ui/checkout/checkout.dart';
 import 'package:tsdtech_client_sdk/src/ui/components/demo/demo_components.dart';
+import 'package:tsdtech_client_sdk/src/ui/config/tsdtech_ui_config.dart';
+import 'package:tsdtech_client_sdk/src/ui/theme/theme.dart';
 import 'package:tsdtech_client_sdk/src/utils/mocks/mock_item_generator.dart';
 import 'package:tsdtech_client_sdk/tsdtech_sdk_client.dart';
+import 'package:tsdtech_client_sdk/tsdtech_sdk_ui.dart';
 
 class DemoScreen extends StatefulWidget {
   const DemoScreen({super.key});
@@ -220,11 +224,8 @@ class _DemoScreenState extends State<DemoScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           CheckoutWidget(
-            // store: _checkoutStore,
             items: _demoItems,
             administratorId: _administratorId,
-            
-            // A publicKey foi removida, pois o orquestrador cuida disso!
             onStatusChange: (s) => setState(() => _checkoutStatus = s),
             onSuccess: (result) =>
                 _showMessage('Pagamento finalizado: ${result.transactionId}'),

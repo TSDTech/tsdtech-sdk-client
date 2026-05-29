@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:tsdtech_client_sdk/tsdtech_sdk_client.dart';
+import 'package:tsdtech_client_sdk/tsdtech_sdk_ui.dart';
 
 class PixQrSection extends StatelessWidget {
   const PixQrSection({

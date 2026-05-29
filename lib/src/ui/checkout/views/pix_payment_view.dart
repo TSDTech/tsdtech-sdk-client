@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tsdtech_client_sdk/tsdtech_sdk_client.dart';
+import 'package:tsdtech_client_sdk/tsdtech_sdk_ui.dart';
 
 class PixPaymentView extends StatelessWidget {
   final String? qrCode;

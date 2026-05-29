@@ -1,4 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:tsdtech_client_sdk/src/ui/config/tsdtech_ui_config.dart';
+import 'package:tsdtech_client_sdk/src/ui/theme/theme.dart';
 // import 'package:tsdtech_client_sdk/main.dart' as example;
 import 'package:tsdtech_client_sdk/tsdtech_sdk_client.dart';
 

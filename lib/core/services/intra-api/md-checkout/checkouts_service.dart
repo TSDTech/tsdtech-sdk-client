@@ -193,9 +193,9 @@ class CheckoutsService extends IntraApi {
     }
   }
 
-  /// Retrieves the status of a PIX payment by its [paymentId].
+  /// Retrieves the status of a PIX payment by its [depositRequestId].
   ///
-  /// - [paymentId]: The unique identifier of the payment
+  /// - [depositRequestId]: The unique identifier of the payment
   /// - Returns: [ValueResult] containing the status string (e.g., 'pending', 'completed')
   ///
   /// ## Example
@@ -205,18 +205,6 @@ class CheckoutsService extends IntraApi {
   ///   print('PIX Status: ${status.value}');
   /// }
   /// ```
-  // Future<ValueResult<String>> getPixStatus(String paymentId) async {
-  //   try {
-  //     final path = '/checkouts/client/pix/status/$paymentId';
-  //     final response = await get(path);
-  //     final data = response.data as Map<String, dynamic>;
-  //     final status = data['status'] as String? ?? '';
-  //     return ValueResult.success(status);
-  //   } catch (e) {
-  //     return ValueResult.fromError(e);
-  //   }
-  // }
-
   Future<ValueResult<String>> getPixStatus(String depositRequestId) async {
     try {
       final path = '$depositRequestPath/status-pix/$depositRequestId';

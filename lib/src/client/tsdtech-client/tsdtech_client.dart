@@ -1,3 +1,5 @@
+import 'package:tsdtech_client_sdk/tsdtech_sdk_ui.dart';
+
 import '../gateway-client/gateway_client.dart';
 import '../../services/gateway-services/gateway_service.dart';
 import '../../services/checkout_orchestrator.dart';
@@ -28,7 +30,21 @@ class TsdtechClient {
   }
 
   // Método para inicializar o SDK (Vamos chamar no main)
-  static void initialize({String? gatewayBaseUrl, String? gatewayApiKey}) {
+  static void initialize({
+    required String baseUrl, // Obrigatório para a API principal
+    String? gatewayBaseUrl, 
+    String? gatewayApiKey,
+    TsdtechThemeData? theme, // Opcional para quem quiser customizar a UI
+    TsdtechLocale locale = TsdtechLocale.pt,
+  }) {
+    TsdtechUiConfig.initialize(
+      baseUrl: baseUrl,
+      gatewayBaseUrl: gatewayBaseUrl,
+      apiKey: gatewayApiKey,
+      theme: theme,
+      locale: locale,
+    );
+    
     _instance ??= TsdtechClient._(
       gatewayBaseUrl: gatewayBaseUrl, 
       gatewayApiKey: gatewayApiKey,

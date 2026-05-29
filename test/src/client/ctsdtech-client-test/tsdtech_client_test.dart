@@ -17,6 +17,7 @@ void main() {
     () {
       // Inicializamos o Singleton
       TsdtechClient.initialize(
+        baseUrl: 'http://api.local',
         gatewayBaseUrl: 'https://gateway.tsdtech.com',
         gatewayApiKey: 'secret_key',
       );

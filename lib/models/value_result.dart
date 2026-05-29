@@ -82,7 +82,7 @@ class ValueResult<T> {
   /// Returns true if this result represents a failure with an error.
   bool get isError => _error != null;
 
-  /// Creates a failure result from a [DioException] or any exception object.
+  /// Creates a failure result from a `DioException` or any exception object.
   ///
   /// Extracts error message from response body following TsdTech API conventions:
   /// - Checks `error.message` or `error.title`

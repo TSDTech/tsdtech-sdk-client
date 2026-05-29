@@ -4,15 +4,15 @@
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Dart CI](https://github.com/tsdtech/tsdtech-client-sdk/actions/workflows/dart.yml/badge.svg)](https://github.com/tsdtech/tsdtech-client-sdk/actions/workflows/dart.yml)
 
-SDK Dart puro para integração com a plataforma TSDTech de pagamentos.
+SDK oficial da TSDTech para integração de pagamentos, serviços e UI nativa em aplicativos Flutter e Dart.
 
 ## ✨ Features
 
-- **Checkout**: Pagamentos via cartão (com criptografia), PIX e boleto
-- **Autenticação**: Login e cadastro de usuários clientes
-- **Vouchers**: Listagem e gerenciamento de vouchers
-- **Serviços**: Listagem de serviços e formulários
-- **Pedidos**: Gestão de pedidos
+- **UI Drop-in Pronta**: `CheckoutWidget` e telas de fluxo completo (`TsdtechUi`) nativos para integrar pagamentos em poucas linhas de código.
+- **Orquestração Inteligente**: `CheckoutOrchestrator` que gerencia o fluxo completo (Pedido -> Gateway -> PIX Polling com WebSocket).
+- **Segurança Nativa (PCI)**: Criptografia de cartão `RSA/ECB/OAEP` nativa via `CardEncryptor`.
+- **Checkout Headless**: APIs diretas para pagamentos via cartão, PIX e boleto se preferir criar sua própria UI.
+- **Ecossistema Completo**: Login e cadastro, catálogo de serviços, listagem de vouchers, memberships e gestão de pedidos.
 
 ## 📦 Instalação
 
@@ -20,24 +20,132 @@ Adicione ao seu `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  tsdtech_client_sdk: ^0.1.0
+  tsdtech_client_sdk: ^1.0.0
 ```
 
-## 🚀 Usage
+## 🚀 Inicialização e Configuração
 
-### Configuração Inicial
+A inicialização foi simplificada. No `main.dart` do seu app, chame a inicialização global antes de rodar a aplicação. O SDK já configura a UI e o motor de pagamentos "por debaixo dos panos".
 
 ```dart
+import 'package:flutter/material.dart';
 import 'package:tsdtech_client_sdk/tsdtech_sdk_client.dart';
 
-// Configure o base URL antes de usar os serviços
-Constants.setBaseUrl('https://api.seu-servidor.com');
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Inicializa o SDK completo (Motor + UI Config)
+  TsdtechClient.initialize(
+    baseUrl: '[https://api.seudominio.com](https://api.seudominio.com)',
+    gatewayBaseUrl: '[https://gateway.seudominio.com](https://gateway.seudominio.com)',
+    gatewayApiKey: 'sua_api_key_publica',
+  );
+
+  runApp(const MyApp());
+}
 ```
 
-### Autenticação
+## 💳 Exemplo de Uso (UI Nativa)
+
+Você pode usar as telas completas e prontas do SDK através da classe `TsdtechUi`.
+
+### Abrindo a Tela de Checkout (Navegação Completa)
 
 ```dart
-// Login de usuário cliente
+import 'package:tsdtech_client_sdk/tsdtech_sdk_ui.dart';
+
+TsdtechUi.pushCheckoutScreen(
+  context: context,
+  items: meusCartItems,
+  administratorId: 'admin_123',
+  onSuccess: () => print('Pagamento aprovado!'),
+  onCancel: () => print('Fluxo cancelado pelo usuário.'),
+);
+```
+
+### Usando o Checkout em BottomSheet ou Dialog
+
+```dart
+// Como Bottom Sheet
+TsdtechUi.showCheckoutSheet(
+  context: context,
+  items: meusCartItems,
+  administratorId: 'admin_123',
+  onSuccess: () {},
+  onCancel: () {},
+);
+
+// Como Dialog
+TsdtechUi.showCheckoutDialog(
+  context: context,
+  items: meusCartItems,
+  administratorId: 'admin_123',
+  onSuccess: () {},
+  onCancel: () {},
+);
+```
+
+### Componente Embutido (Drop-in)
+
+Se quiser colocar o formulário de checkout dentro de uma tela já existente sua:
+
+```dart
+CheckoutWidget(
+  store: CheckoutStore(), // Store nativa do SDK
+  items: meusCartItems,
+  administratorId: 'admin_123',
+  onSuccess: (PaymentResult result) {
+    print('Sucesso: ${result.transactionId}');
+  },
+  onError: (String error) {
+    print('Erro: $error');
+  },
+);
+```
+
+## 💻 Exemplo de Uso (Headless / Via Código)
+
+Se você preferir construir 100% da sua própria interface, o `CheckoutOrchestrator` faz o trabalho de segurança e comunicação com o Gateway:
+
+### Checkout com PIX
+
+```dart
+final orchestrator = TsdtechClient.instance.orchestrator!;
+
+// O orchestrator cuida da conversão do depósito para PIX
+final result = await orchestrator.payWithPix('id_do_deposito_gerado');
+
+if (result.isSuccess) {
+  final pixData = result.value; // DepositPixResponse
+  print('PIX QR Code: ${pixData.textQrCode}');
+}
+```
+
+### Checkout com Cartão de Crédito
+
+O Orquestrador busca a chave pública, criptografa os dados e envia para o gateway de forma transparente:
+
+```dart
+final orchestrator = TsdtechClient.instance.orchestrator!;
+
+final cardData = CardPaymentData(
+  cardHolderName: 'JOAO DA SILVA',
+  cardNumber: '1234567890123456',
+  cardExpiryDate: '202812',
+  securityCode: '123',
+);
+
+// Envia a requisição do carrinho junto com os dados sensíveis do cartão
+final result = await orchestrator.payWithCard(checkoutRequest, cardData);
+
+if (result.isSuccess) {
+  print('Pagamento processado! Status: ${result.value.status}');
+}
+```
+
+### Autenticação de Usuários Cliente
+
+```dart
 final authService = AuthServiceClientUser.instance;
 
 final result = await authService.login(
@@ -48,185 +156,69 @@ final result = await authService.login(
 
 result.fold(
   (loginResponse) {
-    print('Login bem-sucedido: ${loginResponse.token}');
-    // Configure o token para requisições autenticadas
+    // Configure o token global para habilitar requisições privadas na API base
     BaseApi.setToken(loginResponse.token);
   },
-  (error) {
-    print('Erro no login: $error');
-  },
+  (error) => print('Erro no login: $error'),
 );
-
-// Cadastro de novo usuário
-final signupResult = await authService.signup(
-  SignupRequestClient(
-    email: 'novo@exemplo.com',
-    password: 'sua-senha',
-    name: 'Nome do Usuário',
-  ),
-  administratorId: 'admin-123',
-);
-```
-
-### Checkout com PIX
-
-```dart
-import 'package:tsdtech_client_sdk/tsdtech_sdk_client.dart';
-
-final checkoutService = CheckoutsService.instance;
-
-// Criar checkout PIX
-final result = await checkoutService.createCheckout(
-  CheckoutRequest(
-    items: [/* seus itens */],
-    paymentMethodId: 'pix',
-  ),
-);
-
-if (result.isSuccess) {
-  final pixData = result.value.pix;
-  // Exiba o QR code PIX para o usuário
-  print('PIX QR Code: ${pixData?.qrCode}');
-  print('PIX Copia e Cola: ${pixData?.qrCodeText}');
-
-  // Verifique o status do pagamento
-  final statusResult = await checkoutService.getPixStatus(result.value.paymentId);
-  print('Status PIX: ${statusResult.value}');
-}
-```
-
-### Checkout com Cartão (2-step)
-
-```dart
-// 1. Criar checkout para obter depositRequestId
-final checkoutResult = await checkoutService.createCheckout(
-  CheckoutRequest(
-    items: [/* seus itens */],
-    paymentMethodId: 'card',
-  ),
-);
-
-if (checkoutResult.isSuccess) {
-  final depositRequestId = checkoutResult.value.depositRequestId;
-  
-  // 2. Usar GatewayClient para criptografar e enviar dados do cartão
-  // (Implementação depende de GatewayClient - ver task OPA2-470)
-}
-```
-
-### Checkout com Boleto
-
-```dart
-final result = await checkoutService.createCheckout(
-  CheckoutRequest(
-    items: [/* seus itens */],
-    paymentMethodId: 'bill',
-  ),
-);
-
-if (result.isSuccess) {
-  final billData = result.value.bill;
-  print('Linha digitável: ${billData?.digitableLine}');
-  print('URL do boleto: ${billData?.url}');
-}
-```
-
-### Calcular Carrinho
-
-```dart
-final calculateResult = await checkoutService.calculateCart(
-  CalculateRequest(
-    items: [/* seus itens */],
-    paymentMethodId: 'card-id',
-  ),
-);
-
-if (calculateResult.isSuccess) {
-  print('Total: ${calculateResult.value.total}');
-  print('Subtotal: ${calculateResult.value.subtotal}');
-}
-```
-
-### Listar Meios de Pagamento
-
-```dart
-final methodsResult = await checkoutService.getPaymentMethods();
-if (methodsResult.isSuccess) {
-  for (final method in methodsResult.value) {
-    print('${method.id}: ${method.name}');
-  }
-}
 ```
 
 ## 🔧 Estrutura do SDK
 
-```
+```text
 lib/
 ├── core/
-│   ├── constants/
-│   │   └── constants.dart          # Configurações e URLs
-│   └── services/
-│       ├── base.api.dart           # Cliente HTTP base (Dio)
-│       └── intra-api/
-│           ├── intra.api.dart      # Classe base para serviços
-│           ├── md-checkout/        # Serviço de checkout/pagamentos
-│           ├── md-authorizers/     # Auth, Memberships, ApiKeys
-│           ├── md-vouchers/        # Serviço de vouchers
-│           ├── md-services/        # Serviços e tipos de serviço
-│           ├── md-orders/          # Serviço de pedidos
-│           ├── md-clients/         # Serviço de clientes
-│           └── ...                 # Outros módulos
-├── models/
-│   ├── value_result.dart          # Result type
-│   ├── checkouts/                 # Models de checkout
-│   ├── vouchers/                  # Models de voucher
-│   ├── auth/                      # Models de autenticação
-│   └── common/                    # Paginação, etc.
-└── tsdtech_sdk_client.dart        # Barrel file principal
+│   ├── constants/            # Configurações e URLs Base
+│   └── services/             # Cliente HTTP base (Dio) e IntraApi modules
+├── src/
+│   ├── client/               # Instâncias do TsdtechClient e GatewayClient
+│   ├── crypto/               # Módulo de Criptografia RSA (CardEncryptor)
+│   ├── services/             # CheckoutOrchestrator
+│   └── ui/                   # Componentes Visuais, MobX Stores, e Theme Configs
+├── models/                   # DTOs padronizados (Vouchers, Services, Orders)
+├── tsdtech_sdk_client.dart   # Barrel file principal (Lógica)
+└── tsdtech_sdk_ui.dart       # Barrel file de Interface (Widgets)
 ```
 
 ## 📚 API Reference
 
-### Services Principais
-
-| Service | Descrição | Métodos Principais |
+| Módulo/Serviço | Descrição | Principais Métodos |
 |---------|-----------|-------------------|
-| `CheckoutsService` | Pagamentos | `createCheckout()`, `calculateCart()`, `getPaymentMethods()`, `getPixStatus()` |
-| `AuthServiceClientUser` | Autenticação | `login()`, `signup()` |
-| `VouchersService` | Vouchers | `getVouchersClient()`, `getVoucherById()` |
-| `ServicesService` | Serviços | `getPublicServices()`, `getServiceFormModel()`, `submitServiceForm()` |
-| `OrdersService` | Pedidos | `getOrders()`, `getOrderById()` |
+| `CheckoutOrchestrator` | Pagamentos seguros | `payWithCard()`, `payWithPix()`, `payWithBill()` |
+| `CheckoutsService` | Gestão de depósitos | `createCheckout()`, `calculateCart()`, `getPixStatus()` |
+| `AuthServiceClientUser`| Autenticação | `login()`, `signup()` |
+| `VouchersService` | Gestão de Vouchers | `getVouchersClient()` |
+| `ServicesService` | Catálogo de Serviços | `getPublicServices()`, `submitServiceForm()` |
+| `OrdersService` | Histórico de Pedidos | `getAllOrders()` |
+| `ProviderRequestsService` | Gestão de provedores | `getProviderRequestsClient()` |
 
-### Token Management
+### Gerenciamento de Token e Erros
 
 ```dart
-// Definir token para requisições autenticadas
+// Definir token JWT após o login
 BaseApi.setToken('seu-jwt-token');
 
-// Remover token
+// Remover token (Logout)
 BaseApi.resetToken();
 
-// Habilitar modo debug (logs)
+// Habilitar modo debug (logs do Dio)
 BaseApi.setDebugMode(true);
 ```
 
-### ValueResult
+### Tratamento de Retornos (ValueResult)
 
-Todas as operações do SDK retornam `ValueResult<T>`:
+O SDK não usa `throw` para regras de negócio. Todas as requisições devolvem um `ValueResult<T>` seguro e tipado:
 
 ```dart
-final result = await service.someOperation();
+final result = await SubaccountService.instance.patchClient(name: 'Novo Nome');
 
-````watch command
-dart run build_runner watch --delete-conflicting-outputs
-
-// Usando fold
+// Usando fold funcional
 result.fold(
-  (value) => print('Sucesso: $value'),
-  (error) => print('Erro: $error'),
+  (client) => print('Sucesso: ${client.firstName}'),
+  (error) => print('Erro da API: $error'), // Já extrai a mensagem limpa do JSON
 );
 
-// Usando isSuccess/isFailure
+// Ou checagem imperativa
 if (result.isSuccess) {
   print(result.value);
 } else {
@@ -236,9 +228,9 @@ if (result.isSuccess) {
 
 ## ⚠️ Notas Importantes
 
-- **SDK Dart Puro**: Este SDK não depende do Flutter e pode ser usado em qualquer projeto Dart
-- **Gerenciamento de Token**: O SDK não armazena tokens automaticamente. Use `BaseApi.setToken()` após login
-- **Debug Mode**: Use `BaseApi.setDebugMode(true)` para habilitar logs de debug
+- **Módulos Híbridos**: As services e a API (`core/` e `models/`) são isoladas e podem ser usadas em Dart Puro. A pasta `src/ui/` contém os componentes dependentes do Flutter.
+- **Gerenciamento de Sessão**: O SDK não persiste tokens localmente (SharedPreferences) de forma automática para o `BaseApi`. É responsabilidade do aplicativo chamador gerenciar a sessão e invocar `BaseApi.setToken()`.
+- **Criptografia**: O envio de pagamentos por cartão nunca trafega dados sensíveis abertos. O `CardEncryptor` utiliza a chave pública do Gateway para proteger a transação.
 
 ## 📄 License
 

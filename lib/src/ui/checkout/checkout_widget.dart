@@ -8,6 +8,7 @@ import 'package:tsdtech_client_sdk/src/ui/components/demo/demo_components.dart';
 import 'package:tsdtech_client_sdk/tsdtech_sdk_client.dart';
 // import 'package:tsdtech_client_sdk/models/checkouts/checkout_request.model.dart' as checkout_request;
 import 'package:tsdtech_client_sdk/models/services/service.model.dart';
+import 'package:tsdtech_client_sdk/tsdtech_sdk_ui.dart';
 
 class CheckoutWidgetController {
   CheckoutWidgetController()

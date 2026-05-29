@@ -6,8 +6,8 @@ import '../../client/gateway-client/gateway_client.dart';
 import '../../dto/gateway/public_key_response.dart';
 import '../../dto/gateway/card_payment_request.dart';
 import '../../dto/gateway/payment_status_response.dart';
-// import '../../utils/card-utils/card_encryptor.dart';
 
+/// Serviço responsável por orquestrar chamadas de pagamento com o Gateway.
 class GatewayService {
   final GatewayClient _client;
 

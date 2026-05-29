@@ -4,9 +4,9 @@ import 'package:pointycastle/asymmetric/api.dart';
 import '../../../models/checkouts/checkout_request.model.dart';
 
 class CardEncryptor {
-  // Criptografa os dados do cartão usando chave pública RSA.
-  // Utiliza o padrão exigido para PCI: RSA/ECB/OAEPWithSHA-256AndMGF1Padding.
-  // Retorna o ciphertext em Base64.
+  /// Criptografa os dados do cartão usando chave pública RSA.
+  /// Utiliza o padrão exigido para PCI: RSA/ECB/OAEPWithSHA-256AndMGF1Padding.
+  /// Retorna o ciphertext em Base64.
   static String encrypt(String pemPublicKey, CardPaymentData cardData) {
     final normalizedPem = pemPublicKey.trim();
     if (normalizedPem.isEmpty) {

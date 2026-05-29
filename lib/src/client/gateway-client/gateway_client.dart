@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 
+/// Cliente HTTP base para comunicação direta com o Gateway de Pagamentos.
 class GatewayClient {
   final Dio _dio;
 

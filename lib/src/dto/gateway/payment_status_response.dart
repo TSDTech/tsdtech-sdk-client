@@ -3,6 +3,7 @@ import 'gateway_payment_status.dart';
 
 part 'payment_status_response.g.dart';
 
+/// DTO contendo o status final do processamento no Gateway.
 @JsonSerializable()
 class PaymentStatusResponse {
   final GatewayPaymentStatus status;

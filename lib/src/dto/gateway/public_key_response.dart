@@ -2,6 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'public_key_response.g.dart';
 
+/// DTO que representa a resposta da chave pública RSA do Gateway.
 @JsonSerializable()
 class PublicKeyResponse {
   final String pemPublicKey;

@@ -105,7 +105,7 @@ class CheckoutOrchestrator {
   /// Convenience method for bill (boleto) payments (one-step flow).
   ///
   /// Delegates directly to [CheckoutsService.createCheckout]. The gateway is
-  /// not involved — the response will contain a [`CheckoutResponse.bill`] payload.
+  /// not involved — the response will contain a `CheckoutResponse.bill` payload.
   Future<ValueResult<CheckoutResponse>> payWithBill(
     CheckoutRequest request,
   ) async {

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:intl/intl.dart';
@@ -95,7 +94,6 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
   @override
   Widget build(BuildContext context) {
     final effectiveStore = widget.store ?? _internalStore;
-    final theme = TsdtechUiConfig.instance.theme;
     
     // Formatador oficial pra injetar no OrderSummaryCard
     final currencyFormat = NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$');

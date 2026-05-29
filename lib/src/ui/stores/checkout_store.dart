@@ -369,8 +369,8 @@ abstract class CheckoutStoreBase with Store {
 
       // 🔥 O PULO DO GATO: Se o tempo restante for menor que o backoff, 
       // o app espera apenas o tempo exato que falta para o PIX expirar!
-      int actualWaitTime = (remainingSeconds < backoffWaitTime) ? remainingSeconds : backoffWaitTime;
-
+      final actualWaitTime = (remainingSeconds < backoffWaitTime) ? remainingSeconds : backoffWaitTime;
+  
       // Aguarda o intervalo exato calculado
       await Future.delayed(Duration(seconds: actualWaitTime));
 

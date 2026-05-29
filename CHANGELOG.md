@@ -7,8 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.2.2] - 2025-05-29
 
-- Melhorado `TsdtechClient` para o mesmo inicilizar configurações da UI sem necessidade do usuário chamar
-- Arrumado comentários importantes para geração dos docs
+- Alterado `TsdtechClient` para o mesmo inicializar configurações da UI sem necessidade do usuário
+- Alterado comentários importantes para geração dos docs
 
 ## [0.2.1] - 2025-05-27
 

@@ -49,6 +49,19 @@ void main() {
 
 Você pode usar as telas completas e prontas do SDK através da classe `TsdtechUi`.
 
+### O SDK oferece um componente Drop-in chamado `CheckoutWidget`. Você pode embuti-lo em qualquer tela do seu app para processar pagamentos instantaneamente:
+
+```dart
+CheckoutWidget(
+  depositRequestId: 'id_do_pedido_gerado',
+  onSuccess: (PaymentResult result) {
+    print('Sucesso! Transação ID: ${result.transactionId}');
+  },
+  onError: (String message) {
+    print('Ops, deu erro: $message');
+  },
+);
+
 ### Abrindo a Tela de Checkout (Navegação Completa)
 
 ```dart

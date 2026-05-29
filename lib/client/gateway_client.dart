@@ -1,0 +1,1 @@
+export '../src/client/gateway-client/gateway_client.dart' show GatewayClient;

@@ -148,13 +148,14 @@ void main() {
       });
       gatewayClient.dio.interceptors.add(
         MockGatewayInterceptor((options, handler) {
-          if (options.path == '/public-keys')
+          if (options.path == '/public-keys') {
             handler.reject(
               DioException(
                 requestOptions: options,
                 type: DioExceptionType.connectionTimeout,
               ),
             );
+          }
         }),
       );
       final result = await orchestrator.payWithCard(checkoutRequest, cardData);

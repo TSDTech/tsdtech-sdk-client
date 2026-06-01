@@ -9,7 +9,6 @@ import 'package:tsdtech_client_sdk/models/checkouts/checkout_request.model.dart'
 import 'package:tsdtech_client_sdk/src/client/gateway-client/gateway_client.dart';
 import 'package:tsdtech_client_sdk/src/client/tsdtech-client/tsdtech_client.dart';
 import 'package:tsdtech_client_sdk/src/dto/gateway/gateway_payment_status.dart';
-import 'package:tsdtech_client_sdk/src/models/checkout/deposit_pix_response.model.dart';
 import 'package:tsdtech_client_sdk/src/services/checkout_orchestrator.dart';
 import 'package:tsdtech_client_sdk/src/services/gateway-services/gateway_service.dart';
 

@@ -44,6 +44,7 @@ void main() {
       await tester.pumpWidget(
         buildApp(
           () => TsdtechUi.showCheckoutSheet<void>(
+            depositRequestId: 'acaa27a1-ade2-45ea-a8b0-3f619ba5ae8f',
             context: tester.element(find.text('x')),
             items: [],
             administratorId: 'a',
@@ -62,6 +63,7 @@ void main() {
       await tester.pumpWidget(
         buildApp(
           () => TsdtechUi.showCheckoutDialog<void>(
+            depositRequestId: 'acaa27a1-ade2-45ea-a8b0-3f619ba5ae8f',
             context: tester.element(find.text('x')),
             items: [],
             administratorId: 'a',
@@ -80,6 +82,7 @@ void main() {
       await tester.pumpWidget(
         buildApp(
           () => TsdtechUi.pushCheckoutScreen(
+            depositRequestId: 'acaa27a1-ade2-45ea-a8b0-3f619ba5ae8f',
             context: tester.element(find.text('x')),
             items: [],
             administratorId: 'a',

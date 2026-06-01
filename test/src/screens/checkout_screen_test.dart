@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tsdtech_client_sdk/core/local_storage/shared_prefs_helper.dart';
-import 'package:tsdtech_client_sdk/core/services/base.api.dart';
 import 'package:tsdtech_client_sdk/tsdtech_sdk_client.dart';
 import 'package:tsdtech_client_sdk/tsdtech_sdk_ui.dart';
 import '../../helpers/mock_dio.dart';

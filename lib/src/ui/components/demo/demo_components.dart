@@ -140,9 +140,9 @@ class StatusBanner extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: map.$2.withOpacity(0.12),
+        color: map.$2.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(theme.borderRadius),
-        border: Border.all(color: map.$2.withOpacity(0.32)),
+        border: Border.all(color: map.$2.withValues(alpha: 0.32)),
       ),
       child: Row(
         children: [
@@ -210,7 +210,7 @@ class HeroMetric extends StatelessWidget {
       width: 150,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.14),
+        color: Colors.white.withValues(alpha: 0.14),
         borderRadius: BorderRadius.circular(18),
       ),
       child: Column(
@@ -219,7 +219,7 @@ class HeroMetric extends StatelessWidget {
           Text(
             label,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: theme.textOnPrimaryColor.withOpacity(0.8),
+              color: theme.textOnPrimaryColor.withValues(alpha: 0.8),
             ),
           ),
           const SizedBox(height: 8),
@@ -289,7 +289,7 @@ class ColorSwatchCard extends StatelessWidget {
           Text(label, style: Theme.of(context).textTheme.titleSmall),
           const SizedBox(height: 4),
           Text(
-            '#${color.value.toRadixString(16).padLeft(8, '0').toUpperCase()}',
+            '#${color.toARGB32().toRadixString(16).padLeft(8, '0').toUpperCase()}',
             style: Theme.of(context).textTheme.bodySmall,
           ),
         ],

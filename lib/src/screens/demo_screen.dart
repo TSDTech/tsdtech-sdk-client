@@ -17,13 +17,6 @@ class _DemoScreenState extends State<DemoScreen> {
   // STORES OFICIAIS DO SDK (Nenhuma store mockada)
   // ==========================================
   final CheckoutStore _checkoutStore = CheckoutStore();
-  final PaymentStore _paymentStore = PaymentStore();
-  final CardFormStore _cardFormStore = CardFormStore();
-
-  // Estado local para a visualização na demo
-  PaymentFormData? _paymentFormResult;
-  CardFormData? _cardPreview;
-  PaymentStatus? _checkoutStatus;
   bool _isDarkTheme = false;
 
   static const _administratorId = 'admin_demo_123';
@@ -165,7 +158,7 @@ class _DemoScreenState extends State<DemoScreen> {
           Text(
             'Este app reúne o CheckoutWidget, a CheckoutScreen, os formulários isolados e a troca de tema em uma única vitrine executável.',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              color: theme.textOnPrimaryColor.withOpacity(0.9),
+              color: theme.textOnPrimaryColor.withValues(alpha: 0.9)
             ),
           ),
           const SizedBox(height: 20),
@@ -200,7 +193,7 @@ class _DemoScreenState extends State<DemoScreen> {
                 style: OutlinedButton.styleFrom(
                   foregroundColor: theme.textOnPrimaryColor,
                   side: BorderSide(
-                    color: theme.textOnPrimaryColor.withOpacity(0.4),
+                    color: theme.textOnPrimaryColor.withValues(alpha: 0.4),
                   ),
                 ),
                 icon: const Icon(Icons.palette_outlined),
@@ -223,7 +216,6 @@ class _DemoScreenState extends State<DemoScreen> {
           CheckoutWidget(
             items: _demoItems,
             administratorId: _administratorId,
-            onStatusChange: (s) => setState(() => _checkoutStatus = s),
             onSuccess: (result) =>
                 _showMessage('Pagamento finalizado: ${result.transactionId}'),
             onError: (message) => _showMessage('Erro: $message'),

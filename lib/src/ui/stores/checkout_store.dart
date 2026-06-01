@@ -414,7 +414,7 @@ abstract class CheckoutStoreBase with Store {
           } catch (_) {}
         }
         
-        pollStatus();
+        await pollStatus();
       }
     }
 

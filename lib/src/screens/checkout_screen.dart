@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-
 import '../../models/cart/cart_item.model.dart';
 import '../services/gateway-services/gateway_service.dart';
 import '../ui/checkout/checkout_widget.dart';
@@ -47,10 +45,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   final CheckoutWidgetController _checkoutController =
       CheckoutWidgetController();
   final CheckoutStore _checkoutStore = CheckoutStore();
-  final NumberFormat _currencyFormat = NumberFormat.currency(
-    locale: 'pt_BR',
-    symbol: 'R\$',
-  );
 
   String _gatewayPublicKey = '';
   bool _isFetchingGatewayPublicKey = false;

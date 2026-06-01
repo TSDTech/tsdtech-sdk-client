@@ -10,6 +10,7 @@ class TsdtechUi {
 
   static Future<T?> showCheckoutSheet<T>({
     required BuildContext context,
+    required String depositRequestId,
     required List<CartItem> items,
     required String administratorId,
     required VoidCallback onSuccess,
@@ -25,6 +26,7 @@ class TsdtechUi {
         return FractionallySizedBox(
           heightFactor: 0.95,
           child: CheckoutScreen(
+            // depositRequestId: depositRequestId,
             items: items,
             administratorId: administratorId,
             onSuccess: onSuccess,
@@ -37,6 +39,7 @@ class TsdtechUi {
 
   static Future<T?> showCheckoutDialog<T>({
     required BuildContext context,
+    required String depositRequestId,
     required List<CartItem> items,
     required String administratorId,
     required VoidCallback onSuccess,
@@ -55,6 +58,7 @@ class TsdtechUi {
             width: size.width > 720 ? 680 : size.width,
             height: size.height * 0.9,
             child: CheckoutScreen(
+              // depositRequestId: depositRequestId,
               items: items,
               administratorId: administratorId,
               onSuccess: onSuccess,
@@ -68,6 +72,7 @@ class TsdtechUi {
 
   static Future<dynamic> pushCheckoutScreen({
     required BuildContext context,
+    required String depositRequestId,
     required List<CartItem> items,
     required String administratorId,
     required VoidCallback onSuccess,
@@ -75,6 +80,7 @@ class TsdtechUi {
   }) {
     return Navigator.of(context).push<void>(
       CheckoutScreen.route(
+        // depositRequestId: depositRequestId,
         items: items,
         administratorId: administratorId,
         onSuccess: onSuccess,

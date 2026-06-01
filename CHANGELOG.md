@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.6] - 2025-06-01
+- Resolvido algumas mensagens de avisos do codigo
+- Removido o uso de withOpacity e alterado para withValues 
+
 ## [0.2.5] - 2025-06-01
 - Implementação do estilo padrão SPA no componente `CheckoutWidget`, além de todos seus componentes filhos
 - Resolvido vários erros menores de compilação e formatação nos arquivos de testes

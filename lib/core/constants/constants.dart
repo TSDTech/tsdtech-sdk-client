@@ -20,7 +20,11 @@ class Constants {
 
   static String getBaseUrl() => backendUrl;
 
-  static String getMsUrl(String msName) => 'https://$stage-$msName-415041877599.southamerica-east1.run.app';
+  static String getMsUrl(String stage, String msName) => switch (stage) {
+    'dev' => 'https://dev-$msName-415041877599.southamerica-east1.run.app',
+    'hml' => 'https://hml-$msName-1041798165885.southamerica-east1.run.app',
+    _ => throw ArgumentError('Invalid stage: $stage'),
+  };
 
   static String get fullDomain {
     if (frontendUrl.isNotEmpty) return Uri.parse(frontendUrl).host;

@@ -45,6 +45,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   final CheckoutWidgetController _checkoutController =
       CheckoutWidgetController();
   final CheckoutStore _checkoutStore = CheckoutStore();
+  // final NumberFormat _currencyFormat = NumberFormat.currency(
+  //   locale: 'pt_BR',
+  //   symbol: 'R\$',
+  // );
 
   String _gatewayPublicKey = '';
   bool _isFetchingGatewayPublicKey = false;

@@ -4,9 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:intl/intl.dart';
 import 'package:tsdtech_client_sdk/src/ui/components/checkout/order_summary_card.dart';
-import 'package:tsdtech_client_sdk/src/ui/components/demo/demo_components.dart';
+import 'package:tsdtech_client_sdk/src/ui/components/checkout/status_banner.dart';
 import 'package:tsdtech_client_sdk/tsdtech_sdk_client.dart';
-// import 'package:tsdtech_client_sdk/models/checkouts/checkout_request.model.dart' as checkout_request;
 import 'package:tsdtech_client_sdk/models/services/service.model.dart';
 import 'package:tsdtech_client_sdk/tsdtech_sdk_ui.dart';
 
@@ -82,10 +81,12 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
     super.initState();
     // A store nasce junto com o Widget e mantém os dados seguros
     _internalStore = CheckoutStore();
-    _internalStore.fetchOrderSummary(widget.depositRequestId!);
+    final requestId = widget.depositRequestId ?? MockBackendSpaService.createOrderAndGetDepositId();
+    _internalStore.fetchOrderSummary(requestId);
   }
 
   @override
+
   void dispose() {
     // 3. Quando o SPA fechar a tela, a gente limpa a memória automaticamente
     _internalStore.dispose();
@@ -181,9 +182,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
       notifyStatus(PaymentStatus.processing);
 
       try {
-        final depositRequestId =
-            widget.depositRequestId ??
-            await MockBackendSpaService.createOrderAndGetDepositId();
+        final depositRequestId = widget.depositRequestId ?? MockBackendSpaService.createOrderAndGetDepositId();
         // final dynamic result;
 
         // final request = checkout_request.CheckoutRequest(
@@ -315,6 +314,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
         final method = effectiveStore.selectedMethod;
 
         return SingleChildScrollView(
+          padding: const EdgeInsets.all(10),
           physics: const BouncingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -336,14 +336,15 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
 
               // Container que envelopa o pagamento
               Container(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).cardColor,
+                  // color: Theme.of(context).cardColor,
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.05),
-                      blurRadius: 10,
+                      color: Colors.grey.withValues(alpha: 0.46),
+                      blurRadius: 7,
                       offset: const Offset(0, 4),
                     ),
                   ],
@@ -398,18 +399,25 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
               const SizedBox(height: 24),
 
               if (widget.showSubmitButton &&
-                  !(method == PaymentMethodType.pix &&
-                      effectiveStore.hasGeneratedPix))
+                  !(method == PaymentMethodType.pix && effectiveStore.hasGeneratedPix))
                 ElevatedButton(
                   onPressed: processPayment,
                   style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF10C484), // Mesmo verde dos preços
                     padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
                   child: Text(
                     method == PaymentMethodType.card
                         ? 'Pagar Agora'
                         : 'Gerar Pagamento',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold, 
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
                   ),
                 ),
               const SizedBox(height: 24),
@@ -423,8 +431,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
 }
 
 class MockBackendSpaService {
-  static Future<String> createOrderAndGetDepositId() async {
-    await Future.delayed(const Duration(seconds: 1));
+  static String createOrderAndGetDepositId() {
     return 'acaa27a1-ade2-45ea-a8b0-3f619ba5ae8f';
   }
 }

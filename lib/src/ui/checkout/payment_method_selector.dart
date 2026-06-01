@@ -20,6 +20,10 @@ class PaymentMethodSelector extends StatelessWidget {
     return Row(
       children: [
         if (showPix) _buildOption(PaymentMethodType.pix, 'PIX', Icons.qr_code),
+        
+        // Adiciona um espaçamento caso os dois botões estejam visíveis
+        if (showPix && showCard) const SizedBox(width: 12),
+        
         //TODO - implementar cartão
         // if (showCard)
         //   _buildOption(PaymentMethodType.card, 'Cartão', Icons.credit_card),
@@ -29,33 +33,43 @@ class PaymentMethodSelector extends StatelessWidget {
 
   Widget _buildOption(PaymentMethodType type, String title, IconData icon) {
     final isSelected = selectedMethod == type;
+    
+    // O mesmo verde utilizado no botão e nos valores da imagem
+    const brandGreen = Color(0xFF10C484);
+
     return Expanded(
       child: GestureDetector(
         onTap: () => onChanged(type),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          margin: const EdgeInsets.symmetric(horizontal: 4),
-          padding: const EdgeInsets.symmetric(vertical: 12),
+          padding: const EdgeInsets.symmetric(vertical: 16),
           decoration: BoxDecoration(
+            // Fundo branco se inativo, e um verde beeem sutil se selecionado
             color: isSelected
-                ? Colors.blue.withValues(alpha: 0.1)
-                : Colors.white,
+                ? brandGreen.withValues(alpha: 0.05)
+                : Colors.white, 
             border: Border.all(
-              color: isSelected ? Colors.blue : Colors.grey.shade300,
-              width: isSelected ? 2 : 1,
+              // Borda verde se selecionado, senão borda cinza clara
+              color: isSelected ? brandGreen : Colors.grey.shade300,
+              width: isSelected ? 2 : 1, 
             ),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(icon, color: isSelected ? Colors.blue : Colors.grey),
+              Icon(
+                icon, 
+                color: isSelected ? brandGreen : Colors.black54,
+                size: 28,
+              ),
               const SizedBox(height: 8),
               Text(
                 title,
                 style: TextStyle(
-                  color: isSelected ? Colors.blue : Colors.black87,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                  color: isSelected ? brandGreen : Colors.black87,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+                  fontSize: 14,
                 ),
               ),
             ],

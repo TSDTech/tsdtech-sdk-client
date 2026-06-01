@@ -16,29 +16,46 @@ class PixPaymentView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const brandGreen = Color(0xFF10C484);
+
     void showMessage(String message) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(message)));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(message)));
     }
 
-    // Validação: Se não tem qrCode, mostra o texto inicial (igualzinho você fez)
+    // 1. Estado Inicial (Antes de gerar o PIX)
     if (qrCode == null || qrCode!.isEmpty) {
-      return const Padding(
-        padding: EdgeInsets.symmetric(vertical: 16),
-        child: Text(
-          'O pagamento será processado via PIX instantâneo. Clique abaixo para gerar o código.',
-          textAlign: TextAlign.center,
+      return Container(
+        margin: const EdgeInsets.symmetric(vertical: 16),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: const Color(0xFFF4F5F7), // Fundo cinza padrão
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: const Row(
+          children: [
+            Icon(Icons.pix_outlined, color: Colors.black54),
+            SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                'O pagamento será processado via PIX instantâneo. Clique abaixo para gerar o código.',
+                style: TextStyle(
+                  color: Colors.black54,
+                  fontSize: 13,
+                  height: 1.4,
+                ),
+              ),
+            ),
+          ],
         ),
       );
     }
 
-    // Se tem qrCode, mostramos usando o estilo e as funções do PixDisplay
+    // 2. Estado com o PIX gerado
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         PixDisplay(
-          // Instanciamos o PixData. Se o copyPasteCode for nulo, fazemos um fallback pro próprio qrCode
           pixData: PixData(
             qrCode: qrCode!,
             copyPasteCode: copyPasteCode ?? qrCode!,
@@ -48,23 +65,39 @@ class PixPaymentView extends StatelessWidget {
               : DateTime.now().add(const Duration(minutes: 25)),
           onCopied: () => showMessage('Código PIX copiado.'),
         ),
+        
+        const SizedBox(height: 24),
 
-        const SizedBox(height: 32),
-
-        // Mantemos o seu indicador de "Aguardando pagamento" no final da tela
-        const Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            CircularProgressIndicator(),
-            SizedBox(height: 16),
-            Text(
-              'Aguardando confirmação do pagamento...',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                color: Colors.grey, // Uma corzinha pra ficar mais elegante
+        // 3. Indicador de "Aguardando pagamento" refatorado
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF4F5F7), // Fundo cinza padrão
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.grey.shade200), // Borda bem sutil
+          ),
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.5,
+                  valueColor: AlwaysStoppedAnimation<Color>(brandGreen), // Spinner na cor da marca
+                ),
               ),
-            ),
-          ],
+              SizedBox(width: 16),
+              Text(
+                'Aguardando confirmação...',
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                  color: Colors.black87,
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );

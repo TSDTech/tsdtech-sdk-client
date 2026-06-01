@@ -126,7 +126,6 @@ class StatusBanner extends StatelessWidget {
       );
     }
 
-
     final map = switch (status!) {
       PaymentStatus.processing => ('Processando', theme.warningColor),
       PaymentStatus.waitingPayment => (

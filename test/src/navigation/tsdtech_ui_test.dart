@@ -17,16 +17,27 @@ void main() {
 
   Widget buildApp(VoidCallback onTap) {
     return MaterialApp(
-      home: Scaffold(body: ElevatedButton(onPressed: onTap, child: const Text('x'))),
+      home: Scaffold(
+        body: ElevatedButton(onPressed: onTap, child: const Text('x')),
+      ),
     );
   }
 
   group('TsdtechUi helpers', () {
-    testWidgets('showCheckoutSheet abre checkout em bottom sheet', (tester) async {
+    testWidgets('showCheckoutSheet abre checkout em bottom sheet', (
+      tester,
+    ) async {
       await tester.pumpWidget(
-        buildApp(() => TsdtechUi.showCheckoutSheet<void>(
-          context: tester.element(find.text('x')), items: [], administratorId: 'a', depositRequestId: '123', onSuccess: (){}, onCancel: (){},
-        )),
+        buildApp(
+          () => TsdtechUi.showCheckoutSheet<void>(
+            context: tester.element(find.text('x')),
+            items: [],
+            administratorId: 'a',
+            depositRequestId: '123',
+            onSuccess: () {},
+            onCancel: () {},
+          ),
+        ),
       );
       await tester.tap(find.text('x'));
       await tester.pump();
@@ -35,9 +46,16 @@ void main() {
 
     testWidgets('showCheckoutDialog abre checkout em dialog', (tester) async {
       await tester.pumpWidget(
-        buildApp(() => TsdtechUi.showCheckoutDialog<void>(
-          context: tester.element(find.text('x')), items: [], administratorId: 'a', depositRequestId: '123', onSuccess: (){}, onCancel: (){},
-        )),
+        buildApp(
+          () => TsdtechUi.showCheckoutDialog<void>(
+            context: tester.element(find.text('x')),
+            items: [],
+            administratorId: 'a',
+            depositRequestId: '123',
+            onSuccess: () {},
+            onCancel: () {},
+          ),
+        ),
       );
       await tester.tap(find.text('x'));
       await tester.pump();
@@ -46,9 +64,16 @@ void main() {
 
     testWidgets('pushCheckoutScreen navega para a tela', (tester) async {
       await tester.pumpWidget(
-        buildApp(() => TsdtechUi.pushCheckoutScreen(
-          context: tester.element(find.text('x')), items: [], administratorId: 'a', depositRequestId: '123', onSuccess: (){}, onCancel: (){},
-        )),
+        buildApp(
+          () => TsdtechUi.pushCheckoutScreen(
+            context: tester.element(find.text('x')),
+            items: [],
+            administratorId: 'a',
+            depositRequestId: '123',
+            onSuccess: () {},
+            onCancel: () {},
+          ),
+        ),
       );
       await tester.tap(find.text('x'));
       await tester.pump();

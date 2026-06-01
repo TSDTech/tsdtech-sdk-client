@@ -16,19 +16,24 @@ void main() {
   });
 
   group('CheckoutWidget UI Tests', () {
-    testWidgets('CA-1 e CA-2: Renderiza corretamente com as opções PIX e Cartão', (tester) async {
-      await tester.pumpWidget(
-        const MaterialApp(
-          home: Scaffold(
-            body: CheckoutWidget(items: [], administratorId: 'a'),
+    testWidgets(
+      'CA-1 e CA-2: Renderiza corretamente com as opções PIX e Cartão',
+      (tester) async {
+        await tester.pumpWidget(
+          const MaterialApp(
+            home: Scaffold(
+              body: CheckoutWidget(items: [], administratorId: 'a'),
+            ),
           ),
-        ),
-      );
-      // Validamos o comportamento inalterado do Widget
-      expect(tester.takeException(), isA<TypeError>());
-    });
+        );
+        // Validamos o comportamento inalterado do Widget
+        expect(tester.takeException(), isA<TypeError>());
+      },
+    );
 
-    testWidgets('CA-2: Troca de abas atualiza a View do componente', (tester) async {
+    testWidgets('CA-2: Troca de abas atualiza a View do componente', (
+      tester,
+    ) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(

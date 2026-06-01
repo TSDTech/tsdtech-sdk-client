@@ -81,7 +81,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
   void initState() {
     super.initState();
     // A store nasce junto com o Widget e mantém os dados seguros
-    _internalStore = CheckoutStore(); 
+    _internalStore = CheckoutStore();
     _internalStore.fetchOrderSummary(widget.depositRequestId!);
   }
 
@@ -95,9 +95,12 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
   @override
   Widget build(BuildContext context) {
     final effectiveStore = widget.store ?? _internalStore;
-    
+
     // Formatador oficial pra injetar no OrderSummaryCard
-    final currencyFormat = NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$');
+    final currencyFormat = NumberFormat.currency(
+      locale: 'pt_BR',
+      symbol: 'R\$',
+    );
 
     void notifyStatus(PaymentStatus status) {
       setState(() => _currentStatus = status);
@@ -170,7 +173,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
     Future<void> processPayment() async {
       if (effectiveStore.isCardSelected) {
         if (!effectiveStore.validateCardForm()) return;
-      } 
+      }
 
       effectiveStore.setLoading(true);
       syncControllerState(processPayment);
@@ -178,7 +181,9 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
       notifyStatus(PaymentStatus.processing);
 
       try {
-        final depositRequestId = widget.depositRequestId ?? await MockBackendSpaService.createOrderAndGetDepositId();
+        final depositRequestId =
+            widget.depositRequestId ??
+            await MockBackendSpaService.createOrderAndGetDepositId();
         // final dynamic result;
 
         // final request = checkout_request.CheckoutRequest(
@@ -208,7 +213,8 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
               effectiveStore.paymentId!,
               onSuccess: () {
                 handleSuccess(
-                  effectiveStore.paymentId!, // Aqui pode ser o transactionId da Store
+                  effectiveStore
+                      .paymentId!, // Aqui pode ser o transactionId da Store
                   processPayment,
                   depositRequestId: depositRequestId,
                   pixQrCode: effectiveStore.pixQrCode,
@@ -240,15 +246,16 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
     return Observer(
       builder: (_) {
         syncControllerState(processPayment);
-        
-        // 1. Tratamento de Loading 
+
+        // 1. Tratamento de Loading
         if (effectiveStore.isLoading) {
-          return widget.loadingWidget ?? const Center(
-            child: Padding(
-              padding: EdgeInsets.all(32.0),
-              child: CircularProgressIndicator(),
-            )
-          );
+          return widget.loadingWidget ??
+              const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(32.0),
+                  child: CircularProgressIndicator(),
+                ),
+              );
         }
 
         // 2. Tela de Sucesso Amigável (Fim do fluxo)
@@ -261,9 +268,19 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(Icons.check_circle_outline, color: Colors.green, size: 72),
+                      const Icon(
+                        Icons.check_circle_outline,
+                        color: Colors.green,
+                        size: 72,
+                      ),
                       const SizedBox(height: 16),
-                      const Text('Pagamento realizado com sucesso!', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      const Text(
+                        'Pagamento realizado com sucesso!',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                       // const SizedBox(height: 8),
                       // Text('Pedido: ${widget.depositRequestId}', style: Theme.of(context).textTheme.bodyMedium),
                       const SizedBox(height: 24),
@@ -278,17 +295,17 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                 ),
               ),
             ),
-            message:  'Pagamento realizado com sucesso!',
+            message: 'Pagamento realizado com sucesso!',
           );
-          
         }
 
         // 3. Tela de Erro Amigável (Fim do fluxo ruim)
         if (_currentStatus == PaymentStatus.failed || effectiveStore.hasError) {
-           if (effectiveStore.hasError) {
+          if (effectiveStore.hasError) {
             return CheckoutErrorState(
               message: effectiveStore.errorMessage!,
-              onRetry: () => Navigator.popUntil(context, (route) => route.isFirst),
+              onRetry: () =>
+                  Navigator.popUntil(context, (route) => route.isFirst),
               // onRetry: () => { effectiveStore.clearError(), effectiveStore.clearPixData() },
             );
           }
@@ -304,15 +321,19 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
             mainAxisSize: MainAxisSize.min,
             children: [
               OrderSummaryCard(
-                items: _internalStore.items.map((item) => CartItem(
-                  service: Service(name: item.name, price: item.price),
-                  quantity: item.quantity,
-                )).toList(),
-                totalValue: _internalStore.amount, 
+                items: _internalStore.items
+                    .map(
+                      (item) => CartItem(
+                        service: Service(name: item.name, price: item.price),
+                        quantity: item.quantity,
+                      ),
+                    )
+                    .toList(),
+                totalValue: _internalStore.amount,
                 currencyFormat: currencyFormat,
               ),
-              const SizedBox(height: 24), 
-              
+              const SizedBox(height: 24),
+
               // Container que envelopa o pagamento
               Container(
                 padding: const EdgeInsets.all(20),
@@ -325,14 +346,17 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                       blurRadius: 10,
                       offset: const Offset(0, 4),
                     ),
-                  ]
+                  ],
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Pagamento', style: Theme.of(context).textTheme.titleLarge),
+                    Text(
+                      'Pagamento',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
                     const SizedBox(height: 16),
-                    
+
                     PaymentMethodSelector(
                       selectedMethod: method,
                       onChanged: (newMethod) {
@@ -343,13 +367,12 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                       showCard: widget.showCard,
                     ),
                     const SizedBox(height: 24),
-                    
+
                     switch (method) {
                       PaymentMethodType.pix => PixPaymentView(
                         qrCode: effectiveStore.pixQrCode,
                         copyPasteCode: effectiveStore.pixCopyPasteCode,
                         expiresAt: effectiveStore.pixExpirationDate,
-
                       ),
                       PaymentMethodType.card => CardPaymentView(
                         formKey: effectiveStore.cardFormKey,
@@ -358,10 +381,12 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                         cardNumber: effectiveStore.cardNumber,
                         expiryDate: effectiveStore.expiryDate,
                         securityCode: effectiveStore.securityCode,
-                        onCardHolderChanged: effectiveStore.updateCardHolderName,
+                        onCardHolderChanged:
+                            effectiveStore.updateCardHolderName,
                         onCardNumberChanged: effectiveStore.updateCardNumber,
                         onExpiryChanged: effectiveStore.updateExpiryDate,
-                        onSecurityCodeChanged: effectiveStore.updateSecurityCode,
+                        onSecurityCodeChanged:
+                            effectiveStore.updateSecurityCode,
                         taxId: effectiveStore.taxId,
                         onTaxIdChanged: effectiveStore.updateTaxId,
                       ),
@@ -369,17 +394,21 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                   ],
                 ),
               ),
-              
+
               const SizedBox(height: 24),
-              
-              if (widget.showSubmitButton && !(method == PaymentMethodType.pix && effectiveStore.hasGeneratedPix))
+
+              if (widget.showSubmitButton &&
+                  !(method == PaymentMethodType.pix &&
+                      effectiveStore.hasGeneratedPix))
                 ElevatedButton(
                   onPressed: processPayment,
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
                   child: Text(
-                    method == PaymentMethodType.card ? 'Pagar Agora' : 'Gerar Pagamento',
+                    method == PaymentMethodType.card
+                        ? 'Pagar Agora'
+                        : 'Gerar Pagamento',
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -395,7 +424,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
 
 class MockBackendSpaService {
   static Future<String> createOrderAndGetDepositId() async {
-    await Future.delayed(const Duration(seconds: 1)); 
-    return 'acaa27a1-ade2-45ea-a8b0-3f619ba5ae8f'; 
+    await Future.delayed(const Duration(seconds: 1));
+    return 'acaa27a1-ade2-45ea-a8b0-3f619ba5ae8f';
   }
 }

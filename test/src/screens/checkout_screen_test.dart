@@ -10,8 +10,14 @@ void main() {
   setUpAll(() async {
     SharedPreferences.setMockInitialValues({});
     await SharedPrefsHelper.init();
-    TsdtechUiConfig.initialize(baseUrl: 'https://test.com', gatewayBaseUrl: 'https://test.com');
-    TsdtechClient.initialize(baseUrl: 'https://test.com', gatewayBaseUrl: 'https://test.com');
+    TsdtechUiConfig.initialize(
+      baseUrl: 'https://test.com',
+      gatewayBaseUrl: 'https://test.com',
+    );
+    TsdtechClient.initialize(
+      baseUrl: 'https://test.com',
+      gatewayBaseUrl: 'https://test.com',
+    );
     BaseApi.setDioForTesting(createDioWithAdapter(MockHttpClientAdapter()));
   });
 
@@ -38,7 +44,12 @@ void main() {
             builder: (c) => Scaffold(
               body: ElevatedButton(
                 onPressed: () => Navigator.of(c).push(
-                  CheckoutScreen.route(items: [], administratorId: 'a', onSuccess: () {}, onCancel: () {}),
+                  CheckoutScreen.route(
+                    items: [],
+                    administratorId: 'a',
+                    onSuccess: () {},
+                    onCancel: () {},
+                  ),
                 ),
                 child: const Text('Abrir'),
               ),

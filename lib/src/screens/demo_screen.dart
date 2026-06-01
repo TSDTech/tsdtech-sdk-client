@@ -29,7 +29,7 @@ class _DemoScreenState extends State<DemoScreen> {
     super.initState();
     // Gerando 3 itens aleatórios ao abrir a tela
     _demoItems = MockItemGenerator.generateRandomItems(
-      count: 3, 
+      count: 3,
       administratorId: _administratorId,
     );
   }
@@ -40,9 +40,9 @@ class _DemoScreenState extends State<DemoScreen> {
   );
 
   void _showMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   Future<void> _openCheckoutScreen() async {
@@ -158,7 +158,7 @@ class _DemoScreenState extends State<DemoScreen> {
           Text(
             'Este app reúne o CheckoutWidget, a CheckoutScreen, os formulários isolados e a troca de tema em uma única vitrine executável.',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              color: theme.textOnPrimaryColor.withValues(alpha: 0.9)
+              color: theme.textOnPrimaryColor.withValues(alpha: 0.9),
             ),
           ),
           const SizedBox(height: 20),
@@ -222,7 +222,7 @@ class _DemoScreenState extends State<DemoScreen> {
           ),
           const SizedBox(height: 16),
           // StatusBanner(status: _checkoutStatus),
-        ],  
+        ],
       ),
     );
   }

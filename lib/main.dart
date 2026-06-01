@@ -8,12 +8,12 @@ void main() {
 
   // Inicializa as configs de tema
   DemoThemeConfig.configure(DemoThemePreset.brand);
-  
+
   TsdtechClient.initialize(
     baseUrl: 'https://api.tsdtech.com.br',
     gatewayBaseUrl: 'https://api.seugateway.com.br',
     gatewayApiKey: 'sua-api-key-se-tiver',
   );
-  
+
   runApp(const TsdtechApp());
 }

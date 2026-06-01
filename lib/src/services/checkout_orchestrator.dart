@@ -1,7 +1,8 @@
 import 'package:tsdtech_client_sdk/src/models/checkout/deposit_pix_response.model.dart';
 
 import '../../models/value_result.dart';
-import '../../models/checkouts/checkout_request.model.dart' show CardPaymentData, CheckoutRequest;
+import '../../models/checkouts/checkout_request.model.dart'
+    show CardPaymentData, CheckoutRequest;
 import '../../models/checkouts/checkout_response.model.dart';
 import '../../core/services/intra-api/md-checkout/checkouts_service.dart';
 import '../dto/gateway/payment_status_response.dart';

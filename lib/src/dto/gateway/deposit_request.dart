@@ -8,10 +8,7 @@ class DepositRequest {
   final String depositRequestId;
   final PaymentMethod? paymentMethod;
 
-  DepositRequest({
-    required this.depositRequestId,
-    this.paymentMethod,
-  });
+  DepositRequest({required this.depositRequestId, this.paymentMethod});
 
   factory DepositRequest.fromJson(Map<String, dynamic> json) =>
       _$DepositRequestFromJson(json);

@@ -5,11 +5,11 @@ import 'package:tsdtech_client_sdk/tsdtech_sdk_ui.dart';
 class PixPaymentView extends StatelessWidget {
   final String? qrCode;
   final String? copyPasteCode;
-  final String? expiresAt; 
+  final String? expiresAt;
 
   const PixPaymentView({
-    super.key, 
-    this.qrCode, 
+    super.key,
+    this.qrCode,
     this.copyPasteCode,
     this.expiresAt,
   });
@@ -21,6 +21,7 @@ class PixPaymentView extends StatelessWidget {
         context,
       ).showSnackBar(SnackBar(content: Text(message)));
     }
+
     // Validação: Se não tem qrCode, mostra o texto inicial (igualzinho você fez)
     if (qrCode == null || qrCode!.isEmpty) {
       return const Padding(
@@ -42,12 +43,14 @@ class PixPaymentView extends StatelessWidget {
             qrCode: qrCode!,
             copyPasteCode: copyPasteCode ?? qrCode!,
           ),
-          expiresAt: expiresAt != null ? DateTime.parse(expiresAt!) : DateTime.now().add(const Duration(minutes: 25)),
+          expiresAt: expiresAt != null
+              ? DateTime.parse(expiresAt!)
+              : DateTime.now().add(const Duration(minutes: 25)),
           onCopied: () => showMessage('Código PIX copiado.'),
         ),
-        
+
         const SizedBox(height: 32),
-        
+
         // Mantemos o seu indicador de "Aguardando pagamento" no final da tela
         const Column(
           crossAxisAlignment: CrossAxisAlignment.center,

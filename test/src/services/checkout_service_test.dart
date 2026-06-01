@@ -23,32 +23,45 @@ void main() {
       BaseApi.setDioForTesting(dio);
     });
 
-    test('getPaymentMethods retorna lista de PaymentMethodModel válida', () async {
-      final payload = [
-        {'paymentMethod': 'pix', 'isActive': true},
-        {'paymentMethod': 'card', 'isActive': true, 'installmentNumber': 3},
-      ];
-      adapter.when('GET', '/checkouts/client/methods', payload);
+    test(
+      'getPaymentMethods retorna lista de PaymentMethodModel válida',
+      () async {
+        final payload = [
+          {'paymentMethod': 'pix', 'isActive': true},
+          {'paymentMethod': 'card', 'isActive': true, 'installmentNumber': 3},
+        ];
+        adapter.when('GET', '/checkouts/client/methods', payload);
 
-      final result = await CheckoutsService.instance.getPaymentMethods();
-      expect(result.isSuccess, isTrue);
-      expect(result.value!.length, 2);
-    });
+        final result = await CheckoutsService.instance.getPaymentMethods();
+        expect(result.isSuccess, isTrue);
+        expect(result.value!.length, 2);
+      },
+    );
 
     test('calculateCart retorna CalculateResponse calculado', () async {
       final responseJson = {'totalValue': 123.45, 'cart': []};
       adapter.when('POST', '/checkouts/client/calculate', responseJson);
 
-      final request = CalculateRequest(cart: [CalculateItem(serviceId: 's1', value: 10.0, quantity: 1)]);
+      final request = CalculateRequest(
+        cart: [CalculateItem(serviceId: 's1', value: 10.0, quantity: 1)],
+      );
       final result = await CheckoutsService.instance.calculateCart(request);
       expect(result.isSuccess, isTrue);
     });
 
     test('createCheckout returns CheckoutResponse', () async {
-      final responseJson = {'paymentMethod': 'pix', 'paymentId': 'p1', 'status': 'pending'};
+      final responseJson = {
+        'paymentMethod': 'pix',
+        'paymentId': 'p1',
+        'status': 'pending',
+      };
       adapter.when('POST', '/checkouts/client', responseJson);
 
-      final request = CheckoutRequest(cart: [], paymentMethod: 'pix', totalValue: 10.0);
+      final request = CheckoutRequest(
+        cart: [],
+        paymentMethod: 'pix',
+        totalValue: 10.0,
+      );
       final result = await CheckoutsService.instance.createCheckout(request);
       expect(result.isSuccess, isTrue);
     });
@@ -65,8 +78,20 @@ void main() {
     });
 
     test('API error results in ValueResult.failure', () async {
-      final requestOptions = RequestOptions(path: 'https://example.com/checkouts/client/methods');
-      final ex = DioException(requestOptions: requestOptions, response: Response(requestOptions: requestOptions, data: {'error': {'message': 'api error mock'}}, statusCode: 400), type: DioExceptionType.badResponse);
+      final requestOptions = RequestOptions(
+        path: 'https://example.com/checkouts/client/methods',
+      );
+      final ex = DioException(
+        requestOptions: requestOptions,
+        response: Response(
+          requestOptions: requestOptions,
+          data: {
+            'error': {'message': 'api error mock'},
+          },
+          statusCode: 400,
+        ),
+        type: DioExceptionType.badResponse,
+      );
       adapter.whenThrow('GET', '/checkouts/client/methods', ex);
 
       final result = await CheckoutsService.instance.getPaymentMethods();

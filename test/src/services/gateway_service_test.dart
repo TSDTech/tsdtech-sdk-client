@@ -16,7 +16,8 @@ GQIDAQAB
 -----END PUBLIC KEY-----''';
 
 class MockInterceptor extends Interceptor {
-  final void Function(RequestOptions options, RequestInterceptorHandler handler) onRequestHandler;
+  final void Function(RequestOptions options, RequestInterceptorHandler handler)
+  onRequestHandler;
   MockInterceptor(this.onRequestHandler);
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
@@ -33,63 +34,152 @@ void main() {
     service = GatewayService(client);
   });
 
-  test('fetchPublicKey returns PublicKeyResponse with pemPublicKey and keyId', () async {
-    client.dio.interceptors.add(MockInterceptor((options, handler) {
-      if (options.path == '/public-keys') {
-        handler.resolve(Response(requestOptions: options, statusCode: 200, data: {'keyId': 'key_123', 'pemPublicKey': validMockPemKey}));
-      }
-    }));
-    final result = await service.fetchPublicKey();
-    expect(result.isSuccess, true);
-    expect(result.value?.pemPublicKey, validMockPemKey); // 🔥 Aqui tava o erro!
-  });
+  test(
+    'fetchPublicKey returns PublicKeyResponse with pemPublicKey and keyId',
+    () async {
+      client.dio.interceptors.add(
+        MockInterceptor((options, handler) {
+          if (options.path == '/public-keys') {
+            handler.resolve(
+              Response(
+                requestOptions: options,
+                statusCode: 200,
+                data: {'keyId': 'key_123', 'pemPublicKey': validMockPemKey},
+              ),
+            );
+          }
+        }),
+      );
+      final result = await service.fetchPublicKey();
+      expect(result.isSuccess, true);
+      expect(
+        result.value?.pemPublicKey,
+        validMockPemKey,
+      ); // 🔥 Aqui tava o erro!
+    },
+  );
 
   test('payWithCard returns PaymentStatusResponse approved', () async {
-    client.dio.interceptors.add(MockInterceptor((options, handler) {
-      if (options.path == '/payments/card' && options.method == 'POST') {
-        handler.resolve(Response(requestOptions: options, statusCode: 200, data: {'depositRequestId': 'req_456', 'status': 'approved'}));
-      }
-    }));
-    final result = await service.payWithCard(CardPaymentRequest(depositRequestId: 'req_456', encryptedCard: 'data', keyId: 'key_123'));
+    client.dio.interceptors.add(
+      MockInterceptor((options, handler) {
+        if (options.path == '/payments/card' && options.method == 'POST') {
+          handler.resolve(
+            Response(
+              requestOptions: options,
+              statusCode: 200,
+              data: {'depositRequestId': 'req_456', 'status': 'approved'},
+            ),
+          );
+        }
+      }),
+    );
+    final result = await service.payWithCard(
+      CardPaymentRequest(
+        depositRequestId: 'req_456',
+        encryptedCard: 'data',
+        keyId: 'key_123',
+      ),
+    );
     expect(result.isSuccess, true);
   });
 
   test('getPaymentStatus returns PaymentStatusResponse processing', () async {
-    client.dio.interceptors.add(MockInterceptor((options, handler) {
-      if (options.path == '/payments/status/req_789') {
-        handler.resolve(Response(requestOptions: options, statusCode: 200, data: {'depositRequestId': 'req_789', 'status': 'processing'}));
-      }
-    }));
+    client.dio.interceptors.add(
+      MockInterceptor((options, handler) {
+        if (options.path == '/payments/status/req_789') {
+          handler.resolve(
+            Response(
+              requestOptions: options,
+              statusCode: 200,
+              data: {'depositRequestId': 'req_789', 'status': 'processing'},
+            ),
+          );
+        }
+      }),
+    );
     final result = await service.getPaymentStatus('req_789');
     expect(result.isSuccess, true);
   });
 
-  test('payWithEncryptedCard executes the complete flow: encrypt + pay', () async {
-    client.dio.interceptors.add(MockInterceptor((options, handler) {
-      if (options.path == '/payments/card' && options.method == 'POST') {
-        handler.resolve(Response(requestOptions: options, statusCode: 200, data: {'depositRequestId': 'req_abc', 'status': 'approved'}));
-      }
-    }));
-    final cardData = CardPaymentData(cardNumber: '1111222233334444', cardHolderName: 'TEST USER', cardExpiryDate: '12/30', securityCode: '123');
-    final result = await service.payWithEncryptedCard('req_abc', cardData, validMockPemKey, 'fake_key');
-    expect(result.isSuccess, true);
-  });
+  test(
+    'payWithEncryptedCard executes the complete flow: encrypt + pay',
+    () async {
+      client.dio.interceptors.add(
+        MockInterceptor((options, handler) {
+          if (options.path == '/payments/card' && options.method == 'POST') {
+            handler.resolve(
+              Response(
+                requestOptions: options,
+                statusCode: 200,
+                data: {'depositRequestId': 'req_abc', 'status': 'approved'},
+              ),
+            );
+          }
+        }),
+      );
+      final cardData = CardPaymentData(
+        cardNumber: '1111222233334444',
+        cardHolderName: 'TEST USER',
+        cardExpiryDate: '12/30',
+        securityCode: '123',
+      );
+      final result = await service.payWithEncryptedCard(
+        'req_abc',
+        cardData,
+        validMockPemKey,
+        'fake_key',
+      );
+      expect(result.isSuccess, true);
+    },
+  );
 
-  test('returns ValueResult.failure with message from gateway on error', () async {
-    client.dio.interceptors.add(MockInterceptor((options, handler) {
-      if (options.path == '/payments/card') {
-        handler.reject(DioException(requestOptions: options, type: DioExceptionType.badResponse, response: Response(requestOptions: options, statusCode: 422, data: {'message': 'Cartão expirado'})));
-      }
-    }));
-    final result = await service.payWithCard(CardPaymentRequest(depositRequestId: 'req_err', encryptedCard: 'data', keyId: 'key_123'));
-    expect(result.isError, true);
-  });
+  test(
+    'returns ValueResult.failure with message from gateway on error',
+    () async {
+      client.dio.interceptors.add(
+        MockInterceptor((options, handler) {
+          if (options.path == '/payments/card') {
+            handler.reject(
+              DioException(
+                requestOptions: options,
+                type: DioExceptionType.badResponse,
+                response: Response(
+                  requestOptions: options,
+                  statusCode: 422,
+                  data: {'message': 'Cartão expirado'},
+                ),
+              ),
+            );
+          }
+        }),
+      );
+      final result = await service.payWithCard(
+        CardPaymentRequest(
+          depositRequestId: 'req_err',
+          encryptedCard: 'data',
+          keyId: 'key_123',
+        ),
+      );
+      expect(result.isError, true);
+    },
+  );
 
-  test('returns ValueResult.failure with friendly error message on timeout', () async {
-    client.dio.interceptors.add(MockInterceptor((options, handler) {
-      if (options.path == '/public-keys') handler.reject(DioException(requestOptions: options, type: DioExceptionType.connectionTimeout));
-    }));
-    final result = await service.fetchPublicKey();
-    expect(result.isError, true);
-  });
+  test(
+    'returns ValueResult.failure with friendly error message on timeout',
+    () async {
+      client.dio.interceptors.add(
+        MockInterceptor((options, handler) {
+          if (options.path == '/public-keys')
+            handler.reject(
+              DioException(
+                requestOptions: options,
+                type: DioExceptionType.connectionTimeout,
+              ),
+            );
+        }),
+      );
+      final result = await service.fetchPublicKey();
+      expect(result.isError, true);
+    },
+  );
 }

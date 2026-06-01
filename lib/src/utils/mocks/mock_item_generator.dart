@@ -13,7 +13,7 @@ class MockItemGenerator {
     'Hidratação VIP',
     'Pigmentação de barba',
     'Corte infantil',
-    'Luzes no cabelo'
+    'Luzes no cabelo',
   ];
 
   static final _descriptions = [
@@ -26,16 +26,16 @@ class MockItemGenerator {
 
   /// Gera uma lista de [CartItem] aleatórios
   static List<CartItem> generateRandomItems({
-    required int count, 
+    required int count,
     required String administratorId,
   }) {
     return List.generate(count, (index) {
       final name = _serviceNames[_random.nextInt(_serviceNames.length)];
       final description = _descriptions[_random.nextInt(_descriptions.length)];
-      
+
       // Gera um preço aleatório entre 20.0 e 150.0
       final price = 20.0 + _random.nextInt(130) + _random.nextDouble();
-      
+
       // Gera uma quantidade aleatória entre 1 e 3
       final quantity = _random.nextInt(3) + 1;
 

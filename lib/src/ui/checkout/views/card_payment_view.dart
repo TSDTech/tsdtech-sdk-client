@@ -44,7 +44,7 @@ class CardPaymentView extends StatelessWidget {
   // Obs: Se o seu enum não tiver "unknown", troque pelo valor padrão correto.
   dynamic get _currentBrand {
     final clean = cardNumber.replaceAll(RegExp(r'\D'), '');
-    if (clean.isEmpty) return CardBrand.unknown; 
+    if (clean.isEmpty) return CardBrand.unknown;
     if (clean.startsWith('34') || clean.startsWith('37')) return CardBrand.amex;
     if (clean.startsWith('4')) return CardBrand.visa;
     if (RegExp(r'^5[1-5]').hasMatch(clean)) return CardBrand.mastercard;
@@ -68,10 +68,14 @@ class CardPaymentView extends StatelessWidget {
             inputFormatters: [
               CardNumberFormatter(), // O seu formatador original!
             ],
-            suffixIcon: CardBrandIcon(brand: _currentBrand), // O seu ícone dinâmico!
+            suffixIcon: CardBrandIcon(
+              brand: _currentBrand,
+            ), // O seu ícone dinâmico!
             onChanged: onCardNumberChanged,
             textInputAction: TextInputAction.next,
-            validator: (value) => value == null || value.trim().isEmpty ? 'Campo obrigatório' : null,
+            validator: (value) => value == null || value.trim().isEmpty
+                ? 'Campo obrigatório'
+                : null,
           ),
           const SizedBox(height: 16),
 
@@ -88,7 +92,9 @@ class CardPaymentView extends StatelessWidget {
             ],
             onChanged: onCardHolderChanged,
             textInputAction: TextInputAction.next,
-            validator: (value) => value == null || value.trim().isEmpty ? 'Campo obrigatório' : null,
+            validator: (value) => value == null || value.trim().isEmpty
+                ? 'Campo obrigatório'
+                : null,
           ),
           const SizedBox(height: 16),
 
@@ -108,7 +114,9 @@ class CardPaymentView extends StatelessWidget {
                   ],
                   onChanged: onExpiryChanged,
                   textInputAction: TextInputAction.next,
-                  validator: (value) => value == null || value.trim().isEmpty ? 'Campo obrigatório' : null,
+                  validator: (value) => value == null || value.trim().isEmpty
+                      ? 'Campo obrigatório'
+                      : null,
                 ),
               ),
               const SizedBox(width: 16),
@@ -125,10 +133,14 @@ class CardPaymentView extends StatelessWidget {
                     FilteringTextInputFormatter.digitsOnly,
                     LengthLimitingTextInputFormatter(_isAmex ? 4 : 3),
                   ],
-                  suffixIcon: CvvTooltipIcon(isAmex: _isAmex), // O seu tooltip de CVV!
+                  suffixIcon: CvvTooltipIcon(
+                    isAmex: _isAmex,
+                  ), // O seu tooltip de CVV!
                   onChanged: onSecurityCodeChanged,
                   textInputAction: TextInputAction.next, // Mudou para next
-                  validator: (value) => value == null || value.trim().isEmpty ? 'Campo obrigatório' : null,
+                  validator: (value) => value == null || value.trim().isEmpty
+                      ? 'Campo obrigatório'
+                      : null,
                 ),
               ),
             ],
@@ -147,7 +159,9 @@ class CardPaymentView extends StatelessWidget {
             ],
             onChanged: onTaxIdChanged,
             textInputAction: TextInputAction.done, // Agora esse é o último!
-            validator: (value) => value == null || value.trim().isEmpty ? 'Campo obrigatório' : null,
+            validator: (value) => value == null || value.trim().isEmpty
+                ? 'Campo obrigatório'
+                : null,
           ),
         ],
       ),

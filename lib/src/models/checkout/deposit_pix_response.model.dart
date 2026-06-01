@@ -23,6 +23,6 @@ class DepositPixResponse {
 
   factory DepositPixResponse.fromJson(Map<String, dynamic> json) =>
       _$DepositPixResponseFromJson(json);
-      
+
   Map<String, dynamic> toJson() => _$DepositPixResponseToJson(this);
 }

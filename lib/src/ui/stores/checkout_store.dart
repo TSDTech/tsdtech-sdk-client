@@ -8,7 +8,8 @@ import 'package:tsdtech_client_sdk/src/models/checkout/deposit_pix_response.mode
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:tsdtech_client_sdk/models/value_result.dart';
 import 'package:tsdtech_client_sdk/src/client/tsdtech-client/tsdtech_client.dart';
-import 'package:tsdtech_client_sdk/models/checkouts/checkout_request.model.dart' as checkout_request;
+import 'package:tsdtech_client_sdk/models/checkouts/checkout_request.model.dart'
+    as checkout_request;
 
 import '../checkout/payment_types.dart';
 
@@ -23,7 +24,7 @@ abstract class CheckoutStoreBase with Store {
 
   final PaymentMethodType _initialMethod;
   final GlobalKey<FormState> cardFormKey = GlobalKey<FormState>();
-  
+
   // Variáveis para gerenciar o Polling antigo e o novo WebSocket
   Object? _pixPollingToken;
   WebSocketChannel? pixSocketChannel;
@@ -76,7 +77,8 @@ abstract class CheckoutStoreBase with Store {
   double amount = 0;
 
   @observable
-  ObservableList<DepositRequestItemSummary> items = ObservableList<DepositRequestItemSummary>();
+  ObservableList<DepositRequestItemSummary> items =
+      ObservableList<DepositRequestItemSummary>();
 
   @computed
   bool get hasError => errorMessage != null && errorMessage!.isNotEmpty;
@@ -105,7 +107,7 @@ abstract class CheckoutStoreBase with Store {
   void updateSecurityCode(String value) => securityCode = value;
 
   @action
-  void updateTaxId(String value) => taxId = value;  
+  void updateTaxId(String value) => taxId = value;
 
   @action
   void resetCardForm() {
@@ -144,7 +146,12 @@ abstract class CheckoutStoreBase with Store {
   void clearError() => errorMessage = null;
 
   @action
-  void setPixData({String? paymentId, String? qrCode, String? copyPasteCode, String? expirationDate}) {
+  void setPixData({
+    String? paymentId,
+    String? qrCode,
+    String? copyPasteCode,
+    String? expirationDate,
+  }) {
     this.paymentId = paymentId;
     pixQrCode = qrCode;
     pixCopyPasteCode = copyPasteCode;
@@ -206,7 +213,7 @@ abstract class CheckoutStoreBase with Store {
   @action
   Future<ValueResult<dynamic>> processPayment({
     required String depositRequestId,
-    checkout_request.CheckoutRequest?  request,
+    checkout_request.CheckoutRequest? request,
   }) async {
     setLoading(true);
     clearError();
@@ -229,10 +236,9 @@ abstract class CheckoutStoreBase with Store {
         );
 
         result = await orchestrator.payWithCard(request!, cardData);
-
       } else if (isPixSelected) {
         result = await orchestrator.payWithPix(depositRequestId);
-        
+
         if (result.isSuccess) {
           final pixResponse = result.value as DepositPixResponse;
           setPixData(
@@ -260,7 +266,9 @@ abstract class CheckoutStoreBase with Store {
   }
 
   @action
-  Future<ValueResult<DepositRequestSummaryResponse>> fetchOrderSummary(String depositRequestId) async {
+  Future<ValueResult<DepositRequestSummaryResponse>> fetchOrderSummary(
+    String depositRequestId,
+  ) async {
     setLoading(true);
     clearError();
 
@@ -285,14 +293,17 @@ abstract class CheckoutStoreBase with Store {
   // ==========================================
 
   @action
-  void startPixPollingWithBackoff(String paymentId, {required VoidCallback onSuccess}) {
+  void startPixPollingWithBackoff(
+    String paymentId, {
+    required VoidCallback onSuccess,
+  }) {
     cancelPixPolling(); // Garante que não existam dois loops concorrentes rodando
-    
+
     final token = Object();
     _pixPollingToken = token;
 
     // 1. SE NÃO HOUVER DATA DE EXPIRAÇÃO, COLOCA UM TIMEOUT PADRÃO DE SEGURANÇA
-    int calculatedMaxAttempts = 50; 
+    int calculatedMaxAttempts = 50;
 
     if (pixExpirationDate != null) {
       try {
@@ -313,19 +324,18 @@ abstract class CheckoutStoreBase with Store {
         // 2. CALCULA MATEMATICAMENTE QUANTAS TENTATIVAS CABEM NO TEMPO RESTANTE
         int remainingSeconds = totalDurationSeconds;
         int virtualAttempt = 0;
-        
+
         while (remainingSeconds > 0) {
           virtualAttempt++;
           int nextDelay = 5;
           if (virtualAttempt > 5) nextDelay = 10;
           if (virtualAttempt > 15) nextDelay = 15;
-          
+
           remainingSeconds -= nextDelay;
         }
-        
+
         // Adiciona uma pequena margem de segurança de 2 tentativas adicionais
         calculatedMaxAttempts = virtualAttempt + 2;
-        
       } catch (_) {
         calculatedMaxAttempts = 50;
       }
@@ -338,8 +348,8 @@ abstract class CheckoutStoreBase with Store {
       if (!isPixPollingActive(token)) return;
 
       // 3. PEGA OS SEGUNDOS REAIS RESTANTES ANTES DE APLICAR O DELAY
-      int remainingSeconds = 9999; 
-      
+      int remainingSeconds = 9999;
+
       if (pixExpirationDate != null) {
         try {
           final expiryTime = DateTime.parse(pixExpirationDate!);
@@ -363,14 +373,16 @@ abstract class CheckoutStoreBase with Store {
       }
 
       // DETERMINA O INTERVALO ATUAL SEGUINDO O BACKOFF
-      int backoffWaitTime = 5; 
-      if (attempt > 5) backoffWaitTime = 10;  
-      if (attempt > 15) backoffWaitTime = 15; 
+      int backoffWaitTime = 5;
+      if (attempt > 5) backoffWaitTime = 10;
+      if (attempt > 15) backoffWaitTime = 15;
 
-      // 🔥 O PULO DO GATO: Se o tempo restante for menor que o backoff, 
+      // 🔥 O PULO DO GATO: Se o tempo restante for menor que o backoff,
       // o app espera apenas o tempo exato que falta para o PIX expirar!
-      final actualWaitTime = (remainingSeconds < backoffWaitTime) ? remainingSeconds : backoffWaitTime;
-  
+      final actualWaitTime = (remainingSeconds < backoffWaitTime)
+          ? remainingSeconds
+          : backoffWaitTime;
+
       // Aguarda o intervalo exato calculado
       await Future.delayed(Duration(seconds: actualWaitTime));
 
@@ -390,7 +402,9 @@ abstract class CheckoutStoreBase with Store {
             cancelPixPolling();
             onSuccess(); // Sucesso, muda o widget para verde e fecha a conta
             return;
-          } else if (status == 'expired' || status == 'cancelled' || status == 'failed') {
+          } else if (status == 'expired' ||
+              status == 'cancelled' ||
+              status == 'failed') {
             cancelPixPolling();
             setError('Pagamento PIX expirado ou cancelado.');
             return;
@@ -413,7 +427,7 @@ abstract class CheckoutStoreBase with Store {
             }
           } catch (_) {}
         }
-        
+
         pollStatus();
       }
     }
@@ -425,10 +439,10 @@ abstract class CheckoutStoreBase with Store {
   /// Método auxiliar privado para centralizar a limpeza e notificação de cancelamento
   void _encerrarPorTimeout(String paymentId, Object currentToken) {
     if (!isPixPollingActive(currentToken)) return;
-    
+
     cancelPixPolling();
     setError('O tempo limite para o pagamento deste PIX expirou.');
-    
+
     // Dispara de forma assíncrona ("fire and forget") para avisar o seu backend
     // Adicionado tipo genérico explícito <String> exigido pelo linter no catchError
     _checkoutService.notifyPixExpired(paymentId).catchError((error) {
@@ -439,7 +453,8 @@ abstract class CheckoutStoreBase with Store {
 
   @action
   void cancelPixPolling() {
-    _pixPollingToken = null; // Isso quebra o loop automaticamente na próxima checagem
+    _pixPollingToken =
+        null; // Isso quebra o loop automaticamente na próxima checagem
   }
 
   bool isPixPollingActive(Object token) {

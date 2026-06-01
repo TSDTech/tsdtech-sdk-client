@@ -71,7 +71,7 @@ void main() {
     // Pegamos a instância já populada no setUpAll
     gatewayService = GatewayService.instance;
     checkoutService = CheckoutsService();
-    
+
     orchestrator = CheckoutOrchestrator(
       checkoutService: checkoutService,
       gatewayService: gatewayService,
@@ -92,7 +92,18 @@ void main() {
               Response(
                 requestOptions: options,
                 statusCode: 200,
-                data: {'keyId': 'key_abc', 'pemPublicKey': 'pem_value'},
+                data: {
+                  'keyId': 'key_abc',
+                  'pemPublicKey': '''-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtt1U5UFmzDjj7gapJsmm
+bYtbyidVOPtj4WoyMnTaNL4EzwbunYI2oQWcxXR8H/e0f96eVHBa7w1Oq5l/IrcV
+mpljD8AQqubMD9qN3D8m4CO2nENkoBQK7KP3+M1PqekqIRrIxWzGwSJPn0bSfRb/
+E23qCA3Piha+u6ehKFcOs9zkO3tTfwEU3UwxYQCjrbBGDVWe+bOea6ieDjUV/P/J
+ErpDWPDHh5/7bseus0lVJZkvqmoeT4ec98M3vxDpAc1N2ZGQE+5ou+i6gvJl8AMA
+64n4gkOmYCWKXtcXQj4XtI6ZufN8FH/gPtgYglkB0TS9KXEcU+NTwdv5WGADYAZb
+GQIDAQAB
+-----END PUBLIC KEY-----''',
+                },
               ),
             );
           } else if (options.path == '/payments/card') {
@@ -199,7 +210,18 @@ void main() {
                 Response(
                   requestOptions: options,
                   statusCode: 200,
-                  data: {'keyId': 'key_xyz', 'pemPublicKey': 'pem_value'},
+                  data: {
+                    'keyId': 'key_xyz',
+                    'pemPublicKey': '''-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtt1U5UFmzDjj7gapJsmm
+bYtbyidVOPtj4WoyMnTaNL4EzwbunYI2oQWcxXR8H/e0f96eVHBa7w1Oq5l/IrcV
+mpljD8AQqubMD9qN3D8m4CO2nENkoBQK7KP3+M1PqekqIRrIxWzGwSJPn0bSfRb/
+E23qCA3Piha+u6ehKFcOs9zkO3tTfwEU3UwxYQCjrbBGDVWe+bOea6ieDjUV/P/J
+ErpDWPDHh5/7bseus0lVJZkvqmoeT4ec98M3vxDpAc1N2ZGQE+5ou+i6gvJl8AMA
+64n4gkOmYCWKXtcXQj4XtI6ZufN8FH/gPtgYglkB0TS9KXEcU+NTwdv5WGADYAZb
+GQIDAQAB
+-----END PUBLIC KEY-----''',
+                  },
                 ),
               );
             } else if (options.path == '/payments/card') {
@@ -237,7 +259,18 @@ void main() {
               Response(
                 requestOptions: options,
                 statusCode: 200,
-                data: {'keyId': 'key_err', 'pemPublicKey': 'pem_value'},
+                data: {
+                  'keyId': 'key_err',
+                  'pemPublicKey': '''-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtt1U5UFmzDjj7gapJsmm
+bYtbyidVOPtj4WoyMnTaNL4EzwbunYI2oQWcxXR8H/e0f96eVHBa7w1Oq5l/IrcV
+mpljD8AQqubMD9qN3D8m4CO2nENkoBQK7KP3+M1PqekqIRrIxWzGwSJPn0bSfRb/
+E23qCA3Piha+u6ehKFcOs9zkO3tTfwEU3UwxYQCjrbBGDVWe+bOea6ieDjUV/P/J
+ErpDWPDHh5/7bseus0lVJZkvqmoeT4ec98M3vxDpAc1N2ZGQE+5ou+i6gvJl8AMA
+64n4gkOmYCWKXtcXQj4XtI6ZufN8FH/gPtgYglkB0TS9KXEcU+NTwdv5WGADYAZb
+GQIDAQAB
+-----END PUBLIC KEY-----''',
+                },
               ),
             );
           } else if (options.path == '/payments/card') {
@@ -265,11 +298,14 @@ void main() {
 
   group('CheckoutOrchestrator.payWithPix()', () {
     test('retorna CheckoutResponse com pix data', () async {
-      checkoutAdapter.when('POST', '/checkouts/client', {
-        'paymentMethod': 'pix',
-        'paymentId': 'pix_001',
-        'pix': {'qrCode': 'qr_code_value', 'copyPasteCode': '00020126...'},
-      });
+      checkoutAdapter
+          .when('POST', '/deposit-request/public/dep_123/convert-to-pix', {
+            'id': 'pix_001',
+            'paymentMethod': 'pix',
+            'status': 'pending',
+            'textQrCode': '00020126...',
+            'pixPaymentIntentId': 'pix_001',
+          });
 
       const depositRequestId = 'dep_123';
 
@@ -278,6 +314,7 @@ void main() {
       expect(result.isSuccess, true);
       expect(result.value!.paymentMethod, 'pix');
       expect(result.value!.pixPaymentIntentId, 'pix_001');
+      expect(result.value!.id, 'pix_001');
     });
   });
 
@@ -306,7 +343,10 @@ void main() {
   group('TsdtechClient', () {
     test('initialize cria a instância corretamente com os serviços', () {
       // Usamos a nova sintaxe do Singleton que refatoramos
-      TsdtechClient.initialize(baseUrl: 'http://api.local', gatewayBaseUrl: 'http://gateway.local');
+      TsdtechClient.initialize(
+        baseUrl: 'http://api.local',
+        gatewayBaseUrl: 'http://gateway.local',
+      );
       final client = TsdtechClient.instance;
 
       expect(client.orchestrator, isNotNull);

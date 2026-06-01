@@ -15,7 +15,9 @@ class GatewayClient {
     Duration sendTimeout = const Duration(seconds: 30),
   }) : _dio = Dio(
          BaseOptions(
-           baseUrl: gatewayBaseUrl ?? '', // Pode ser setado depois, mas precisa ser inicializado com algo
+           baseUrl:
+               gatewayBaseUrl ??
+               '', // Pode ser setado depois, mas precisa ser inicializado com algo
            connectTimeout: connectTimeout,
            receiveTimeout: receiveTimeout,
            sendTimeout: sendTimeout,

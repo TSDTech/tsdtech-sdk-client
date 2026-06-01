@@ -19,7 +19,9 @@ class GatewayService {
   // 3. Getter público para você chamar 'GatewayService.instance' em qualquer lugar
   static GatewayService get instance {
     if (_instance == null) {
-      throw Exception('GatewayService não foi inicializado! Chame GatewayService.init() primeiro.');
+      throw Exception(
+        'GatewayService não foi inicializado! Chame GatewayService.init() primeiro.',
+      );
     }
     return _instance!;
   }

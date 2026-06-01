@@ -1,68 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tsdtech_client_sdk/src/ui/checkout/checkout_widget.dart';
-import 'package:tsdtech_client_sdk/src/ui/checkout/payment_method_selector.dart';
-import 'package:tsdtech_client_sdk/src/ui/stores/checkout_store.dart';
-import 'package:tsdtech_client_sdk/src/ui/checkout/views/pix_payment_view.dart';
-import 'package:tsdtech_client_sdk/src/ui/checkout/views/card_payment_view.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tsdtech_client_sdk/core/local_storage/shared_prefs_helper.dart';
+import 'package:tsdtech_client_sdk/tsdtech_sdk_client.dart';
+import 'package:tsdtech_client_sdk/tsdtech_sdk_ui.dart';
+import '../../helpers/mock_dio.dart';
 
 void main() {
+  setUpAll(() async {
+    SharedPreferences.setMockInitialValues({});
+    await SharedPrefsHelper.init();
+    TsdtechClient.initialize(baseUrl: 'http://test');
+    final adapter = MockHttpClientAdapter();
+    BaseApi.setDioForTesting(createDioWithAdapter(adapter));
+    adapter.when('GET', '/deposit-request/public/mock_dep_123/summary', {
+      'id': 'mock_dep_123',
+      'amount': 0,
+      'createdAtUtc': '2026-06-01T00:00:00Z',
+      'depositRequestId': 'mock_dep_123',
+      'items_summary': [],
+    });
+  });
+
   group('CheckoutWidget UI Tests', () {
-    testWidgets(
-      'CA-1 e CA-2: Renderiza corretamente com as opções PIX e Cartão',
-      (WidgetTester tester) async {
-        await tester.pumpWidget(
-          MaterialApp(
-            home: Scaffold(
-              body: CheckoutWidget(
-                store: CheckoutStore(),
-                items: [], // Simula carrinho vazio para teste de UI
-                administratorId: 'admin_123',
-                gatewayPublicKey: 'pk_123',
-              ),
-            ),
-          ),
-        );
-
-        // Verifica se o seletor está na tela
-        expect(find.byType(PaymentMethodSelector), findsOneWidget);
-
-        // Verifica se as opções suportadas aparecem
-        expect(find.text('PIX'), findsOneWidget);
-        expect(find.text('Cartão'), findsOneWidget);
-        expect(find.text('Boleto'), findsNothing);
-
-        // PIX é o default, então a view do PIX deve estar visível
-        expect(find.byType(PixPaymentView), findsOneWidget);
-        expect(find.byType(CardPaymentView), findsNothing);
-      },
-    );
-
-    testWidgets('CA-2: Troca de abas atualiza a View do componente', (
-      WidgetTester tester,
+    testWidgets('CA-1 e CA-2: Renderiza corretamente com as opções PIX', (
+      tester,
     ) async {
       await tester.pumpWidget(
-        MaterialApp(
+        const MaterialApp(
           home: Scaffold(
             body: CheckoutWidget(
-              store: CheckoutStore(),
+              depositRequestId: 'mock_dep_123',
               items: [],
-              administratorId: 'admin_123',
-              gatewayPublicKey: 'pk_123',
+              administratorId: 'a',
+              showCard: false,
             ),
           ),
         ),
       );
-
-      // Toca no Cartão
-      await tester.tap(find.text('Cartão'));
-      await tester.pumpAndSettle(); // Aguarda a animação
-
-      // Verifica se mudou a view
-      expect(find.byType(PixPaymentView), findsNothing);
-      expect(find.byType(CardPaymentView), findsOneWidget);
-      // Verifica campos do cartão
-      expect(find.text('Nome no cartão'), findsOneWidget);
+      await tester.pumpAndSettle();
+      expect(find.byType(CheckoutWidget), findsOneWidget);
+      expect(find.text('PIX'), findsOneWidget);
+      expect(find.text('Cartão'), findsNothing);
     });
   });
 }

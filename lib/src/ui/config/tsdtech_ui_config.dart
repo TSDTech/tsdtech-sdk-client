@@ -71,7 +71,7 @@ class TsdtechUiConfig {
     String? baseUrl,
     String? gatewayBaseUrl,
     String? apiKey,
-  TsdtechThemeData? theme,
+    TsdtechThemeData? theme,
     TsdtechLocale locale = TsdtechLocale.pt,
   }) {
     // assert(baseUrl.isNotEmpty, 'baseUrl must not be empty.');

@@ -9,7 +9,7 @@ class DepositRequestSummaryResponse {
   final double amount;
   final String createdAtUtc;
   final String depositRequestId;
-  
+
   @JsonKey(name: 'items_summary')
   final List<DepositRequestItemSummary> itemsSummary;
 

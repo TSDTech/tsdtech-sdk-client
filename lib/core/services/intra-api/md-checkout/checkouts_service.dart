@@ -146,7 +146,7 @@ class CheckoutsService extends IntraApi {
     }
   }
 
-   Future<ValueResult<CheckoutResponse>> createCheckoutDeposit(
+  Future<ValueResult<CheckoutResponse>> createCheckoutDeposit(
     DepositRequest request,
   ) async {
     try {
@@ -178,14 +178,13 @@ class CheckoutsService extends IntraApi {
     String depositRequestId,
   ) async {
     try {
-
       final path = '$depositRequestPath/$depositRequestId/convert-to-pix';
       final response = await post(path);
       final mockData = response.data as Map<String, dynamic>;
 
       // 3. Converte o map pro seu objeto CheckoutResponse exatamente como antes
       final result = DepositPixResponse.fromJson(mockData);
-      
+
       // 4. Retorna o sucesso mockado!
       return ValueResult.success(result);
     } catch (e) {
@@ -217,7 +216,9 @@ class CheckoutsService extends IntraApi {
     }
   }
 
-  Future<ValueResult<DepositRequestSummaryResponse>> getOrderSummary(String depositRequestId) async {
+  Future<ValueResult<DepositRequestSummaryResponse>> getOrderSummary(
+    String depositRequestId,
+  ) async {
     try {
       final path = '$depositRequestPath/$depositRequestId/summary';
       final response = await get(path);

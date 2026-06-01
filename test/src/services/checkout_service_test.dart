@@ -75,7 +75,7 @@ void main() {
     });
 
     test('getPixStatus returns status string', () async {
-      adapter.when('GET', '/checkouts/client/pix/status/p1', {
+      adapter.when('GET', '/deposit-request/public/status-pix/p1', {
         'status': 'completed',
       });
 

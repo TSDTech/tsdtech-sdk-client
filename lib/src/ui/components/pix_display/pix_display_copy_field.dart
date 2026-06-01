@@ -101,8 +101,8 @@ class _VerticalDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 1, 
-      height: 56, 
+      width: 1,
+      height: 56,
       color: Colors.grey.shade200, // Divisória sutil
     );
   }
@@ -134,18 +134,18 @@ class _CopyButton extends StatelessWidget {
                   color: Colors.black26,
                 )
               : copied
-                  ? const Icon(
-                      key: ValueKey('check'),
-                      Icons.check_rounded,
-                      size: 22,
-                      color: brandGreen,
-                    )
-                  : const Icon(
-                      key: ValueKey('copy'),
-                      Icons.copy_rounded,
-                      size: 22,
-                      color: brandGreen, // Botão de copiar com a cor da marca
-                    ),
+              ? const Icon(
+                  key: ValueKey('check'),
+                  Icons.check_rounded,
+                  size: 22,
+                  color: brandGreen,
+                )
+              : const Icon(
+                  key: ValueKey('copy'),
+                  Icons.copy_rounded,
+                  size: 22,
+                  color: brandGreen, // Botão de copiar com a cor da marca
+                ),
         ),
       ),
     );

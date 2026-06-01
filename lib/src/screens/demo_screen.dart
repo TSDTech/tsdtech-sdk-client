@@ -36,7 +36,7 @@ class _DemoScreenState extends State<DemoScreen> {
     super.initState();
     // Gerando 3 itens aleatórios ao abrir a tela
     _demoItems = MockItemGenerator.generateRandomItems(
-      count: 3, 
+      count: 3,
       administratorId: _administratorId,
     );
   }
@@ -47,9 +47,9 @@ class _DemoScreenState extends State<DemoScreen> {
   );
 
   void _showMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   Future<void> _openCheckoutScreen() async {
@@ -230,7 +230,7 @@ class _DemoScreenState extends State<DemoScreen> {
           ),
           const SizedBox(height: 16),
           // StatusBanner(status: _checkoutStatus),
-        ],  
+        ],
       ),
     );
   }

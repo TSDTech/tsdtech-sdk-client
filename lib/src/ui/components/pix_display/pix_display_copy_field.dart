@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../theme/tsdtech_colors.dart';
-import '../../theme/tsdtech_text_styles.dart';
-
 class PixCopyField extends StatelessWidget {
   const PixCopyField({
     super.key,
@@ -19,17 +16,28 @@ class PixCopyField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const brandGreen = Color(0xFF10C484);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('Pix Copia e Cola', style: TsdtechTextStyles.titleSmall),
+        const Text(
+          'Pix Copia e Cola',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: Colors.black87,
+          ),
+        ),
         const SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
-            color: TsdtechColors.surface,
-            borderRadius: BorderRadius.circular(10),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8), // Mantendo os 8px de padrão
             border: Border.all(
-              color: copied ? TsdtechColors.success : TsdtechColors.outline,
+              // Borda verde se copiado, senão cinza clara
+              color: copied ? brandGreen : Colors.grey.shade300,
+              width: 1,
             ),
           ),
           child: Row(
@@ -42,9 +50,10 @@ class PixCopyField extends StatelessWidget {
                   ),
                   child: SelectableText(
                     copyPasteCode,
-                    style: TsdtechTextStyles.bodySmall.copyWith(
-                      color: TsdtechColors.textSecondary,
+                    style: const TextStyle(
+                      color: Colors.black54, // Cinza escuro para boa leitura
                       fontFamily: 'monospace',
+                      fontSize: 13,
                     ),
                     maxLines: 3,
                   ),
@@ -61,19 +70,21 @@ class PixCopyField extends StatelessWidget {
         ),
         if (copied)
           Padding(
-            padding: const EdgeInsets.only(top: 6),
+            padding: const EdgeInsets.only(top: 8),
             child: Row(
-              children: [
-                const Icon(
+              children: const [
+                Icon(
                   Icons.check_circle_outline_rounded,
-                  size: 14,
-                  color: TsdtechColors.success,
+                  size: 16,
+                  color: brandGreen,
                 ),
-                const SizedBox(width: 4),
+                SizedBox(width: 6),
                 Text(
                   'Código copiado!',
-                  style: TsdtechTextStyles.bodySmall.copyWith(
-                    color: TsdtechColors.success,
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: brandGreen,
                   ),
                 ),
               ],
@@ -89,7 +100,11 @@ class _VerticalDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(width: 1, height: 56, color: TsdtechColors.outline);
+    return Container(
+      width: 1, 
+      height: 56, 
+      color: Colors.grey.shade200, // Divisória sutil
+    );
   }
 }
 
@@ -102,9 +117,11 @@ class _CopyButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const brandGreen = Color(0xFF10C484);
+
     return InkWell(
       onTap: onTap,
-      borderRadius: const BorderRadius.horizontal(right: Radius.circular(10)),
+      borderRadius: const BorderRadius.horizontal(right: Radius.circular(8)),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: AnimatedSwitcher(
@@ -113,22 +130,22 @@ class _CopyButton extends StatelessWidget {
               ? const Icon(
                   key: ValueKey('disabled'),
                   Icons.block_outlined,
-                  size: 20,
-                  color: TsdtechColors.textDisabled,
+                  size: 22,
+                  color: Colors.black26,
                 )
               : copied
-              ? const Icon(
-                  key: ValueKey('check'),
-                  Icons.check_rounded,
-                  size: 20,
-                  color: TsdtechColors.success,
-                )
-              : const Icon(
-                  key: ValueKey('copy'),
-                  Icons.copy_rounded,
-                  size: 20,
-                  color: TsdtechColors.primary,
-                ),
+                  ? const Icon(
+                      key: ValueKey('check'),
+                      Icons.check_rounded,
+                      size: 22,
+                      color: brandGreen,
+                    )
+                  : const Icon(
+                      key: ValueKey('copy'),
+                      Icons.copy_rounded,
+                      size: 22,
+                      color: brandGreen, // Botão de copiar com a cor da marca
+                    ),
         ),
       ),
     );

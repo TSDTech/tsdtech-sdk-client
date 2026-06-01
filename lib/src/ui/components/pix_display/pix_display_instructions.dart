@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../theme/tsdtech_colors.dart';
-import '../../theme/tsdtech_text_styles.dart';
-
 class PixInstructions extends StatelessWidget {
   const PixInstructions({super.key, required this.steps});
 
@@ -10,30 +7,40 @@ class PixInstructions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            const Icon(
-              Icons.info_outline_rounded,
-              size: 16,
-              color: TsdtechColors.textSecondary,
-            ),
-            const SizedBox(width: 6),
-            Text(
-              'Como pagar',
-              style: TsdtechTextStyles.titleSmall.copyWith(
-                color: TsdtechColors.textSecondary,
+    return Container(
+      // Agrupa as instruções num container com o mesmo fundo cinza do carrinho
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF4F5F7), 
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: const [
+              Icon(
+                Icons.info_outline_rounded,
+                size: 18,
+                color: Colors.black54,
               ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        ...steps.indexed.map(
-          (entry) => _InstructionStep(number: entry.$1 + 1, text: entry.$2),
-        ),
-      ],
+              SizedBox(width: 8),
+              Text(
+                'Como pagar',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          ...steps.indexed.map(
+            (entry) => _InstructionStep(number: entry.$1 + 1, text: entry.$2),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -46,29 +53,43 @@ class _InstructionStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const brandGreen = Color(0xFF10C484);
+
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.only(bottom: 12),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Círculo do número
           Container(
-            width: 22,
-            height: 22,
+            width: 24,
+            height: 24,
             alignment: Alignment.center,
-            decoration: const BoxDecoration(
-              color: TsdtechColors.primaryLight,
+            decoration: BoxDecoration(
+              color: brandGreen.withValues(alpha: 0.15), // Fundo verde suave
               shape: BoxShape.circle,
             ),
             child: Text(
               '$number',
-              style: TsdtechTextStyles.labelSmall.copyWith(
-                color: TsdtechColors.white,
-                fontWeight: FontWeight.w700,
+              style: const TextStyle(
+                color: brandGreen, // Texto verde forte
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
               ),
             ),
           ),
-          const SizedBox(width: 10),
-          Expanded(child: Text(text, style: TsdtechTextStyles.bodySmall)),
+          const SizedBox(width: 12),
+          // Texto da instrução
+          Expanded(
+            child: Text(
+              text,
+              style: const TextStyle(
+                color: Colors.black54, // Cinza escuro para leitura confortável
+                fontSize: 13,
+                height: 1.4, // Espaçamento entre linhas pra respirar melhor
+              ),
+            ),
+          ),
         ],
       ),
     );

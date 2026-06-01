@@ -112,6 +112,7 @@ class CartPreview extends StatelessWidget {
   }
 }
 
+<<<<<<< Updated upstream
 class StatusBanner extends StatelessWidget {
   const StatusBanner({required this.status});
   final PaymentStatus? status;
@@ -160,6 +161,8 @@ class StatusBanner extends StatelessWidget {
   }
 }
 
+=======
+>>>>>>> Stashed changes
 class InfoTile extends StatelessWidget {
   const InfoTile({required this.title, required this.content});
   final String title;

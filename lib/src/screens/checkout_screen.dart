@@ -261,6 +261,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             onPressed: isDisabled ? null : _handlePay,
                             style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 16),
+                              backgroundColor: const Color(0xFF10C484), // Mesmo verde dos preços
                             ),
                             child: Text(
                               _isFetchingGatewayPublicKey

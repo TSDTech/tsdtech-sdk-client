@@ -5,19 +5,21 @@ import 'package:tsdtech_client_sdk/src/ui/config/tsdtech_ui_config.dart';
 
 class StatusBanner extends StatelessWidget {
   const StatusBanner({super.key, required this.status});
-  
+
   final PaymentStatus? status;
 
   @override
   Widget build(BuildContext context) {
     final theme = TsdtechUiConfig.instance.theme;
-    
+
     // 1. Estado Nulo (Aguardando Ação) renderizado com o padrão cinza claro
     if (status == null) {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         decoration: BoxDecoration(
-          color: const Color(0xFFF4F5F7), // Mesmo fundo cinza dos itens do carrinho
+          color: const Color(
+            0xFFF4F5F7,
+          ), // Mesmo fundo cinza dos itens do carrinho
           borderRadius: BorderRadius.circular(8),
         ),
         child: const Row(
@@ -39,10 +41,7 @@ class StatusBanner extends StatelessWidget {
                   SizedBox(height: 4),
                   Text(
                     'Aguardando ação.',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.black54,
-                    ),
+                    style: TextStyle(fontSize: 13, color: Colors.black54),
                   ),
                 ],
               ),
@@ -67,8 +66,12 @@ class StatusBanner extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       decoration: BoxDecoration(
-        color: map.$2.withValues(alpha: 0.1), // Fundo suave transparente da respectiva cor
-        borderRadius: BorderRadius.circular(8), // Borda de 8px acompanhando o resto
+        color: map.$2.withValues(
+          alpha: 0.1,
+        ), // Fundo suave transparente da respectiva cor
+        borderRadius: BorderRadius.circular(
+          8,
+        ), // Borda de 8px acompanhando o resto
         // Borda removida intencionalmente para o visual flat (sem linha demarcando)
       ),
       child: Row(

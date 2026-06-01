@@ -17,7 +17,7 @@ class OrderSummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Cor verde baseada na imagem
-    const brandGreen = Color(0xFF10C484); 
+    const brandGreen = Color(0xFF10C484);
 
     return Card(
       elevation: 0,
@@ -34,8 +34,8 @@ class OrderSummaryCard extends StatelessWidget {
             const Text(
               'Descrição do carrinho',
               style: TextStyle(
-                fontSize: 16, 
-                fontWeight: FontWeight.w600, 
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
                 color: Colors.black87,
               ),
             ),
@@ -45,14 +45,18 @@ class OrderSummaryCard extends StatelessWidget {
             else
               ...items.map((item) {
                 final unitValue = item.service.price ?? 0;
-                
+
                 // Fallback de descrição para ficar igual à imagem caso seu model
                 // não tenha a propriedade description no momento.
-                final description = item.service.description?.toLowerCase() ?? 'Sem descrição';
+                final description =
+                    item.service.description?.toLowerCase() ?? 'Sem descrição';
 
                 return Container(
                   margin: const EdgeInsets.only(bottom: 12),
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 16,
+                  ),
                   decoration: BoxDecoration(
                     color: const Color(0xFFF4F5F7), // Fundo cinza claro
                     borderRadius: BorderRadius.circular(8),
@@ -109,9 +113,9 @@ class OrderSummaryCard extends StatelessWidget {
                   ),
                 );
               }),
-            
+
             const SizedBox(height: 8),
-            
+
             // Rodapé do Total
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -119,8 +123,8 @@ class OrderSummaryCard extends StatelessWidget {
                 const Text(
                   'Total',
                   style: TextStyle(
-                    fontWeight: FontWeight.bold, 
-                    fontSize: 16, 
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
                     color: Colors.black87,
                   ),
                 ),

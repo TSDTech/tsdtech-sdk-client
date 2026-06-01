@@ -20,10 +20,10 @@ class PaymentMethodSelector extends StatelessWidget {
     return Row(
       children: [
         if (showPix) _buildOption(PaymentMethodType.pix, 'PIX', Icons.qr_code),
-        
+
         // Adiciona um espaçamento caso os dois botões estejam visíveis
         if (showPix && showCard) const SizedBox(width: 12),
-        
+
         //TODO - implementar cartão
         // if (showCard)
         //   _buildOption(PaymentMethodType.card, 'Cartão', Icons.credit_card),
@@ -33,7 +33,7 @@ class PaymentMethodSelector extends StatelessWidget {
 
   Widget _buildOption(PaymentMethodType type, String title, IconData icon) {
     final isSelected = selectedMethod == type;
-    
+
     // O mesmo verde utilizado no botão e nos valores da imagem
     const brandGreen = Color(0xFF10C484);
 
@@ -47,11 +47,11 @@ class PaymentMethodSelector extends StatelessWidget {
             // Fundo branco se inativo, e um verde beeem sutil se selecionado
             color: isSelected
                 ? brandGreen.withValues(alpha: 0.05)
-                : Colors.white, 
+                : Colors.white,
             border: Border.all(
               // Borda verde se selecionado, senão borda cinza clara
               color: isSelected ? brandGreen : Colors.grey.shade300,
-              width: isSelected ? 2 : 1, 
+              width: isSelected ? 2 : 1,
             ),
             borderRadius: BorderRadius.circular(8),
           ),
@@ -59,7 +59,7 @@ class PaymentMethodSelector extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(
-                icon, 
+                icon,
                 color: isSelected ? brandGreen : Colors.black54,
                 size: 28,
               ),

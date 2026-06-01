@@ -67,7 +67,6 @@ void main() {
     });
 
     test('getPixStatus returns status string', () async {
-      // 🔥 AQUI FOI ALTERADO PARA A ROTA NOVA DO SEU CÓDIGO
       adapter.when('GET', '/deposit-request/public/status-pix/p1', {
         'status': 'completed',
       });

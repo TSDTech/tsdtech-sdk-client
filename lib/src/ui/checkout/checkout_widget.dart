@@ -81,12 +81,13 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
     super.initState();
     // A store nasce junto com o Widget e mantém os dados seguros
     _internalStore = CheckoutStore();
-    final requestId = widget.depositRequestId ?? MockBackendSpaService.createOrderAndGetDepositId();
+    final requestId =
+        widget.depositRequestId ??
+        MockBackendSpaService.createOrderAndGetDepositId();
     _internalStore.fetchOrderSummary(requestId);
   }
 
   @override
-
   void dispose() {
     // 3. Quando o SPA fechar a tela, a gente limpa a memória automaticamente
     _internalStore.dispose();
@@ -182,7 +183,9 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
       notifyStatus(PaymentStatus.processing);
 
       try {
-        final depositRequestId = widget.depositRequestId ?? MockBackendSpaService.createOrderAndGetDepositId();
+        final depositRequestId =
+            widget.depositRequestId ??
+            MockBackendSpaService.createOrderAndGetDepositId();
         // final dynamic result;
 
         // final request = checkout_request.CheckoutRequest(
@@ -399,11 +402,14 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
               const SizedBox(height: 24),
 
               if (widget.showSubmitButton &&
-                  !(method == PaymentMethodType.pix && effectiveStore.hasGeneratedPix))
+                  !(method == PaymentMethodType.pix &&
+                      effectiveStore.hasGeneratedPix))
                 ElevatedButton(
                   onPressed: processPayment,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF10C484), // Mesmo verde dos preços
+                    backgroundColor: const Color(
+                      0xFF10C484,
+                    ), // Mesmo verde dos preços
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -414,7 +420,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                         ? 'Pagar Agora'
                         : 'Gerar Pagamento',
                     style: const TextStyle(
-                      fontWeight: FontWeight.bold, 
+                      fontWeight: FontWeight.bold,
                       color: Colors.white,
                       fontSize: 16,
                     ),

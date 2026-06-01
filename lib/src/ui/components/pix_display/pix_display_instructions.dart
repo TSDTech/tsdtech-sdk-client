@@ -11,7 +11,7 @@ class PixInstructions extends StatelessWidget {
       // Agrupa as instruções num container com o mesmo fundo cinza do carrinho
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFFF4F5F7), 
+        color: const Color(0xFFF4F5F7),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
@@ -19,11 +19,7 @@ class PixInstructions extends StatelessWidget {
         children: [
           const Row(
             children: [
-              Icon(
-                Icons.info_outline_rounded,
-                size: 18,
-                color: Colors.black54,
-              ),
+              Icon(Icons.info_outline_rounded, size: 18, color: Colors.black54),
               SizedBox(width: 8),
               Text(
                 'Como pagar',

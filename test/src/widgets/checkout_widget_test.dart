@@ -10,38 +10,38 @@ void main() {
   setUpAll(() async {
     SharedPreferences.setMockInitialValues({});
     await SharedPrefsHelper.init();
-    TsdtechUiConfig.initialize(baseUrl: 'http://test');
     TsdtechClient.initialize(baseUrl: 'http://test');
-    BaseApi.setDioForTesting(createDioWithAdapter(MockHttpClientAdapter()));
+    final adapter = MockHttpClientAdapter();
+    BaseApi.setDioForTesting(createDioWithAdapter(adapter));
+    adapter.when('GET', '/deposit-request/public/mock_dep_123/summary', {
+      'id': 'mock_dep_123',
+      'amount': 0,
+      'createdAtUtc': '2026-06-01T00:00:00Z',
+      'depositRequestId': 'mock_dep_123',
+      'items_summary': [],
+    });
   });
 
   group('CheckoutWidget UI Tests', () {
-    testWidgets(
-      'CA-1 e CA-2: Renderiza corretamente com as opções PIX e Cartão',
-      (tester) async {
-        await tester.pumpWidget(
-          const MaterialApp(
-            home: Scaffold(
-              body: CheckoutWidget(items: [], administratorId: 'a'),
-            ),
-          ),
-        );
-        // Validamos o comportamento inalterado do Widget
-        expect(tester.takeException(), isA<TypeError>());
-      },
-    );
-
-    testWidgets('CA-2: Troca de abas atualiza a View do componente', (
+    testWidgets('CA-1 e CA-2: Renderiza corretamente com as opções PIX', (
       tester,
     ) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
-            body: CheckoutWidget(items: [], administratorId: 'a'),
+            body: CheckoutWidget(
+              depositRequestId: 'mock_dep_123',
+              items: [],
+              administratorId: 'a',
+              showCard: false,
+            ),
           ),
         ),
       );
-      expect(tester.takeException(), isA<TypeError>());
+      await tester.pumpAndSettle();
+      expect(find.byType(CheckoutWidget), findsOneWidget);
+      expect(find.text('PIX'), findsOneWidget);
+      expect(find.text('Cartão'), findsNothing);
     });
   });
 }

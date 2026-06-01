@@ -19,8 +19,9 @@ class PixPaymentView extends StatelessWidget {
     const brandGreen = Color(0xFF10C484);
 
     void showMessage(String message) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(message)));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(message)));
     }
 
     // 1. Estado Inicial (Antes de gerar o PIX)
@@ -65,7 +66,7 @@ class PixPaymentView extends StatelessWidget {
               : DateTime.now().add(const Duration(minutes: 25)),
           onCopied: () => showMessage('Código PIX copiado.'),
         ),
-        
+
         const SizedBox(height: 24),
 
         // 3. Indicador de "Aguardando pagamento" refatorado
@@ -84,7 +85,9 @@ class PixPaymentView extends StatelessWidget {
                 height: 20,
                 child: CircularProgressIndicator(
                   strokeWidth: 2.5,
-                  valueColor: AlwaysStoppedAnimation<Color>(brandGreen), // Spinner na cor da marca
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    brandGreen,
+                  ), // Spinner na cor da marca
                 ),
               ),
               SizedBox(width: 16),

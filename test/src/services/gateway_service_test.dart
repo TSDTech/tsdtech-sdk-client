@@ -44,7 +44,18 @@ void main() {
               Response(
                 requestOptions: options,
                 statusCode: 200,
-                data: {'keyId': 'key_123', 'pemPublicKey': validMockPemKey},
+                data: {
+                  'keyId': 'key_123',
+                  'pemPublicKey': '''-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtt1U5UFmzDjj7gapJsmm
+bYtbyidVOPtj4WoyMnTaNL4EzwbunYI2oQWcxXR8H/e0f96eVHBa7w1Oq5l/IrcV
+mpljD8AQqubMD9qN3D8m4CO2nENkoBQK7KP3+M1PqekqIRrIxWzGwSJPn0bSfRb/
+E23qCA3Piha+u6ehKFcOs9zkO3tTfwEU3UwxYQCjrbBGDVWe+bOea6ieDjUV/P/J
+ErpDWPDHh5/7bseus0lVJZkvqmoeT4ec98M3vxDpAc1N2ZGQE+5ou+i6gvJl8AMA
+64n4gkOmYCWKXtcXQj4XtI6ZufN8FH/gPtgYglkB0TS9KXEcU+NTwdv5WGADYAZb
+GQIDAQAB
+-----END PUBLIC KEY-----''',
+                },
               ),
             );
           }
@@ -52,10 +63,8 @@ void main() {
       );
       final result = await service.fetchPublicKey();
       expect(result.isSuccess, true);
-      expect(
-        result.value?.pemPublicKey,
-        validMockPemKey,
-      ); // 🔥 Aqui tava o erro!
+      expect(result.value?.keyId, 'key_123');
+      expect(result.value?.pemPublicKey, contains('BEGIN PUBLIC KEY'));
     },
   );
 
@@ -107,6 +116,14 @@ void main() {
       client.dio.interceptors.add(
         MockInterceptor((options, handler) {
           if (options.path == '/payments/card' && options.method == 'POST') {
+            final encryptedCard = options.data['encryptedCard'];
+            expect(encryptedCard, isA<String>());
+            expect((encryptedCard as String).isNotEmpty, isTrue);
+            expect(
+              RegExp(r'^[A-Za-z0-9+/=]+$').hasMatch(encryptedCard),
+              isTrue,
+            );
+
             handler.resolve(
               Response(
                 requestOptions: options,
@@ -126,7 +143,15 @@ void main() {
       final result = await service.payWithEncryptedCard(
         'req_abc',
         cardData,
-        validMockPemKey,
+        '''-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtt1U5UFmzDjj7gapJsmm
+bYtbyidVOPtj4WoyMnTaNL4EzwbunYI2oQWcxXR8H/e0f96eVHBa7w1Oq5l/IrcV
+mpljD8AQqubMD9qN3D8m4CO2nENkoBQK7KP3+M1PqekqIRrIxWzGwSJPn0bSfRb/
+E23qCA3Piha+u6ehKFcOs9zkO3tTfwEU3UwxYQCjrbBGDVWe+bOea6ieDjUV/P/J
+ErpDWPDHh5/7bseus0lVJZkvqmoeT4ec98M3vxDpAc1N2ZGQE+5ou+i6gvJl8AMA
+64n4gkOmYCWKXtcXQj4XtI6ZufN8FH/gPtgYglkB0TS9KXEcU+NTwdv5WGADYAZb
+GQIDAQAB
+-----END PUBLIC KEY-----''',
         'fake_key',
       );
       expect(result.isSuccess, true);

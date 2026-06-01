@@ -2,23 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tsdtech_client_sdk/core/local_storage/shared_prefs_helper.dart';
+import 'package:tsdtech_client_sdk/core/services/base.api.dart';
 import 'package:tsdtech_client_sdk/tsdtech_sdk_client.dart';
 import 'package:tsdtech_client_sdk/tsdtech_sdk_ui.dart';
 import '../../helpers/mock_dio.dart';
 
 void main() {
+  late MockHttpClientAdapter adapter;
   setUpAll(() async {
     SharedPreferences.setMockInitialValues({});
     await SharedPrefsHelper.init();
-    TsdtechUiConfig.initialize(
-      baseUrl: 'https://test.com',
-      gatewayBaseUrl: 'https://test.com',
+    TsdtechClient.initialize(baseUrl: 'https://test.com');
+    adapter = MockHttpClientAdapter();
+    BaseApi.setDioForTesting(createDioWithAdapter(adapter));
+    adapter.when(
+      'GET',
+      '/deposit-request/public/acaa27a1-ade2-45ea-a8b0-3f619ba5ae8f/summary',
+      {
+        'id': 'acaa27a1-ade2-45ea-a8b0-3f619ba5ae8f',
+        'amount': 0,
+        'createdAtUtc': '2026-06-01T00:00:00Z',
+        'depositRequestId': 'acaa27a1-ade2-45ea-a8b0-3f619ba5ae8f',
+        'items_summary': [],
+      },
     );
-    TsdtechClient.initialize(
-      baseUrl: 'https://test.com',
-      gatewayBaseUrl: 'https://test.com',
-    );
-    BaseApi.setDioForTesting(createDioWithAdapter(MockHttpClientAdapter()));
   });
 
   group('CheckoutScreen', () {
@@ -33,8 +40,8 @@ void main() {
           ),
         ),
       );
-      // Confirma que a tela apresenta a exceção baseada no estado do widget atual
-      expect(tester.takeException(), isA<TypeError>());
+      await tester.pumpAndSettle();
+      expect(find.text('Checkout'), findsOneWidget);
     });
 
     testWidgets('expoe route Material e fecha com callback', (tester) async {
@@ -59,9 +66,8 @@ void main() {
       );
 
       await tester.tap(find.text('Abrir'));
-      await tester.pump();
-      // Ao empurrar a tela nova, garante a captura da exceção para dar green no teste
-      expect(tester.takeException(), isA<TypeError>());
+      await tester.pumpAndSettle();
+      expect(find.byType(Scaffold), findsWidgets);
     });
   });
 }

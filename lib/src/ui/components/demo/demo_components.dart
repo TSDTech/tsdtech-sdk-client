@@ -112,57 +112,6 @@ class CartPreview extends StatelessWidget {
   }
 }
 
-<<<<<<< Updated upstream
-class StatusBanner extends StatelessWidget {
-  const StatusBanner({required this.status});
-  final PaymentStatus? status;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = TsdtechUiConfig.instance.theme;
-    if (status == null) {
-      return const InfoTile(
-        title: 'Status do CheckoutWidget',
-        content: 'Aguardando ação.',
-      );
-    }
-
-
-    final map = switch (status!) {
-      PaymentStatus.processing => ('Processando', theme.warningColor),
-      PaymentStatus.waitingPayment => (
-        'Aguardando pagamento',
-        theme.accentColor,
-      ),
-      PaymentStatus.success => ('Concluído', theme.successColor),
-      PaymentStatus.failed => ('Falhou', theme.errorColor),
-    };
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: map.$2.withOpacity(0.12),
-        borderRadius: BorderRadius.circular(theme.borderRadius),
-        border: Border.all(color: map.$2.withOpacity(0.32)),
-      ),
-      child: Row(
-        children: [
-          Icon(Icons.info_outline_rounded, color: map.$2),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              'Status atual: ${map.$1}',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-=======
->>>>>>> Stashed changes
 class InfoTile extends StatelessWidget {
   const InfoTile({required this.title, required this.content});
   final String title;

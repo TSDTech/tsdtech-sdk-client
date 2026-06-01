@@ -22,12 +22,8 @@ class PixPaymentView extends StatelessWidget {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(message)));
     }
-<<<<<<< Updated upstream
-    // Validação: Se não tem qrCode, mostra o texto inicial (igualzinho você fez)
-=======
 
     // 1. Estado Inicial (Antes de gerar o PIX)
->>>>>>> Stashed changes
     if (qrCode == null || qrCode!.isEmpty) {
       return Container(
         margin: const EdgeInsets.symmetric(vertical: 16),
@@ -68,21 +64,6 @@ class PixPaymentView extends StatelessWidget {
           onCopied: () => showMessage('Código PIX copiado.'),
         ),
         
-<<<<<<< Updated upstream
-        const SizedBox(height: 32),
-        
-        // Mantemos o seu indicador de "Aguardando pagamento" no final da tela
-        const Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            CircularProgressIndicator(),
-            SizedBox(height: 16),
-            Text(
-              'Aguardando confirmação do pagamento...',
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                color: Colors.grey, // Uma corzinha pra ficar mais elegante
-=======
         const SizedBox(height: 24),
 
         // 3. Indicador de "Aguardando pagamento" refatorado
@@ -103,7 +84,6 @@ class PixPaymentView extends StatelessWidget {
                   strokeWidth: 2.5,
                   valueColor: AlwaysStoppedAnimation<Color>(brandGreen), // Spinner na cor da marca
                 ),
->>>>>>> Stashed changes
               ),
               SizedBox(width: 16),
               Text(

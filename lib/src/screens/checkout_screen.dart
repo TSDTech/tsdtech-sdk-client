@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-
 import '../../models/cart/cart_item.model.dart';
 import '../services/gateway-services/gateway_service.dart';
 import '../ui/checkout/checkout_widget.dart';
@@ -47,10 +45,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   final CheckoutWidgetController _checkoutController =
       CheckoutWidgetController();
   final CheckoutStore _checkoutStore = CheckoutStore();
-  final NumberFormat _currencyFormat = NumberFormat.currency(
-    locale: 'pt_BR',
-    symbol: 'R\$',
-  );
+  // final NumberFormat _currencyFormat = NumberFormat.currency(
+  //   locale: 'pt_BR',
+  //   symbol: 'R\$',
+  // );
 
   String _gatewayPublicKey = '';
   bool _isFetchingGatewayPublicKey = false;
@@ -261,7 +259,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             onPressed: isDisabled ? null : _handlePay,
                             style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 16),
-                              backgroundColor: const Color(0xFF10C484), // Mesmo verde dos preços
                             ),
                             child: Text(
                               _isFetchingGatewayPublicKey

@@ -69,10 +69,10 @@ class PixCopyField extends StatelessWidget {
           ),
         ),
         if (copied)
-          Padding(
-            padding: const EdgeInsets.only(top: 8),
+          const Padding(
+            padding: EdgeInsets.only(top: 8),
             child: Row(
-              children: const [
+              children: [
                 Icon(
                   Icons.check_circle_outline_rounded,
                   size: 16,

@@ -40,7 +40,7 @@ class ApiKeysService extends IntraApi {
   static final ApiKeysService instance = ApiKeysService();
 
   /// Creates an [ApiKeysService] instance with the base URL from [Constants].
-  ApiKeysService() : super(Constants.getBaseUrl());
+  ApiKeysService() : super();
 
   /// Retrieves a list of API keys for the specified organization.
   ///

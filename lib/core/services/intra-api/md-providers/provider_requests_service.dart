@@ -35,7 +35,7 @@ class ProviderRequestsService extends IntraApi {
   static final ProviderRequestsService instance = ProviderRequestsService();
 
   /// Creates a [ProviderRequestsService] instance with the base URL from [Constants].
-  ProviderRequestsService() : super(Constants.getBaseUrl());
+  ProviderRequestsService() : super();
 
   /// Retrieves provider requests for the authenticated client.
   ///

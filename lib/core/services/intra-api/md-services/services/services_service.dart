@@ -42,7 +42,7 @@ class ServicesService extends IntraApi {
   static final ServicesService instance = ServicesService();
 
   /// Creates a [ServicesService] instance with the base URL from [Constants].
-  ServicesService() : super(Constants.getBaseUrl());
+  ServicesService() : super();
 
   /// Retrieves a list of public services with optional filtering.
   ///

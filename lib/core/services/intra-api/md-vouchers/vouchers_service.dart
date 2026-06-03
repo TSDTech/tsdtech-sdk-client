@@ -28,7 +28,7 @@ class VouchersService extends IntraApi {
   static final VouchersService instance = VouchersService();
 
   /// Creates a [VouchersService] instance with the base URL from [Constants].
-  VouchersService() : super(Constants.getBaseUrl());
+  VouchersService() : super();
 
   /// Retrieves a paginated list of vouchers for the authenticated client.
   ///

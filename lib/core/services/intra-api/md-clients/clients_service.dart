@@ -24,7 +24,7 @@ class ClientsService extends IntraApi {
   static final ClientsService instance = ClientsService();
 
   /// Creates a [ClientsService] instance with the base URL from [Constants].
-  ClientsService() : super(Constants.getBaseUrl());
+  ClientsService() : super();
 
   /// Updates the authenticated client's profile information.
   ///

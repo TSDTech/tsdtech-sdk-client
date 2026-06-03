@@ -29,7 +29,7 @@ class IntraApi {
   /// Creates an IntraApi instance with the specified [baseUrl].
   ///
   /// - [baseUrl]: The base URL for all API requests in this service
-  IntraApi(this._baseUrl);
+  IntraApi([this._baseUrl = '']);
 
   /// Returns the base URL of this service.
   String get baseUrl => _baseUrl;

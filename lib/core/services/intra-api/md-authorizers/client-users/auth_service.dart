@@ -44,7 +44,7 @@ class AuthServiceClientUser extends IntraApi {
   static final AuthServiceClientUser instance = AuthServiceClientUser();
 
   /// Creates an [AuthServiceClientUser] instance with the base URL from [Constants].
-  AuthServiceClientUser() : super(Constants.getBaseUrl());
+  AuthServiceClientUser() : super();
 
   /// Authenticates a client user with the provided credentials.
   ///

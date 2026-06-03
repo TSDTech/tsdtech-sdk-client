@@ -34,7 +34,7 @@ class ServiceTypesService extends IntraApi {
   static final ServiceTypesService instance = ServiceTypesService();
 
   /// Creates a [ServiceTypesService] instance with the base URL from [Constants].
-  ServiceTypesService() : super(Constants.getBaseUrl());
+  ServiceTypesService() : super();
 
   /// Retrieves a list of public service types with optional filtering.
   ///

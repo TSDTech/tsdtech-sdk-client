@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tsdtech_client_sdk/core/constants/constants.dart';
 import 'package:tsdtech_client_sdk/src/ui/config/tsdtech_ui_config.dart';
 import 'package:tsdtech_client_sdk/src/ui/theme/tsdtech_theme.dart';
 
@@ -8,8 +7,6 @@ enum DemoThemePreset { brand, ocean, graphite }
 class DemoThemeConfig {
   static void configure(DemoThemePreset preset) {
     TsdtechUiConfig.initialize(
-      baseUrl: Constants.getBaseUrl(),
-      gatewayBaseUrl: Constants.getBaseUrl(),
       apiKey: 'demo-api-key',
       locale: TsdtechLocale.pt,
       theme: themeForPreset(preset),

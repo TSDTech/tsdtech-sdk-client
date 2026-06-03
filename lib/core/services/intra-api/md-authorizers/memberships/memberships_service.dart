@@ -27,7 +27,7 @@ class MembershipsService extends IntraApi {
   static final MembershipsService instance = MembershipsService();
 
   /// Creates a [MembershipsService] instance with the base URL from [Constants].
-  MembershipsService() : super(Constants.getBaseUrl());
+  MembershipsService() : super();
 
   /// Retrieves memberships with optional filtering parameters.
   ///

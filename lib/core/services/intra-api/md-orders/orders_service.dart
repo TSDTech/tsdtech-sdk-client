@@ -26,7 +26,7 @@ class OrdersService extends IntraApi {
   static final OrdersService instance = OrdersService();
 
   /// Creates an [OrdersService] instance with the base URL from [Constants].
-  OrdersService() : super(Constants.getBaseUrl());
+  OrdersService() : super();
 
   /// Retrieves all orders for the authenticated client with optional filtering.
   ///

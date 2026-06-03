@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tsdtech_client_sdk/core/constants/constants.dart';
 import '../theme/tsdtech_theme.dart';
 
 /// Supported locales for TSDTech UI widgets.
@@ -55,6 +56,8 @@ class TsdtechUiConfig {
   /// Locale used for all TSDTech UI copy. Defaults to [TsdtechLocale.pt].
   late final TsdtechLocale locale;
 
+  late final Environment? stage;
+
   // ---------------------------------------------------------------------------
   // Initialization
   // ---------------------------------------------------------------------------
@@ -73,6 +76,7 @@ class TsdtechUiConfig {
     String? apiKey,
     TsdtechThemeData? theme,
     TsdtechLocale locale = TsdtechLocale.pt,
+    Environment? stage,
   }) {
     // assert(baseUrl.isNotEmpty, 'baseUrl must not be empty.');
     _instance = TsdtechUiConfig._()
@@ -80,7 +84,8 @@ class TsdtechUiConfig {
       ..gatewayBaseUrl = gatewayBaseUrl
       ..apiKey = apiKey
       ..theme = theme ?? TsdtechThemeData.light()
-      ..locale = locale;
+      ..locale = locale
+      ..stage = stage;
   }
 
   /// Resets the configuration. Intended for use in tests only.

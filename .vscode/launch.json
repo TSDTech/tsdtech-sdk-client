@@ -5,20 +5,20 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "voucherize-client-front",
+      "name": "tsdtech (debug mode)",
       "request": "launch",
       "type": "dart",
       "args": ["--web-port", "8081"]
     },
     {
-      "name": "voucherize-client-front (profile mode)",
+      "name": "tsdtech (profile mode)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "profile",
       "args": ["--web-port", "8081"]
     },
     {
-      "name": "voucherize-client-front (release mode)",
+      "name": "tsdtech (release mode)",
       "request": "launch",
       "type": "dart",
       "flutterMode": "release",

@@ -1,39 +1,18 @@
-import 'package:tsdtech_client_sdk/core/constants/platform/platform_origin.dart';
-
+enum Environment { dev, hml, prod }
 class Constants {
-  static const String stage = String.fromEnvironment(
-    'STAGE',
-    defaultValue: 'dev',
-  );
 
-  static const backendUrl = String.fromEnvironment(
-    'BACKEND_URL',
-    defaultValue:
-        'https://$stage-voucherize-backend-480088766073.southamerica-east1.run.app',
-  );
 
-  static const frontendUrl = String.fromEnvironment(
-    'FRONTEND_URL',
-    defaultValue:
-        'https://$stage-voucherize-client-front-480088766073.southamerica-east1.run.app',
-  );
+  static Environment stage = Environment.hml;
 
-  static String getBaseUrl() => backendUrl;
+  static void setStage (Environment newStage) {
+    stage = newStage;
+  }
+
+  static Environment getStage() => stage;
 
   static String getMsUrl(String msName) => switch (stage) {
-    'dev' => 'https://hml-$msName-415041877599.southamerica-east1.run.app',
-    'hml' => 'https://hml-$msName-1041798165885.southamerica-east1.run.app',
+    Environment.dev => 'https://dev-$msName-415041877599.southamerica-east1.run.app',
+    Environment.hml => 'https://hml-$msName-1041798165885.southamerica-east1.run.app',
     _ => throw ArgumentError('Invalid stage: $stage'),
   };
-
-  static String get fullDomain {
-    if (frontendUrl.isNotEmpty) return Uri.parse(frontendUrl).host;
-
-    final origin = platformOrigin();
-    if (origin != null && Uri.parse(origin).host == 'localhost') {
-      return Uri.parse(frontendUrl).host;
-    }
-
-    return origin != null ? Uri.parse(origin).host : Uri.parse(backendUrl).host;
-  }
 }

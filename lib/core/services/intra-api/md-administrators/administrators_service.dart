@@ -23,7 +23,7 @@ class AdministratorsService extends IntraApi {
   static final AdministratorsService instance = AdministratorsService();
 
   /// Creates an [AdministratorsService] instance with the base URL from [Constants].
-  AdministratorsService() : super(Constants.getBaseUrl());
+  AdministratorsService() : super();
 
   /// Retrieves administrator details by full domain.
   ///

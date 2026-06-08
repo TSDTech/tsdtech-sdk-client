@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
@@ -7,6 +8,7 @@ import 'package:dio/dio.dart';
 class MockHttpClientAdapter implements HttpClientAdapter {
   final Map<String, Map<String, dynamic>> _responses = {};
   final Map<String, Exception> _throws = {};
+  final Map<String, Queue<Map<String, dynamic>>> _queue = {};
   final List<RequestOptions> requests = [];
 
   /// Register a successful response for [method] and a path suffix [pathSuffix].
@@ -25,6 +27,19 @@ class MockHttpClientAdapter implements HttpClientAdapter {
   /// Register an exception to be thrown for [method] + [pathSuffix].
   void whenThrow(String method, String pathSuffix, Exception e) {
     _throws['${method.toUpperCase()} $pathSuffix'] = e;
+  }
+
+  /// Register a one-time response consumed on the **first** matching call.
+  /// Subsequent calls fall through to the regular [when] response.
+  void whenOnce(
+    String method,
+    String pathSuffix,
+    dynamic data, {
+    int statusCode = 200,
+  }) {
+    final key = '${method.toUpperCase()} $pathSuffix';
+    _queue.putIfAbsent(key, () => Queue());
+    _queue[key]!.add({'data': data, 'status': statusCode});
   }
 
   @override
@@ -46,6 +61,26 @@ class MockHttpClientAdapter implements HttpClientAdapter {
         final e = _throws[key]!;
         if (e is DioException) throw e;
         throw e;
+      }
+    }
+
+    // Check one-time queued responses (consumed in FIFO order).
+    for (final key in _queue.keys) {
+      final parts = key.split(' ');
+      final kMethod = parts[0];
+      final suffix = key.substring(kMethod.length + 1);
+      if (kMethod == method &&
+          path.endsWith(suffix) &&
+          _queue[key]!.isNotEmpty) {
+        final entry = _queue[key]!.removeFirst();
+        final bodyString = jsonEncode(entry['data']);
+        return ResponseBody.fromString(
+          bodyString,
+          entry['status'] as int,
+          headers: {
+            Headers.contentTypeHeader: [Headers.jsonContentType],
+          },
+        );
       }
     }
 

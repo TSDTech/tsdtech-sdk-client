@@ -440,6 +440,6 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
 
 class MockBackendSpaService {
   static String createOrderAndGetDepositId() {
-    return 'feab62cf-a057-4d92-8490-b5b93c100f56';
+    return '6574ead9-14c4-4fb6-b655-bcfb6dff1418';
   }
 }

@@ -5,9 +5,11 @@ import 'package:tsdtech_client_sdk/models/checkouts/calculate_response.model.dar
 import 'package:tsdtech_client_sdk/models/checkouts/checkout_request.model.dart';
 import 'package:tsdtech_client_sdk/models/checkouts/checkout_response.model.dart';
 import 'package:tsdtech_client_sdk/models/checkouts/payment_method.model.dart';
+import 'package:tsdtech_client_sdk/models/deposit-request/deposit_request_fee.model.dart';
 import 'package:tsdtech_client_sdk/models/deposit-request/deposit_request_summary.model.dart';
 import 'package:tsdtech_client_sdk/models/value_result.dart';
 import 'package:tsdtech_client_sdk/src/dto/gateway/deposit_request.dart';
+import 'package:tsdtech_client_sdk/src/dto/gateway/payment_method.enum.dart';
 import 'package:tsdtech_client_sdk/src/models/checkout/deposit_pix_response.model.dart';
 
 /// Service for handling checkout and payment operations.
@@ -225,6 +227,22 @@ class CheckoutsService extends IntraApi {
       final data = response.data as Map<String, dynamic>;
       final summaryResponse = DepositRequestSummaryResponse.fromJson(data);
       return ValueResult.success(summaryResponse);
+    } catch (e) {
+      return ValueResult.fromError(e);
+    }
+  }
+
+  Future<ValueResult<DepositRequestFeeResponse>> getDepositRequestFee(
+    String depositRequestId,
+    double amount,
+    PaymentMethod paymentMethod
+  ) async {
+    try {
+      final path = '$depositRequestPath/fee-config/public';
+      final response = await get(path);
+      final data = response.data as Map<String, dynamic>;
+      final feeResponse = DepositRequestFeeResponse.fromJson(data);
+      return ValueResult.success(feeResponse);
     } catch (e) {
       return ValueResult.fromError(e);
     }

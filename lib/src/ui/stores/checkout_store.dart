@@ -302,8 +302,8 @@ abstract class CheckoutStoreBase with Store {
 
       setItems(summary.itemsSummary);
       setAmount(summary.amount);
-      setFeeAmount(summary.feeAmount);
-      setTotalAmount(summary.totalAmount ?? summary.amount);
+      //setFeeAmount(summary.feeAmount);
+      //setTotalAmount(summary.totalAmount ?? summary.amount);
       return result;
     } catch (e) {
       setError(e.toString());

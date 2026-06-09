@@ -11,7 +11,7 @@ class Constants {
   static Environment getStage() => stage;
 
   static String getMsUrl(String msName) => switch (stage) {
-    Environment.dev => 'https://dev-$msName-415041877599.southamerica-east1.run.app',
+    Environment.dev => 'http://localhost:8080',
     Environment.hml => 'https://hml-$msName-1041798165885.southamerica-east1.run.app',
     _ => throw ArgumentError('Invalid stage: $stage'),
   };

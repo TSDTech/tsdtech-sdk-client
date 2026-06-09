@@ -324,7 +324,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
             mainAxisSize: MainAxisSize.min,
             children: [
               OrderSummaryCard(
-                items: _internalStore.items
+                items: effectiveStore.items
                     .map(
                       (item) => CartItem(
                         service: Service(name: item.name, price: item.price),
@@ -332,7 +332,9 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                       ),
                     )
                     .toList(),
-                totalValue: _internalStore.amount,
+                subtotalValue: effectiveStore.amount,
+                feeAmount: effectiveStore.feeAmount,
+                totalValue: effectiveStore.totalAmount,
                 currencyFormat: currencyFormat,
               ),
               const SizedBox(height: 24),
@@ -438,6 +440,6 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
 
 class MockBackendSpaService {
   static String createOrderAndGetDepositId() {
-    return 'acaa27a1-ade2-45ea-a8b0-3f619ba5ae8f';
+    return 'feab62cf-a057-4d92-8490-b5b93c100f56';
   }
 }

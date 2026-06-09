@@ -7,8 +7,10 @@ part 'deposit_request_summary.model.g.dart';
 class DepositRequestSummaryResponse {
   final String id;
   final double amount;
+  final double? totalAmount;
   final String createdAtUtc;
   final String depositRequestId;
+  final double? feeAmount;
 
   @JsonKey(name: 'items_summary')
   final List<DepositRequestItemSummary> itemsSummary;
@@ -16,8 +18,10 @@ class DepositRequestSummaryResponse {
   DepositRequestSummaryResponse({
     required this.id,
     required this.amount,
+    this.totalAmount,
     required this.createdAtUtc,
     required this.depositRequestId,
+    this.feeAmount,
     required this.itemsSummary,
   });
 

@@ -6,18 +6,23 @@ class OrderSummaryCard extends StatelessWidget {
   const OrderSummaryCard({
     super.key,
     required this.items,
+    required this.subtotalValue,
     required this.totalValue,
+    this.feeAmount,
     required this.currencyFormat,
   });
 
   final List<CartItem> items;
+  final double subtotalValue;
   final double totalValue;
+  final double? feeAmount;
   final NumberFormat currencyFormat;
 
   @override
   Widget build(BuildContext context) {
     // Cor verde baseada na imagem
     const brandGreen = Color(0xFF10C484);
+    final showFee = feeAmount != null && feeAmount! > 0;
 
     return Card(
       elevation: 0,
@@ -116,7 +121,57 @@ class OrderSummaryCard extends StatelessWidget {
 
             const SizedBox(height: 8),
 
-            // Rodapé do Total
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Subtotal',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                    color: Colors.black87,
+                  ),
+                ),
+                Text(
+                  currencyFormat.format(subtotalValue),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                    color: Colors.black87,
+                  ),
+                ),
+              ],
+            ),
+
+            if (showFee) ...[
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Taxa de serviço',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  Text(
+                    currencyFormat.format(feeAmount!),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+
+            const SizedBox(height: 12),
+            const Divider(height: 1),
+            const SizedBox(height: 12),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

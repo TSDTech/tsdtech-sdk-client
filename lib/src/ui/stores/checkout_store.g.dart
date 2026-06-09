@@ -236,6 +236,24 @@ mixin _$CheckoutStore on CheckoutStoreBase, Store {
     });
   }
 
+  late final _$feeAmountAtom = Atom(
+    name: 'CheckoutStoreBase.feeAmount',
+    context: context,
+  );
+
+  @override
+  double? get feeAmount {
+    _$feeAmountAtom.reportRead();
+    return super.feeAmount;
+  }
+
+  @override
+  set feeAmount(double? value) {
+    _$feeAmountAtom.reportWrite(value, super.feeAmount, () {
+      super.feeAmount = value;
+    });
+  }
+
   late final _$securityCodeAtom = Atom(
     name: 'CheckoutStoreBase.securityCode',
     context: context,
@@ -305,6 +323,24 @@ mixin _$CheckoutStore on CheckoutStoreBase, Store {
   set amount(double value) {
     _$amountAtom.reportWrite(value, super.amount, () {
       super.amount = value;
+    });
+  }
+
+  late final _$totalAmountAtom = Atom(
+    name: 'CheckoutStoreBase.totalAmount',
+    context: context,
+  );
+
+  @override
+  double get totalAmount {
+    _$totalAmountAtom.reportRead();
+    return super.totalAmount;
+  }
+
+  @override
+  set totalAmount(double value) {
+    _$totalAmountAtom.reportWrite(value, super.totalAmount, () {
+      super.totalAmount = value;
     });
   }
 
@@ -542,6 +578,30 @@ mixin _$CheckoutStore on CheckoutStoreBase, Store {
   }
 
   @override
+  void setFeeAmount(double? value) {
+    final _$actionInfo = _$CheckoutStoreBaseActionController.startAction(
+      name: 'CheckoutStoreBase.setFeeAmount',
+    );
+    try {
+      return super.setFeeAmount(value);
+    } finally {
+      _$CheckoutStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setTotalAmount(double value) {
+    final _$actionInfo = _$CheckoutStoreBaseActionController.startAction(
+      name: 'CheckoutStoreBase.setTotalAmount',
+    );
+    try {
+      return super.setTotalAmount(value);
+    } finally {
+      _$CheckoutStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   void setItems(List<DepositRequestItemSummary> newItems) {
     final _$actionInfo = _$CheckoutStoreBaseActionController.startAction(
       name: 'CheckoutStoreBase.setItems',
@@ -610,6 +670,8 @@ securityCode: ${securityCode},
 cardFormVersion: ${cardFormVersion},
 taxId: ${taxId},
 amount: ${amount},
+feeAmount: ${feeAmount},
+totalAmount: ${totalAmount},
 items: ${items},
 hasError: ${hasError},
 hasGeneratedPix: ${hasGeneratedPix},

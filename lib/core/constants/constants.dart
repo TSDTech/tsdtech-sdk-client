@@ -2,7 +2,7 @@ enum Environment { dev, hml, prod }
 class Constants {
 
 
-  static Environment stage = Environment.hml;
+  static Environment stage = Environment.dev;
 
   static void setStage (Environment newStage) {
     stage = newStage;

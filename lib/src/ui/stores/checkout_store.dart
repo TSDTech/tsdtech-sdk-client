@@ -65,6 +65,9 @@ abstract class CheckoutStoreBase with Store {
   String expiryDate = '';
 
   @observable
+  double? feeAmount;
+
+  @observable
   String securityCode = '';
 
   @observable
@@ -75,6 +78,9 @@ abstract class CheckoutStoreBase with Store {
 
   @observable
   double amount = 0;
+
+  @observable
+  double totalAmount = 0;
 
   @observable
   ObservableList<DepositRequestItemSummary> items =
@@ -178,6 +184,12 @@ abstract class CheckoutStoreBase with Store {
   void setAmount(double value) => amount = value;
 
   @action
+  void setFeeAmount(double? value) => feeAmount = value;
+
+  @action
+  void setTotalAmount(double value) => totalAmount = value;
+
+  @action
   void setItems(List<DepositRequestItemSummary> newItems) {
     items.clear();
     items.addAll(newItems);
@@ -192,6 +204,9 @@ abstract class CheckoutStoreBase with Store {
     pixCopyPasteCode = null;
     paymentId = null;
     paymentResult = null;
+    feeAmount = null;
+    amount = 0;
+    totalAmount = 0;
     cancelPixPolling();
     resetCardForm();
   }
@@ -276,9 +291,19 @@ abstract class CheckoutStoreBase with Store {
       final result = await _checkoutService.getOrderSummary(depositRequestId);
       if (result.isError) {
         setError(result.error);
+        return result;
       }
-      setItems(result.value!.itemsSummary);
-      setAmount(result.value!.amount);
+
+      final summary = result.value;
+      if (summary == null) {
+        setError('Resumo do pedido indisponível.');
+        return ValueResult.failure('Resumo do pedido indisponível.');
+      }
+
+      setItems(summary.itemsSummary);
+      setAmount(summary.amount);
+      setFeeAmount(summary.feeAmount);
+      setTotalAmount(summary.totalAmount ?? summary.amount);
       return result;
     } catch (e) {
       setError(e.toString());

@@ -14,6 +14,7 @@ class CheckoutWidgetController {
     : selectedMethod = ValueNotifier(PaymentMethodType.pix);
 
   final ValueNotifier<PaymentMethodType> selectedMethod;
+  final ValueNotifier<bool> hasSelectedMethod = ValueNotifier(false);
   final ValueNotifier<bool> isLoading = ValueNotifier(false);
   final ValueNotifier<bool> hasGeneratedPix = ValueNotifier(false);
 
@@ -28,6 +29,7 @@ class CheckoutWidgetController {
 
   void dispose() {
     selectedMethod.dispose();
+    hasSelectedMethod.dispose();
     isLoading.dispose();
     hasGeneratedPix.dispose();
   }
@@ -74,6 +76,7 @@ class CheckoutWidget extends StatefulWidget {
 class _CheckoutWidgetState extends State<CheckoutWidget> {
   // Variável local de estado para renderizar a tela de sucesso
   PaymentStatus? _currentStatus;
+  bool _hasSelectedMethod = false;
   late final CheckoutStore _internalStore;
 
   @override
@@ -117,8 +120,39 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
 
       checkoutController._submitPayment = submitPayment;
       checkoutController.selectedMethod.value = effectiveStore.selectedMethod;
+      checkoutController.hasSelectedMethod.value = _hasSelectedMethod;
       checkoutController.isLoading.value = effectiveStore.isLoading;
       checkoutController.hasGeneratedPix.value = effectiveStore.hasGeneratedPix;
+    }
+
+    Future<void> handleMethodSelection(
+      PaymentMethodType newMethod,
+      Future<void> Function() submitPayment,
+    ) async {
+      if (!_hasSelectedMethod) {
+        setState(() => _hasSelectedMethod = true);
+      }
+
+      effectiveStore.selectMethod(newMethod);
+      syncControllerState(submitPayment);
+
+      final depositRequestId =
+          widget.depositRequestId ??
+          MockBackendSpaService.createOrderAndGetDepositId();
+
+      if (newMethod != PaymentMethodType.pix) {
+        effectiveStore.setFeeAmount(null);
+        effectiveStore.setTotalAmount(effectiveStore.amount);
+        syncControllerState(submitPayment);
+        return;
+      }
+
+      await effectiveStore.fetchFeeAmount(
+        depositRequestId,
+        effectiveStore.amount,
+        newMethod,
+      );
+      syncControllerState(submitPayment);
     }
 
     // List<CalculateItem> buildCalculateItems() {
@@ -324,7 +358,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
             mainAxisSize: MainAxisSize.min,
             children: [
               OrderSummaryCard(
-                items: _internalStore.items
+                items: effectiveStore.items
                     .map(
                       (item) => CartItem(
                         service: Service(name: item.name, price: item.price),
@@ -332,7 +366,9 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                       ),
                     )
                     .toList(),
-                totalValue: _internalStore.amount,
+                subtotalValue: effectiveStore.amount,
+                feeAmount: effectiveStore.feeAmount,
+                totalValue: effectiveStore.totalAmount,
                 currencyFormat: currencyFormat,
               ),
               const SizedBox(height: 24),
@@ -356,16 +392,15 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Pagamento',
+                      'Selecione o Método de Pagamento',
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     const SizedBox(height: 16),
 
                     PaymentMethodSelector(
-                      selectedMethod: method,
-                      onChanged: (newMethod) {
-                        effectiveStore.selectMethod(newMethod);
-                        syncControllerState(processPayment);
+                      selectedMethod: _hasSelectedMethod ? method : null,
+                      onChanged: (newMethod) async {
+                        await handleMethodSelection(newMethod, processPayment);
                       },
                       showPix: widget.showPix,
                       showCard: widget.showCard,
@@ -402,6 +437,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
               const SizedBox(height: 24),
 
               if (widget.showSubmitButton &&
+                  _hasSelectedMethod &&
                   !(method == PaymentMethodType.pix &&
                       effectiveStore.hasGeneratedPix))
                 ElevatedButton(
@@ -438,6 +474,6 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
 
 class MockBackendSpaService {
   static String createOrderAndGetDepositId() {
-    return 'acaa27a1-ade2-45ea-a8b0-3f619ba5ae8f';
+    return '00a2ef39-61b0-45c6-b14f-79d53272fccc';
   }
 }

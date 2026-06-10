@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'payment_types.dart';
 
 class PaymentMethodSelector extends StatelessWidget {
-  final PaymentMethodType selectedMethod;
+  final PaymentMethodType? selectedMethod;
   final ValueChanged<PaymentMethodType> onChanged;
   final bool showPix;
   final bool showCard;

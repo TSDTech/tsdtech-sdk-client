@@ -18,12 +18,12 @@ void main() {
 
     mockAdapter.when(
       'GET',
-      '/deposit-request/public/acaa27a1-ade2-45ea-a8b0-3f619ba5ae8f/summary',
+      '/deposit-request/public/feab62cf-a057-4d92-8490-b5b93c100f56/summary',
       {
-        'id': 'acaa27a1-ade2-45ea-a8b0-3f619ba5ae8f',
+        'id': 'feab62cf-a057-4d92-8490-b5b93c100f56',
         'amount': 0,
         'createdAtUtc': '2026-06-01T00:00:00Z',
-        'depositRequestId': 'acaa27a1-ade2-45ea-a8b0-3f619ba5ae8f',
+        'depositRequestId': 'feab62cf-a057-4d92-8490-b5b93c100f56',
         'items_summary': [],
       },
     );
@@ -44,7 +44,7 @@ void main() {
       await tester.pumpWidget(
         buildApp(
           () => TsdtechUi.showCheckoutSheet<void>(
-            depositRequestId: 'acaa27a1-ade2-45ea-a8b0-3f619ba5ae8f',
+            depositRequestId: 'feab62cf-a057-4d92-8490-b5b93c100f56',
             context: tester.element(find.text('x')),
             items: [],
             administratorId: 'a',
@@ -63,7 +63,7 @@ void main() {
       await tester.pumpWidget(
         buildApp(
           () => TsdtechUi.showCheckoutDialog<void>(
-            depositRequestId: 'acaa27a1-ade2-45ea-a8b0-3f619ba5ae8f',
+            depositRequestId: 'feab62cf-a057-4d92-8490-b5b93c100f56',
             context: tester.element(find.text('x')),
             items: [],
             administratorId: 'a',
@@ -82,7 +82,7 @@ void main() {
       await tester.pumpWidget(
         buildApp(
           () => TsdtechUi.pushCheckoutScreen(
-            depositRequestId: 'acaa27a1-ade2-45ea-a8b0-3f619ba5ae8f',
+            depositRequestId: 'feab62cf-a057-4d92-8490-b5b93c100f56',
             context: tester.element(find.text('x')),
             items: [],
             administratorId: 'a',

@@ -14,7 +14,8 @@ void main() {
     baseUrl: 'https://api.tsdtech.com.br',
     gatewayBaseUrl: 'https://api.seugateway.com.br',
     gatewayApiKey: 'sua-api-key-se-tiver',
-    stage: Environment.hml, // Ou Environment.dev ou Environment.prod dependendo do ambiente que quiser usar
+    stage: Environment
+        .hml, // Ou Environment.dev ou Environment.prod dependendo do ambiente que quiser usar
   );
 
   runApp(const TsdtechApp());

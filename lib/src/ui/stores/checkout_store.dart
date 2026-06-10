@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:tsdtech_client_sdk/core/services/intra-api/md-checkout/checkouts_service.dart';
+import 'package:tsdtech_client_sdk/models/deposit-request/deposit_request_fee.model.dart';
 import 'package:tsdtech_client_sdk/models/deposit-request/deposit_request_summary.model.dart';
 import 'package:tsdtech_client_sdk/models/deposit-request/deposit_request_summary_item.model.dart';
 import 'package:tsdtech_client_sdk/src/models/checkout/deposit_pix_response.model.dart';
@@ -65,6 +66,9 @@ abstract class CheckoutStoreBase with Store {
   String expiryDate = '';
 
   @observable
+  double? feeAmount;
+
+  @observable
   String securityCode = '';
 
   @observable
@@ -75,6 +79,9 @@ abstract class CheckoutStoreBase with Store {
 
   @observable
   double amount = 0;
+
+  @observable
+  double totalAmount = 0;
 
   @observable
   ObservableList<DepositRequestItemSummary> items =
@@ -178,6 +185,12 @@ abstract class CheckoutStoreBase with Store {
   void setAmount(double value) => amount = value;
 
   @action
+  void setFeeAmount(double? value) => feeAmount = value;
+
+  @action
+  void setTotalAmount(double value) => totalAmount = value;
+
+  @action
   void setItems(List<DepositRequestItemSummary> newItems) {
     items.clear();
     items.addAll(newItems);
@@ -192,6 +205,9 @@ abstract class CheckoutStoreBase with Store {
     pixCopyPasteCode = null;
     paymentId = null;
     paymentResult = null;
+    feeAmount = null;
+    amount = 0;
+    totalAmount = 0;
     cancelPixPolling();
     resetCardForm();
   }
@@ -276,9 +292,56 @@ abstract class CheckoutStoreBase with Store {
       final result = await _checkoutService.getOrderSummary(depositRequestId);
       if (result.isError) {
         setError(result.error);
+        return result;
       }
-      setItems(result.value!.itemsSummary);
-      setAmount(result.value!.amount);
+
+      final summary = result.value;
+      if (summary == null) {
+        setError('Resumo do pedido indisponível.');
+        return ValueResult.failure('Resumo do pedido indisponível.');
+      }
+
+      setItems(summary.itemsSummary);
+      setAmount(summary.amount);
+      setFeeAmount(null);
+      setTotalAmount(summary.amount);
+      return result;
+    } catch (e) {
+      setError(e.toString());
+      return ValueResult.failure(e.toString());
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  @action
+  Future<ValueResult<DepositRequestFeeResponse>> fetchFeeAmount(
+    String depositRequestId,
+    double amount,
+    PaymentMethodType selectedMethod,
+  ) async {
+    setLoading(true);
+    clearError();
+
+    try {
+      final result = await _checkoutService.getDepositRequestFee(
+        depositRequestId,
+        selectedMethod,
+      );
+      if (result.isError) {
+        setError(result.error);
+        return result;
+      }
+
+      final feeResponse = result.value;
+      if (feeResponse == null) {
+        setError('Valor da taxa indisponível.');
+        return ValueResult.failure('Valor da taxa indisponível.');
+      }
+
+      final currentFee = feeResponse.feeAmount ?? 0;
+      setFeeAmount(currentFee);
+      setTotalAmount(amount + currentFee);
       return result;
     } catch (e) {
       setError(e.toString());

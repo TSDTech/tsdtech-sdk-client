@@ -66,18 +66,20 @@ void main() {
     });
 
     group('Token management', () {
-      test('setToken persiste no SharedPrefs e header Authorization é enviado',
-          () async {
-        await BaseApi.setToken('meu-token-123');
+      test(
+        'setToken persiste no SharedPrefs e header Authorization é enviado',
+        () async {
+          await BaseApi.setToken('meu-token-123');
 
-        expect(SharedPrefsHelper.authToken, equals('meu-token-123'));
+          expect(SharedPrefsHelper.authToken, equals('meu-token-123'));
 
-        adapter.when('GET', '/auth-check', {});
-        await BaseApi.get('https://example.com/auth-check');
+          adapter.when('GET', '/auth-check', {});
+          await BaseApi.get('https://example.com/auth-check');
 
-        final sentHeaders = adapter.requests.last.headers;
-        expect(sentHeaders['Authorization'], equals('Bearer meu-token-123'));
-      });
+          final sentHeaders = adapter.requests.last.headers;
+          expect(sentHeaders['Authorization'], equals('Bearer meu-token-123'));
+        },
+      );
 
       test('setToken não polui dio.options.headers', () async {
         await BaseApi.setToken('qualquer-token');
@@ -102,28 +104,34 @@ void main() {
       });
 
       test(
-          'token gravado diretamente no SharedPrefs é injetado pelo _mergeHeaders',
-          () async {
-        await SharedPrefsHelper.setAuthToken('token-via-prefs');
+        'token gravado diretamente no SharedPrefs é injetado pelo _mergeHeaders',
+        () async {
+          await SharedPrefsHelper.setAuthToken('token-via-prefs');
 
-        adapter.when('GET', '/via-prefs', {});
-        await BaseApi.get('https://example.com/via-prefs');
+          adapter.when('GET', '/via-prefs', {});
+          await BaseApi.get('https://example.com/via-prefs');
 
-        final sentHeaders = adapter.requests.last.headers;
-        expect(sentHeaders['Authorization'], equals('Bearer token-via-prefs'));
-      });
+          final sentHeaders = adapter.requests.last.headers;
+          expect(
+            sentHeaders['Authorization'],
+            equals('Bearer token-via-prefs'),
+          );
+        },
+      );
 
-      test('listener é notificado com o novo token ao chamar setToken',
-          () async {
-        String? notified;
-        void listener(String? t) => notified = t;
-        BaseApi.addTokenListener(listener);
+      test(
+        'listener é notificado com o novo token ao chamar setToken',
+        () async {
+          String? notified;
+          void listener(String? t) => notified = t;
+          BaseApi.addTokenListener(listener);
 
-        await BaseApi.setToken('token-listener');
+          await BaseApi.setToken('token-listener');
 
-        expect(notified, equals('token-listener'));
-        BaseApi.removeTokenListener(listener);
-      });
+          expect(notified, equals('token-listener'));
+          BaseApi.removeTokenListener(listener);
+        },
+      );
 
       test('listener é notificado com null ao chamar resetToken', () async {
         await BaseApi.setToken('token-a-limpar');

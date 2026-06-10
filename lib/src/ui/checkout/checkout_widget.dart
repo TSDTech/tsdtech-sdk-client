@@ -436,7 +436,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
 
               const SizedBox(height: 24),
 
-                if (widget.showSubmitButton &&
+              if (widget.showSubmitButton &&
                   _hasSelectedMethod &&
                   !(method == PaymentMethodType.pix &&
                       effectiveStore.hasGeneratedPix))

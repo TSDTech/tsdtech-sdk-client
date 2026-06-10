@@ -235,7 +235,7 @@ class CheckoutsService extends IntraApi {
 
   Future<ValueResult<DepositRequestFeeResponse>> getDepositRequestFee(
     String depositRequestId,
-    PaymentMethodType selectedMethod
+    PaymentMethodType selectedMethod,
   ) async {
     try {
       const path = 'fee-config/public';

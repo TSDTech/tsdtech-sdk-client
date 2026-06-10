@@ -8,6 +8,7 @@ class DepositRequestFeeResponse {
 
   DepositRequestFeeResponse({this.feeAmount});
 
-  factory DepositRequestFeeResponse.fromJson(Map<String, dynamic> json) => _$DepositRequestFeeResponseFromJson(json);
+  factory DepositRequestFeeResponse.fromJson(Map<String, dynamic> json) =>
+      _$DepositRequestFeeResponseFromJson(json);
   Map<String, dynamic> toJson() => _$DepositRequestFeeResponseToJson(this);
 }

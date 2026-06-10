@@ -9,8 +9,9 @@ import 'package:tsdtech_client_sdk/models/deposit-request/deposit_request_fee.mo
 import 'package:tsdtech_client_sdk/models/deposit-request/deposit_request_summary.model.dart';
 import 'package:tsdtech_client_sdk/models/value_result.dart';
 import 'package:tsdtech_client_sdk/src/dto/gateway/deposit_request.dart';
-import 'package:tsdtech_client_sdk/src/dto/gateway/payment_method.enum.dart';
 import 'package:tsdtech_client_sdk/src/models/checkout/deposit_pix_response.model.dart';
+
+import '../../../../src/ui/checkout/payment_types.dart';
 
 /// Service for handling checkout and payment operations.
 ///
@@ -234,12 +235,15 @@ class CheckoutsService extends IntraApi {
 
   Future<ValueResult<DepositRequestFeeResponse>> getDepositRequestFee(
     String depositRequestId,
-    double amount,
-    PaymentMethod paymentMethod
+    PaymentMethodType selectedMethod
   ) async {
     try {
-      final path = '$depositRequestPath/fee-config/public';
-      final response = await get(path);
+      const path = 'fee-config/public';
+      final queryParams = {
+        'depositRequestId': depositRequestId,
+        'paymentMethod': selectedMethod.name.toUpperCase(),
+      };
+      final response = await get(path, queryParameters: queryParams);
       final data = response.data as Map<String, dynamic>;
       final feeResponse = DepositRequestFeeResponse.fromJson(data);
       return ValueResult.success(feeResponse);

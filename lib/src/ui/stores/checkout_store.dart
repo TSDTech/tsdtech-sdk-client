@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
 import 'package:tsdtech_client_sdk/core/services/intra-api/md-checkout/checkouts_service.dart';
+import 'package:tsdtech_client_sdk/models/deposit-request/deposit_request_fee.model.dart';
 import 'package:tsdtech_client_sdk/models/deposit-request/deposit_request_summary.model.dart';
 import 'package:tsdtech_client_sdk/models/deposit-request/deposit_request_summary_item.model.dart';
 import 'package:tsdtech_client_sdk/src/models/checkout/deposit_pix_response.model.dart';
@@ -302,8 +303,45 @@ abstract class CheckoutStoreBase with Store {
 
       setItems(summary.itemsSummary);
       setAmount(summary.amount);
-      //setFeeAmount(summary.feeAmount);
-      //setTotalAmount(summary.totalAmount ?? summary.amount);
+      setFeeAmount(null);
+      setTotalAmount(summary.amount);
+      return result;
+    } catch (e) {
+      setError(e.toString());
+      return ValueResult.failure(e.toString());
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  @action
+  Future<ValueResult<DepositRequestFeeResponse>> fetchFeeAmount(
+    String depositRequestId,
+    double amount,
+    PaymentMethodType selectedMethod,
+  ) async {
+    setLoading(true);
+    clearError();
+
+    try {
+      final result = await _checkoutService.getDepositRequestFee(
+        depositRequestId,
+        selectedMethod,
+      );
+      if (result.isError) {
+        setError(result.error);
+        return result;
+      }
+
+      final feeResponse = result.value;
+      if (feeResponse == null) {
+        setError('Valor da taxa indisponível.');
+        return ValueResult.failure('Valor da taxa indisponível.');
+      }
+
+      final currentFee = feeResponse.feeAmount ?? 0;
+      setFeeAmount(currentFee);
+      setTotalAmount(amount + currentFee);
       return result;
     } catch (e) {
       setError(e.toString());

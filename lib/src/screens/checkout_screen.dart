@@ -246,6 +246,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   return ValueListenableBuilder<bool>(
                     valueListenable: _checkoutController.hasGeneratedPix,
                     builder: (context, hasGeneratedPix, _) {
+                      if (!_checkoutController.hasSelectedMethod.value) {
+                        return const SizedBox.shrink();
+                      }
+
                       final isDisabled =
                           isLoading ||
                           _isFetchingGatewayPublicKey ||

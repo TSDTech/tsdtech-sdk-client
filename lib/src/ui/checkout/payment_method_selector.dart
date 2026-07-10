@@ -12,7 +12,7 @@ class PaymentMethodSelector extends StatelessWidget {
     required this.selectedMethod,
     required this.onChanged,
     this.showPix = true,
-    this.showCard = false,
+    this.showCard = true,
   });
 
   @override
@@ -24,9 +24,8 @@ class PaymentMethodSelector extends StatelessWidget {
         // Adiciona um espaçamento caso os dois botões estejam visíveis
         if (showPix && showCard) const SizedBox(width: 12),
 
-        //TODO - implementar cartão
-        // if (showCard)
-        //   _buildOption(PaymentMethodType.card, 'Cartão', Icons.credit_card),
+        if (showCard)
+          _buildOption(PaymentMethodType.card, 'Cartão', Icons.credit_card),
       ],
     );
   }

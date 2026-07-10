@@ -149,6 +149,48 @@ if (result.isSuccess) {
 }
 ```
 
+### Pagamento com Cartão via Gateway (deposit request existente)
+
+Se você já possui um `depositRequestId` (deposit request criado previamente), o
+`TsdtechClient` expõe um método de conveniência que orquestra o fluxo completo
+com o Gateway: busca a chave pública, criptografa os dados do cartão e envia o
+pagamento. Requer inicialização com `gatewayBaseUrl`:
+
+```dart
+// No main.dart
+TsdtechClient.initialize(
+  baseUrl: 'https://api.seudominio.com',
+  gatewayBaseUrl: 'https://gateway.seudominio.com',
+  gatewayApiKey: 'sua_api_key_publica',
+);
+
+// No fluxo de pagamento
+final cardData = CardPaymentData(
+  cardHolderName: 'JOAO DA SILVA',
+  cardNumber: '1234567890123456',
+  cardExpiryDate: '202812',
+  securityCode: '123',
+);
+
+final result = await TsdtechClient.instance.payWithCard(
+  depositRequestId: 'id_do_deposito_gerado',
+  cardData: cardData,
+  installmentNumber: 3, // opcional
+);
+
+if (result.isSuccess) {
+  print('Pagamento processado! Status: ${result.value?.status}');
+} else {
+  print('Erro: ${result.error}');
+}
+
+// Consulta posterior do status do pagamento
+final status = await TsdtechClient.instance.getCardPaymentStatus(
+  'id_do_deposito_gerado',
+);
+print('Status atual: ${status.value?.status}');
+```
+
 ### Autenticação de Usuários Cliente
 
 ```dart
@@ -190,6 +232,7 @@ lib/
 
 | Módulo/Serviço | Descrição | Principais Métodos |
 |---------|-----------|-------------------|
+| `TsdtechClient` | Fluxo gateway orquestrado | `payWithCard()`, `getCardPaymentStatus()` |
 | `CheckoutOrchestrator` | Pagamentos seguros | `payWithCard()`, `payWithPix()`, `payWithBill()` |
 | `CheckoutsService` | Gestão de depósitos | `createCheckout()`, `calculateCart()`, `getPixStatus()` |
 | `AuthServiceClientUser`| Autenticação | `login()`, `signup()` |

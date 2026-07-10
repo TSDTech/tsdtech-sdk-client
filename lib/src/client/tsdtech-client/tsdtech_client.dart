@@ -5,6 +5,10 @@ import '../gateway-client/gateway_client.dart';
 import '../../services/gateway-services/gateway_service.dart';
 import '../../services/checkout_orchestrator.dart';
 import '../../../core/services/intra-api/md-checkout/checkouts_service.dart';
+import '../../../models/value_result.dart';
+import '../../../models/checkouts/checkout_request.model.dart'
+    show CardPaymentData;
+import '../../dto/gateway/payment_status_response.dart';
 
 class TsdtechClient {
   static TsdtechClient? _instance;
@@ -63,6 +67,51 @@ class TsdtechClient {
     );
 
     Constants.setStage(stage ?? Constants.getStage());
+  }
+
+  Future<ValueResult<PaymentStatusResponse>> payWithCard({
+    required String depositRequestId,
+    required CardPaymentData cardData,
+    int? installmentNumber,
+  }) async {
+    final gatewayService = gateway;
+    if (gatewayService == null) {
+      return ValueResult.failure(
+        'Gateway não configurado. Inicialize o SDK com gatewayBaseUrl.',
+      );
+    }
+
+    try {
+      return await gatewayService.payDepositRequest(
+        depositRequestId,
+        cardData,
+        installmentNumber: installmentNumber,
+      );
+    } catch (e) {
+      return ValueResult.failure(
+        'Erro inesperado ao processar o pagamento com cartão.',
+      );
+    }
+  }
+
+  /// Consulta o status do pagamento com cartão de um deposit request.
+  Future<ValueResult<PaymentStatusResponse>> getCardPaymentStatus(
+    String depositRequestId,
+  ) async {
+    final gatewayService = gateway;
+    if (gatewayService == null) {
+      return ValueResult.failure(
+        'Gateway não configurado. Inicialize o SDK com gatewayBaseUrl.',
+      );
+    }
+
+    try {
+      return await gatewayService.getPaymentStatus(depositRequestId);
+    } catch (e) {
+      return ValueResult.failure(
+        'Erro inesperado ao consultar o status do pagamento.',
+      );
+    }
   }
 
   // Pegar a instância pronta em qualquer lugar do app

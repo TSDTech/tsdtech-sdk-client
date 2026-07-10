@@ -82,8 +82,9 @@ class GatewayService {
     String depositRequestId,
     CardPaymentData cardData,
     String pemPublicKey,
-    String keyId,
-  ) async {
+    String keyId, {
+    int? installmentNumber,
+  }) async {
     try {
       final encryptedCard = CardEncryptor.encrypt(pemPublicKey, cardData);
 
@@ -91,6 +92,7 @@ class GatewayService {
         depositRequestId: depositRequestId,
         encryptedCard: encryptedCard,
         keyId: keyId,
+        installmentNumber: installmentNumber,
       );
 
       return await payWithCard(request);
@@ -99,6 +101,33 @@ class GatewayService {
         'Erro inesperado ao criptografar ou processar o pagamento com cartão.',
       );
     }
+  }
+
+  /// Executa o fluxo completo de pagamento com cartão para um deposit request
+  /// já existente: busca a chave pública, criptografa os dados do cartão e
+  /// envia o pagamento (steps 5-7 do fluxo do gateway).
+  Future<ValueResult<PaymentStatusResponse>> payDepositRequest(
+    String depositRequestId,
+    CardPaymentData cardData, {
+    int? installmentNumber,
+  }) async {
+    final keyResult = await fetchPublicKey();
+    if (keyResult.isError) {
+      return ValueResult.failure(
+        '[fetchPublicKey] ${keyResult.error}',
+        title: keyResult.title,
+      );
+    }
+
+    final publicKey = keyResult.value!;
+
+    return payWithEncryptedCard(
+      depositRequestId,
+      cardData,
+      publicKey.pemPublicKey,
+      publicKey.keyId,
+      installmentNumber: installmentNumber,
+    );
   }
 
   ValueResult<T> _parseGatewayError<T>(DioException error) {

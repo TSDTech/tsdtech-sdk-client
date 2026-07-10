@@ -251,7 +251,17 @@ abstract class CheckoutStoreBase with Store {
           securityCode: securityCode.trim(),
         );
 
-        result = await orchestrator.payWithCard(request!, cardData);
+        // Com um deposit request já criado, usa o fluxo direto com o gateway
+        // (fetch key + encrypt + send). O orchestrator só é necessário quando
+        // o checkout ainda precisa ser criado a partir de um CheckoutRequest.
+        if (request != null) {
+          result = await orchestrator.payWithCard(request, cardData);
+        } else {
+          result = await TsdtechClient.instance.payWithCard(
+            depositRequestId: depositRequestId,
+            cardData: cardData,
+          );
+        }
       } else if (isPixSelected) {
         result = await orchestrator.payWithPix(depositRequestId);
 

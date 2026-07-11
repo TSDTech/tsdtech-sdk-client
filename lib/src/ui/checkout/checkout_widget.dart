@@ -408,118 +408,171 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
         return SingleChildScrollView(
           padding: const EdgeInsets.all(10),
           physics: const BouncingScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              OrderSummaryCard(
-                items: effectiveStore.items
-                    .map(
-                      (item) => CartItem(
-                        service: Service(name: item.name, price: item.price),
-                        quantity: item.quantity,
-                      ),
-                    )
-                    .toList(),
-                subtotalValue: effectiveStore.amount,
-                feeAmount: effectiveStore.feeAmount,
-                totalValue: effectiveStore.totalAmount,
-                currencyFormat: currencyFormat,
-              ),
-              const SizedBox(height: 24),
-
-              // Container que envelopa o pagamento
-              Container(
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  // color: Theme.of(context).cardColor,
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withValues(alpha: 0.46),
-                      blurRadius: 7,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Selecione o Método de Pagamento',
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                    const SizedBox(height: 16),
-
-                    PaymentMethodSelector(
-                      selectedMethod: _hasSelectedMethod ? method : null,
-                      onChanged: (newMethod) async {
-                        await handleMethodSelection(newMethod, processPayment);
-                      },
-                      showPix: widget.showPix,
-                      showCard: widget.showCard,
-                    ),
-                    const SizedBox(height: 24),
-
-                    switch (method) {
-                      PaymentMethodType.pix => PixPaymentView(
-                        qrCode: effectiveStore.pixQrCode,
-                        copyPasteCode: effectiveStore.pixCopyPasteCode,
-                        expiresAt: effectiveStore.pixExpirationDate,
-                      ),
-                      PaymentMethodType.card => CardPaymentView(
-                        formKey: effectiveStore.cardFormKey,
-                        formVersion: effectiveStore.cardFormVersion,
-                        cardHolderName: effectiveStore.cardHolderName,
-                        cardNumber: effectiveStore.cardNumber,
-                        expiryDate: effectiveStore.expiryDate,
-                        securityCode: effectiveStore.securityCode,
-                        onCardHolderChanged:
-                            effectiveStore.updateCardHolderName,
-                        onCardNumberChanged: effectiveStore.updateCardNumber,
-                        onExpiryChanged: effectiveStore.updateExpiryDate,
-                        onSecurityCodeChanged:
-                            effectiveStore.updateSecurityCode,
-                        taxId: effectiveStore.taxId,
-                        onTaxIdChanged: effectiveStore.updateTaxId,
-                      ),
-                    },
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 24),
-
-              if (widget.showSubmitButton &&
-                  _hasSelectedMethod &&
-                  !(method == PaymentMethodType.pix &&
-                      effectiveStore.hasGeneratedPix))
-                ElevatedButton(
-                  onPressed: processPayment,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(
-                      0xFF10C484,
-                    ), // Mesmo verde dos preços
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
+          // Em telas largas (web/desktop) o conteúdo não estica: fica
+          // centralizado com uma largura máxima confortável de leitura
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 560),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  OrderSummaryCard(
+                    items: effectiveStore.items
+                        .map(
+                          (item) => CartItem(
+                            service: Service(
+                              name: item.name,
+                              price: item.price,
+                            ),
+                            quantity: item.quantity,
+                          ),
+                        )
+                        .toList(),
+                    subtotalValue: effectiveStore.amount,
+                    feeAmount: effectiveStore.feeAmount,
+                    totalValue: effectiveStore.totalAmount,
+                    currencyFormat: currencyFormat,
                   ),
-                  child: Text(
-                    method == PaymentMethodType.card
-                        ? 'Pagar Agora'
-                        : 'Gerar Pagamento',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
+                  const SizedBox(height: 24),
+
+                  // Container que envelopa o pagamento
+                  Container(
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      // color: Theme.of(context).cardColor,
                       color: Colors.white,
-                      fontSize: 16,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withValues(alpha: 0.46),
+                          blurRadius: 7,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Selecione o Método de Pagamento',
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                        const SizedBox(height: 16),
+
+                        PaymentMethodSelector(
+                          selectedMethod: _hasSelectedMethod ? method : null,
+                          onChanged: (newMethod) async {
+                            await handleMethodSelection(
+                              newMethod,
+                              processPayment,
+                            );
+                          },
+                          showPix: widget.showPix,
+                          showCard: widget.showCard,
+                        ),
+                        const SizedBox(height: 24),
+
+                        // Enquanto o usuário não escolher um método, mostra um
+                        // aviso chamativo no lugar do formulário de pagamento
+                        if (!_hasSelectedMethod)
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: const Color(
+                                0xFF10C484,
+                              ).withValues(alpha: 0.08),
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: const Color(
+                                  0xFF10C484,
+                                ).withValues(alpha: 0.4),
+                              ),
+                            ),
+                            child: const Row(
+                              children: [
+                                Icon(
+                                  Icons.touch_app_outlined,
+                                  color: Color(0xFF10C484),
+                                  size: 28,
+                                ),
+                                SizedBox(width: 12),
+                                Expanded(
+                                  child: Text(
+                                    'Escolha acima como você prefere pagar para '
+                                    'continuar com o pedido.',
+                                    style: TextStyle(
+                                      color: Colors.black87,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        else
+                          switch (method) {
+                            PaymentMethodType.pix => PixPaymentView(
+                              qrCode: effectiveStore.pixQrCode,
+                              copyPasteCode: effectiveStore.pixCopyPasteCode,
+                              expiresAt: effectiveStore.pixExpirationDate,
+                            ),
+                            PaymentMethodType.card => CardPaymentView(
+                              formKey: effectiveStore.cardFormKey,
+                              formVersion: effectiveStore.cardFormVersion,
+                              cardHolderName: effectiveStore.cardHolderName,
+                              cardNumber: effectiveStore.cardNumber,
+                              expiryDate: effectiveStore.expiryDate,
+                              securityCode: effectiveStore.securityCode,
+                              onCardHolderChanged:
+                                  effectiveStore.updateCardHolderName,
+                              onCardNumberChanged:
+                                  effectiveStore.updateCardNumber,
+                              onExpiryChanged: effectiveStore.updateExpiryDate,
+                              onSecurityCodeChanged:
+                                  effectiveStore.updateSecurityCode,
+                              taxId: effectiveStore.taxId,
+                              onTaxIdChanged: effectiveStore.updateTaxId,
+                            ),
+                          },
+                      ],
                     ),
                   ),
-                ),
-              const SizedBox(height: 24),
-              StatusBanner(status: _currentStatus),
-            ],
+
+                  const SizedBox(height: 24),
+
+                  if (widget.showSubmitButton &&
+                      _hasSelectedMethod &&
+                      !(method == PaymentMethodType.pix &&
+                          effectiveStore.hasGeneratedPix))
+                    ElevatedButton(
+                      onPressed: processPayment,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(
+                          0xFF10C484,
+                        ), // Mesmo verde dos preços
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: Text(
+                        method == PaymentMethodType.card
+                            ? 'Pagar Agora'
+                            : 'Gerar Pagamento',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  const SizedBox(height: 24),
+                  StatusBanner(status: _currentStatus),
+                ],
+              ),
+            ),
           ),
         );
       },

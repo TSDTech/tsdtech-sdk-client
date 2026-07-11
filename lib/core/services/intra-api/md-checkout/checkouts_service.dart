@@ -9,7 +9,9 @@ import 'package:tsdtech_client_sdk/models/deposit-request/deposit_request_fee.mo
 import 'package:tsdtech_client_sdk/models/deposit-request/deposit_request_summary.model.dart';
 import 'package:tsdtech_client_sdk/models/value_result.dart';
 import 'package:tsdtech_client_sdk/src/dto/gateway/deposit_request.dart';
+import 'package:tsdtech_client_sdk/src/dto/gateway/payment_method.enum.dart';
 import 'package:tsdtech_client_sdk/src/dto/gateway/payment_status_response.dart';
+import 'package:tsdtech_client_sdk/src/models/checkout/deposit_card_response.model.dart';
 import 'package:tsdtech_client_sdk/src/models/checkout/deposit_pix_response.model.dart';
 import 'package:tsdtech_client_sdk/src/services/gateway-services/gateway_service.dart';
 
@@ -206,14 +208,24 @@ class CheckoutsService extends IntraApi {
     }
   }
 
-  Future<ValueResult<CheckoutResponse>> createDepositCard(
-    CheckoutRequest request,
+  /// Converte um deposit request já criado para pagamento com cartão.
+  ///
+  /// Espelha o fluxo do PIX ([createDepositPix]): recebe o [depositRequestId]
+  /// e retorna um [DepositCardResponse] com o intent de pagamento criado.
+  /// O pagamento em si (criptografia + envio) acontece depois via
+  /// [payWithCard], que delega ao `GatewayService`.
+  Future<ValueResult<DepositCardResponse>> createDepositCard(
+    String depositRequestId,
   ) async {
     try {
       const path = '/deposit-request/api-key/card';
+      final request = DepositRequest(
+        depositRequestId: depositRequestId,
+        paymentMethod: PaymentMethod.card,
+      );
       final response = await post(path, data: request.toJson());
       final data = response.data as Map<String, dynamic>;
-      final result = CheckoutResponse.fromJson(data);
+      final result = DepositCardResponse.fromJson(data);
       return ValueResult.success(result);
     } catch (e) {
       return ValueResult.fromError(e);

@@ -260,11 +260,41 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
           }
           syncControllerState(processPayment);
         } else if (effectiveStore.isCardSelected) {
-          handleSuccess(
-            response.id,
-            processPayment,
-            depositRequestId: response.id,
-          );
+          final statusResponse = response as PaymentStatusResponse;
+
+          switch (statusResponse.status) {
+            case GatewayPaymentStatus.approved:
+              handleSuccess(
+                statusResponse.nsu ?? depositRequestId,
+                processPayment,
+                depositRequestId:
+                    statusResponse.depositRequestId ?? depositRequestId,
+                message: statusResponse.message,
+              );
+            case GatewayPaymentStatus.processing:
+              // Pagamento assíncrono: aguarda a confirmação do gateway com o
+              // mesmo esquema de polling do PIX.
+              notifyStatus(PaymentStatus.waitingPayment);
+              effectiveStore.startCardPollingWithBackoff(
+                depositRequestId,
+                onSuccess: () {
+                  handleSuccess(
+                    statusResponse.nsu ?? depositRequestId,
+                    processPayment,
+                    depositRequestId:
+                        statusResponse.depositRequestId ?? depositRequestId,
+                  );
+                },
+              );
+              syncControllerState(processPayment);
+            case GatewayPaymentStatus.declined:
+            case GatewayPaymentStatus.failed:
+            case GatewayPaymentStatus.cancelled:
+              showError(
+                statusResponse.message ?? 'Pagamento com cartão não aprovado.',
+                processPayment,
+              );
+          }
         }
       } catch (error) {
         showError(error.toString(), processPayment);
@@ -289,7 +319,14 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
               const Center(
                 child: Padding(
                   padding: EdgeInsets.all(32.0),
-                  child: CircularProgressIndicator(),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CircularProgressIndicator(),
+                      SizedBox(height: 16),
+                      Text('Aguardando processamento do pagamento...'),
+                    ],
+                  ),
                 ),
               );
         }
@@ -347,7 +384,25 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
           }
         }
 
-        // 4. Fluxo Normal de Checkout (Formulário)
+        // 4. Tela de Espera do Cartão (polling do gateway em andamento)
+        if (_currentStatus == PaymentStatus.waitingPayment &&
+            effectiveStore.isCardSelected) {
+          return const Center(
+            child: Padding(
+              padding: EdgeInsets.all(32.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 16),
+                  Text('Aguardando processamento do pagamento...'),
+                ],
+              ),
+            ),
+          );
+        }
+
+        // 5. Fluxo Normal de Checkout (Formulário)
         final method = effectiveStore.selectedMethod;
 
         return SingleChildScrollView(

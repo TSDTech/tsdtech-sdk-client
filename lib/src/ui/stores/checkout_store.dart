@@ -257,7 +257,7 @@ abstract class CheckoutStoreBase with Store {
         if (request != null) {
           result = await orchestrator.payWithCard(request, cardData);
         } else {
-          result = await TsdtechClient.instance.payWithCard(
+          result = await _checkoutService.payWithCard(
             depositRequestId: depositRequestId,
             cardData: cardData,
           );

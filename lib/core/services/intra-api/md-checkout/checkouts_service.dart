@@ -9,7 +9,9 @@ import 'package:tsdtech_client_sdk/models/deposit-request/deposit_request_fee.mo
 import 'package:tsdtech_client_sdk/models/deposit-request/deposit_request_summary.model.dart';
 import 'package:tsdtech_client_sdk/models/value_result.dart';
 import 'package:tsdtech_client_sdk/src/dto/gateway/deposit_request.dart';
+import 'package:tsdtech_client_sdk/src/dto/gateway/payment_status_response.dart';
 import 'package:tsdtech_client_sdk/src/models/checkout/deposit_pix_response.model.dart';
+import 'package:tsdtech_client_sdk/src/services/gateway-services/gateway_service.dart';
 
 import '../../../../src/ui/checkout/payment_types.dart';
 
@@ -116,10 +118,10 @@ class CheckoutsService extends IntraApi {
   /// - PIX (one-step): the response will contain `pix` payloads with payment
   ///   instructions that can be consumed immediately.
   ///
-  /// Important: do NOT add gateway interaction methods here — `GatewayService`
-  /// is responsible for handling gateway-specific flows (card deposits,
-  /// redirects, etc.). This service only creates the checkout and returns the
-  /// server response which may contain `depositRequestId` or `pix`.
+  /// Important: gateway-specific logic (fetch key, encrypt, send) lives in
+  /// `GatewayService`. Methods here that touch the gateway ([payWithCard],
+  /// [getCardPaymentStatus]) are thin delegations only — keep the actual
+  /// orchestration in `GatewayService`.
   ///
   /// - [request]: The [CheckoutRequest] containing order details and payment info
   /// - Returns: [ValueResult] containing the [CheckoutResponse] with confirmation
@@ -160,6 +162,47 @@ class CheckoutsService extends IntraApi {
       return ValueResult.success(result);
     } catch (e) {
       return ValueResult.fromError(e);
+    }
+  }
+
+  /// Processa o pagamento com cartão de um deposit request já criado.
+  ///
+  /// Delega para o [GatewayService], que executa o fluxo completo:
+  /// busca a chave pública, criptografa os dados do cartão e envia o
+  /// pagamento. Os dados sensíveis nunca trafegam abertos.
+  ///
+  /// Requer que o SDK tenha sido inicializado com `gatewayBaseUrl`
+  /// (via `TsdtechClient.initialize`), que é quem inicializa o gateway.
+  Future<ValueResult<PaymentStatusResponse>> payWithCard({
+    required String depositRequestId,
+    required CardPaymentData cardData,
+    int? installmentNumber,
+  }) async {
+    try {
+      return await GatewayService.instance.payDepositRequest(
+        depositRequestId,
+        cardData,
+        installmentNumber: installmentNumber,
+      );
+    } catch (e) {
+      return ValueResult.failure(
+        'Gateway não configurado. Inicialize o SDK com gatewayBaseUrl.',
+      );
+    }
+  }
+
+  /// Consulta o status do pagamento com cartão de um deposit request.
+  ///
+  /// Delega para o [GatewayService].
+  Future<ValueResult<PaymentStatusResponse>> getCardPaymentStatus(
+    String depositRequestId,
+  ) async {
+    try {
+      return await GatewayService.instance.getPaymentStatus(depositRequestId);
+    } catch (e) {
+      return ValueResult.failure(
+        'Gateway não configurado. Inicialize o SDK com gatewayBaseUrl.',
+      );
     }
   }
 

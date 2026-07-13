@@ -43,5 +43,55 @@ void main() {
       expect(find.text('PIX'), findsOneWidget);
       expect(find.text('Cartão'), findsNothing);
     });
+
+    testWidgets('Renderiza a opção Cartão quando showCard é true', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: CheckoutWidget(
+              depositRequestId: 'mock_dep_123',
+              items: [],
+              administratorId: 'a',
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('PIX'), findsOneWidget);
+      expect(find.text('Cartão'), findsOneWidget);
+
+      // Antes de selecionar cartão, o formulário não aparece
+      expect(find.byType(CardPaymentView), findsNothing);
+    });
+
+    testWidgets('Selecionar Cartão exibe o formulário de cartão', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: CheckoutWidget(
+              depositRequestId: 'mock_dep_123',
+              items: [],
+              administratorId: 'a',
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Cartão'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(CardPaymentView), findsOneWidget);
+      expect(find.text('Número do cartão'), findsOneWidget);
+      expect(find.text('Nome do titular'), findsOneWidget);
+      expect(find.text('Validade'), findsOneWidget);
+      expect(find.text('CVV'), findsOneWidget);
+      expect(find.text('CPF/CNPJ do titular'), findsOneWidget);
+      expect(find.text('Pagar Agora'), findsOneWidget);
+    });
   });
 }

@@ -120,7 +120,9 @@ class CardPaymentView extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 16),
-              Expanded(
+              // CVV tem no máximo 4 dígitos: largura fixa em vez de esticar
+              SizedBox(
+                width: 150,
                 child: CardFormField(
                   fieldKey: ValueKey('checkout-cvv-$formVersion'),
                   initialValue: securityCode,

@@ -5,6 +5,7 @@ import 'package:tsdtech_client_sdk/core/services/intra-api/md-checkout/checkouts
 import 'package:tsdtech_client_sdk/models/deposit-request/deposit_request_fee.model.dart';
 import 'package:tsdtech_client_sdk/models/deposit-request/deposit_request_summary.model.dart';
 import 'package:tsdtech_client_sdk/models/deposit-request/deposit_request_summary_item.model.dart';
+import 'package:tsdtech_client_sdk/src/dto/gateway/gateway_payment_status.dart';
 import 'package:tsdtech_client_sdk/src/models/checkout/deposit_pix_response.model.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:tsdtech_client_sdk/models/value_result.dart';
@@ -251,7 +252,17 @@ abstract class CheckoutStoreBase with Store {
           securityCode: securityCode.trim(),
         );
 
-        result = await orchestrator.payWithCard(request!, cardData);
+        // Com um deposit request já criado, espelha o fluxo do PIX:
+        // converte o deposit para cartão (createDepositCard) e em seguida
+        // executa o pagamento no gateway (fetch key + encrypt + send).
+        if (request != null) {
+          result = await orchestrator.payWithCard(request, cardData);
+        } else {
+          result = await orchestrator.payWithCardDeposit(
+            depositRequestId,
+            cardData,
+          );
+        }
       } else if (isPixSelected) {
         result = await orchestrator.payWithPix(depositRequestId);
 
@@ -496,6 +507,88 @@ abstract class CheckoutStoreBase with Store {
     }
 
     // Inicializa o primeiro disparo
+    pollStatus();
+  }
+
+  /// Polling do status do pagamento com cartão, espelhando o do PIX.
+  ///
+  /// Usado quando o gateway retorna `processing`: consulta
+  /// [CheckoutsService.getCardPaymentStatus] com o mesmo backoff do PIX
+  /// (5s → 10s → 15s) até aprovar, falhar ou estourar o limite de tentativas.
+  /// Compartilha o token de polling com o PIX, então [cancelPixPolling]
+  /// (chamado em [selectMethod], [reset] e [dispose]) também encerra este loop.
+  @action
+  void startCardPollingWithBackoff(
+    String depositRequestId, {
+    required VoidCallback onSuccess,
+  }) {
+    cancelPixPolling(); // Garante que não existam dois loops concorrentes rodando
+
+    final token = Object();
+    _pixPollingToken = token;
+
+    // Cartão não tem data de expiração como o PIX: usa o teto padrão de
+    // tentativas (~10 min com o backoff completo).
+    const maxAttempts = 50;
+    int attempt = 0;
+
+    Future<void> pollStatus() async {
+      if (!isPixPollingActive(token)) return;
+
+      attempt++;
+
+      if (attempt > maxAttempts) {
+        cancelPixPolling();
+        setError(
+          'O tempo limite para confirmar o pagamento com cartão expirou.',
+        );
+        return;
+      }
+
+      // Mesmo backoff dinâmico do PIX
+      int backoffWaitTime = 5;
+      if (attempt > 5) backoffWaitTime = 10;
+      if (attempt > 15) backoffWaitTime = 15;
+
+      await Future.delayed(Duration(seconds: backoffWaitTime));
+
+      if (!isPixPollingActive(token)) return;
+
+      try {
+        final statusResult = await _checkoutService.getCardPaymentStatus(
+          depositRequestId,
+        );
+
+        if (!isPixPollingActive(token)) return;
+
+        if (statusResult.isSuccess && statusResult.value != null) {
+          final response = statusResult.value!;
+
+          switch (response.status) {
+            case GatewayPaymentStatus.approved:
+              cancelPixPolling();
+              onSuccess();
+              return;
+            case GatewayPaymentStatus.declined:
+            case GatewayPaymentStatus.failed:
+            case GatewayPaymentStatus.cancelled:
+              cancelPixPolling();
+              setError(response.message ?? 'Pagamento com cartão não aprovado.');
+              return;
+            case GatewayPaymentStatus.processing:
+              break; // Continua aguardando a próxima rodada
+          }
+        }
+      } catch (e) {
+        // Erros oscilantes de rede não quebram o fluxo,
+        // apenas deixam agendar a próxima rodada
+      }
+
+      if (isPixPollingActive(token)) {
+        await pollStatus();
+      }
+    }
+
     pollStatus();
   }
 

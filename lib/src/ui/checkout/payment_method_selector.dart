@@ -12,7 +12,7 @@ class PaymentMethodSelector extends StatelessWidget {
     required this.selectedMethod,
     required this.onChanged,
     this.showPix = true,
-    this.showCard = false,
+    this.showCard = true,
   });
 
   @override
@@ -24,15 +24,19 @@ class PaymentMethodSelector extends StatelessWidget {
         // Adiciona um espaçamento caso os dois botões estejam visíveis
         if (showPix && showCard) const SizedBox(width: 12),
 
-        //TODO - implementar cartão
-        // if (showCard)
-        //   _buildOption(PaymentMethodType.card, 'Cartão', Icons.credit_card),
+        if (showCard)
+          _buildOption(PaymentMethodType.card, 'Cartão', Icons.credit_card),
       ],
     );
   }
 
   Widget _buildOption(PaymentMethodType type, String title, IconData icon) {
     final isSelected = selectedMethod == type;
+
+    // Enquanto nada foi escolhido, os dois cards ganham destaque para
+    // chamar a atenção do usuário; depois só o selecionado fica em evidência.
+    final hasSelection = selectedMethod != null;
+    final isHighlighted = isSelected || !hasSelection;
 
     // O mesmo verde utilizado no botão e nos valores da imagem
     const brandGreen = Color(0xFF10C484);
@@ -42,34 +46,55 @@ class PaymentMethodSelector extends StatelessWidget {
         onTap: () => onChanged(type),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          curve: Curves.easeOut,
+          padding: const EdgeInsets.symmetric(vertical: 20),
           decoration: BoxDecoration(
             // Fundo branco se inativo, e um verde beeem sutil se selecionado
             color: isSelected
-                ? brandGreen.withValues(alpha: 0.05)
+                ? brandGreen.withValues(alpha: 0.06)
                 : Colors.white,
             border: Border.all(
-              // Borda verde se selecionado, senão borda cinza clara
-              color: isSelected ? brandGreen : Colors.grey.shade300,
-              width: isSelected ? 2 : 1,
+              // Borda verde se selecionado ou enquanto aguarda a escolha
+              color: isHighlighted
+                  ? brandGreen.withValues(alpha: isSelected ? 1 : 0.45)
+                  : Colors.grey.shade300,
+              width: isSelected ? 2 : 1.4,
             ),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              if (isHighlighted)
+                BoxShadow(
+                  color: brandGreen.withValues(alpha: isSelected ? 0.22 : 0.14),
+                  blurRadius: 14,
+                  offset: const Offset(0, 4),
+                ),
+            ],
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                icon,
-                color: isSelected ? brandGreen : Colors.black54,
-                size: 28,
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: isSelected
+                      ? brandGreen
+                      : brandGreen.withValues(alpha: 0.12),
+                ),
+                child: Icon(
+                  icon,
+                  color: isSelected ? Colors.white : brandGreen,
+                  size: 26,
+                ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 10),
               Text(
                 title,
                 style: TextStyle(
                   color: isSelected ? brandGreen : Colors.black87,
                   fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
-                  fontSize: 14,
+                  fontSize: 15,
                 ),
               ),
             ],

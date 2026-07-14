@@ -250,6 +250,7 @@ abstract class CheckoutStoreBase with Store {
           cardNumber: cardNumber.trim(),
           cardExpiryDate: _toBackendCardExpiry(expiryDate.trim()),
           securityCode: securityCode.trim(),
+          taxId: taxId.trim(),
         );
 
         // Com um deposit request já criado, espelha o fluxo do PIX:

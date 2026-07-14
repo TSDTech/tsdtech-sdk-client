@@ -37,6 +37,7 @@ class CardPaymentData {
   final String cardExpiryDate;
   final String securityCode;
   final bool? preAuthorizedTransaction;
+  final String? taxId;
 
   CardPaymentData({
     required this.cardHolderName,
@@ -44,6 +45,7 @@ class CardPaymentData {
     required this.cardExpiryDate,
     required this.securityCode,
     this.preAuthorizedTransaction,
+    this.taxId,
   });
 
   factory CardPaymentData.fromJson(Map<String, dynamic> json) =>

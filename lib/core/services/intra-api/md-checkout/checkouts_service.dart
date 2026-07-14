@@ -9,7 +9,6 @@ import 'package:tsdtech_client_sdk/models/deposit-request/deposit_request_fee.mo
 import 'package:tsdtech_client_sdk/models/deposit-request/deposit_request_summary.model.dart';
 import 'package:tsdtech_client_sdk/models/value_result.dart';
 import 'package:tsdtech_client_sdk/src/dto/gateway/deposit_request.dart';
-import 'package:tsdtech_client_sdk/src/dto/gateway/payment_method.enum.dart';
 import 'package:tsdtech_client_sdk/src/dto/gateway/payment_status_response.dart';
 import 'package:tsdtech_client_sdk/src/models/checkout/deposit_card_response.model.dart';
 import 'package:tsdtech_client_sdk/src/models/checkout/deposit_pix_response.model.dart';
@@ -218,12 +217,8 @@ class CheckoutsService extends IntraApi {
     String depositRequestId,
   ) async {
     try {
-      const path = '/deposit-request/api-key/card';
-      final request = DepositRequest(
-        depositRequestId: depositRequestId,
-        paymentMethod: PaymentMethod.card,
-      );
-      final response = await post(path, data: request.toJson());
+      final path = '$depositRequestPath/$depositRequestId/convert-to-card';
+      final response = await post(path);
       final data = response.data as Map<String, dynamic>;
       final result = DepositCardResponse.fromJson(data);
       return ValueResult.success(result);

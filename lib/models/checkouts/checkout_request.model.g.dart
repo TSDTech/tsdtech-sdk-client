@@ -39,6 +39,7 @@ CardPaymentData _$CardPaymentDataFromJson(Map<String, dynamic> json) =>
       cardExpiryDate: json['cardExpiryDate'] as String,
       securityCode: json['securityCode'] as String,
       preAuthorizedTransaction: json['preAuthorizedTransaction'] as bool?,
+      taxId: json['taxId'] as String?,
     );
 
 Map<String, dynamic> _$CardPaymentDataToJson(CardPaymentData instance) =>
@@ -48,4 +49,5 @@ Map<String, dynamic> _$CardPaymentDataToJson(CardPaymentData instance) =>
       'cardExpiryDate': instance.cardExpiryDate,
       'securityCode': instance.securityCode,
       'preAuthorizedTransaction': instance.preAuthorizedTransaction,
+      'taxId': instance.taxId,
     };

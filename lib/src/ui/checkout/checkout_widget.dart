@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:intl/intl.dart';
 import 'package:tsdtech_client_sdk/src/ui/components/checkout/order_summary_card.dart';
@@ -79,15 +80,76 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
   bool _hasSelectedMethod = false;
   late final CheckoutStore _internalStore;
 
+  // Guarda o depositRequestId criado pelo próprio SDK quando o widget não
+  // recebe um via widget.depositRequestId (fluxo onde o SDK cria o checkout).
+  String? _createdDepositRequestId;
+
+  CheckoutStore get _effectiveStore => widget.store ?? _internalStore;
+
   @override
   void initState() {
     super.initState();
     // A store nasce junto com o Widget e mantém os dados seguros
     _internalStore = CheckoutStore();
-    final requestId =
+
+    final providedId =
         widget.depositRequestId ??
         MockBackendSpaService.createOrderAndGetDepositId();
-    _internalStore.fetchOrderSummary(requestId);
+    if (providedId != null) {
+      _createdDepositRequestId = providedId;
+      _effectiveStore.fetchOrderSummary(providedId);
+    } else {
+      _createCheckoutAndLoadSummary();
+    }
+  }
+
+  /// Constrói o [CheckoutRequest] a partir dos items do carrinho.
+  CheckoutRequest _buildCheckoutRequest() {
+    final items = widget.items ?? const <CartItem>[];
+    final cart = items
+        .map(
+          (item) => CalculateItem(
+            serviceId: item.service.id ?? '',
+            value: item.service.price ?? 0,
+            quantity: item.quantity,
+          ),
+        )
+        .toList();
+    final totalValue = items.fold<double>(
+      0,
+      (sum, item) => sum + (item.service.price ?? 0) * item.quantity,
+    );
+
+    return CheckoutRequest(
+      cart: cart,
+      paymentMethod: 'generic',
+      totalValue: totalValue,
+    );
+  }
+
+  /// Cria o checkout no backend (GENERIC + PENDING) e carrega o resumo do
+  /// pedido usando o depositRequestId retornado.
+  Future<void> _createCheckoutAndLoadSummary() async {
+    _effectiveStore.setLoading(true);
+    _effectiveStore.clearError();
+
+    final request = _buildCheckoutRequest();
+    final result = await CheckoutsService.instance.createCheckout(request);
+
+    if (!mounted) return;
+
+    if (!result.isSuccess || result.value?.depositRequestId == null) {
+      _effectiveStore.setError(
+        result.isSuccess
+            ? 'Não foi possível iniciar o checkout.'
+            : result.error.toString(),
+      );
+      _effectiveStore.setLoading(false);
+      return;
+    }
+
+    _createdDepositRequestId = result.value!.depositRequestId;
+    await _effectiveStore.fetchOrderSummary(_createdDepositRequestId!);
   }
 
   @override
@@ -118,11 +180,26 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
         return;
       }
 
-      checkoutController._submitPayment = submitPayment;
-      checkoutController.selectedMethod.value = effectiveStore.selectedMethod;
-      checkoutController.hasSelectedMethod.value = _hasSelectedMethod;
-      checkoutController.isLoading.value = effectiveStore.isLoading;
-      checkoutController.hasGeneratedPix.value = effectiveStore.hasGeneratedPix;
+      void applyState() {
+        checkoutController._submitPayment = submitPayment;
+        checkoutController.selectedMethod.value =
+            effectiveStore.selectedMethod;
+        checkoutController.hasSelectedMethod.value = _hasSelectedMethod;
+        checkoutController.isLoading.value = effectiveStore.isLoading;
+        checkoutController.hasGeneratedPix.value =
+            effectiveStore.hasGeneratedPix;
+      }
+
+      // Evita "setState() called during build": quando chamado de dentro do
+      // builder do Observer, adia a notificação dos ValueNotifiers pro fim
+      // do frame atual em vez de disparar rebuilds síncronos em outras
+      // subárvores (ex.: ValueListenableBuilder no CheckoutScreen).
+      if (SchedulerBinding.instance.schedulerPhase ==
+          SchedulerPhase.persistentCallbacks) {
+        SchedulerBinding.instance.addPostFrameCallback((_) => applyState());
+      } else {
+        applyState();
+      }
     }
 
     Future<void> handleMethodSelection(
@@ -137,8 +214,11 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
       syncControllerState(submitPayment);
 
       final depositRequestId =
-          widget.depositRequestId ??
-          MockBackendSpaService.createOrderAndGetDepositId();
+          widget.depositRequestId ?? _createdDepositRequestId;
+      if (depositRequestId == null) {
+        syncControllerState(submitPayment);
+        return;
+      }
 
       if (newMethod != PaymentMethodType.pix) {
         effectiveStore.setFeeAmount(null);
@@ -154,29 +234,6 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
       );
       syncControllerState(submitPayment);
     }
-
-    // List<CalculateItem> buildCalculateItems() {
-    //   return _internalStore.items.map((item) {
-    //     return CalculateItem(
-    //       serviceId: item.name,
-    //       value: item.price,
-    //       quantity: item.quantity,
-    //     );
-    //   }).toList();
-    // }
-
-    // final totalValue = _internalStore.items.fold<double>(0.0, (sum, item) {
-    //   return sum + (item.price) * item.quantity;
-    // });
-
-    // String methodToApiString(PaymentMethodType method) {
-    //   switch (method) {
-    //     case PaymentMethodType.pix:
-    //       return 'pix';
-    //     case PaymentMethodType.card:
-    //       return 'card';
-    //   }
-    // }
 
     void showError(String message, Future<void> Function() submitPayment) {
       effectiveStore.setError(message);
@@ -218,20 +275,14 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
 
       try {
         final depositRequestId =
-            widget.depositRequestId ??
-            MockBackendSpaService.createOrderAndGetDepositId();
-        // final dynamic result;
-
-        // final request = checkout_request.CheckoutRequest(
-        //   cart: buildCalculateItems(),
-        //   paymentMethod: methodToApiString(effectiveStore.selectedMethod),
-        //   totalValue: totalValue,
-        //   depositRequestId: depositRequestId,
-        // );
+            widget.depositRequestId ?? _createdDepositRequestId;
+        if (depositRequestId == null) {
+          showError('Checkout ainda não está pronto. Tente novamente.', processPayment);
+          return;
+        }
 
         final result = await effectiveStore.processPayment(
           depositRequestId: depositRequestId,
-          // request: request,
         );
 
         if (!result.isSuccess) {
@@ -579,7 +630,6 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
     );
   }
 }
-
 class MockBackendSpaService {
   static String createOrderAndGetDepositId() {
     return '7f867680-df5f-40c0-b21c-7d569d3ef010';

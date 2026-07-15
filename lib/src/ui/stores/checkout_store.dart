@@ -574,7 +574,9 @@ abstract class CheckoutStoreBase with Store {
             case GatewayPaymentStatus.failed:
             case GatewayPaymentStatus.cancelled:
               cancelPixPolling();
-              setError(response.message ?? 'Pagamento com cartão não aprovado.');
+              setError(
+                response.message ?? 'Pagamento com cartão não aprovado.',
+              );
               return;
             case GatewayPaymentStatus.processing:
               break; // Continua aguardando a próxima rodada

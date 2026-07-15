@@ -126,32 +126,35 @@ void main() {
       expect(result.error, contains('[fetchPublicKey]'));
     });
 
-    test('retorna failure quando a criptografia falha (PEM inválido)', () async {
-      gatewayClient.dio.interceptors.add(
-        MockInterceptor((options, handler) {
-          if (options.path == '/public-keys') {
-            handler.resolve(
-              Response(
-                requestOptions: options,
-                statusCode: 200,
-                data: {'keyId': 'key_123', 'pemPublicKey': 'not-a-pem-key'},
-              ),
-            );
-          } else {
-            fail(
-              'Não deveria chamar ${options.path} após falha na criptografia',
-            );
-          }
-        }),
-      );
+    test(
+      'retorna failure quando a criptografia falha (PEM inválido)',
+      () async {
+        gatewayClient.dio.interceptors.add(
+          MockInterceptor((options, handler) {
+            if (options.path == '/public-keys') {
+              handler.resolve(
+                Response(
+                  requestOptions: options,
+                  statusCode: 200,
+                  data: {'keyId': 'key_123', 'pemPublicKey': 'not-a-pem-key'},
+                ),
+              );
+            } else {
+              fail(
+                'Não deveria chamar ${options.path} após falha na criptografia',
+              );
+            }
+          }),
+        );
 
-      final result = await client.payWithCard(
-        depositRequestId: 'req_123',
-        cardData: buildCardData(),
-      );
+        final result = await client.payWithCard(
+          depositRequestId: 'req_123',
+          cardData: buildCardData(),
+        );
 
-      expect(result.isError, true);
-    });
+        expect(result.isError, true);
+      },
+    );
 
     test('retorna failure quando o envio do pagamento falha', () async {
       gatewayClient.dio.interceptors.add(

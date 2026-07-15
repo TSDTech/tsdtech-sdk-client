@@ -125,9 +125,7 @@ class _PaymentOptionCardState extends State<_PaymentOptionCard> {
                 if (isHighlighted || _isHovered)
                   BoxShadow(
                     color: brandGreen.withValues(
-                      alpha: isSelected
-                          ? 0.22
-                          : (_isHovered ? 0.2 : 0.14),
+                      alpha: isSelected ? 0.22 : (_isHovered ? 0.2 : 0.14),
                     ),
                     blurRadius: _isHovered ? 18 : 14,
                     offset: const Offset(0, 4),

@@ -52,6 +52,11 @@ class CheckoutWidget extends StatefulWidget {
   final CheckoutWidgetController? controller;
   final CheckoutStore? store;
 
+  /// Quando `true`, usa o [MockBackendSpaService] para obter um
+  /// depositRequestId fixo em vez de criar o checkout no backend.
+  /// Apenas para testes/demos locais.
+  final bool debugUseMockBackend;
+
   const CheckoutWidget({
     super.key,
     this.items,
@@ -68,6 +73,7 @@ class CheckoutWidget extends StatefulWidget {
     this.showSubmitButton = true,
     this.controller,
     this.store,
+    this.debugUseMockBackend = true,
   });
 
   @override
@@ -94,7 +100,9 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
 
     final providedId =
         widget.depositRequestId ??
-        MockBackendSpaService.createOrderAndGetDepositId();
+        (widget.debugUseMockBackend
+            ? MockBackendSpaService.createOrderAndGetDepositId()
+            : null);
     if (providedId != null) {
       _createdDepositRequestId = providedId;
       _effectiveStore.fetchOrderSummary(providedId);
@@ -182,8 +190,7 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
 
       void applyState() {
         checkoutController._submitPayment = submitPayment;
-        checkoutController.selectedMethod.value =
-            effectiveStore.selectedMethod;
+        checkoutController.selectedMethod.value = effectiveStore.selectedMethod;
         checkoutController.hasSelectedMethod.value = _hasSelectedMethod;
         checkoutController.isLoading.value = effectiveStore.isLoading;
         checkoutController.hasGeneratedPix.value =
@@ -277,7 +284,10 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
         final depositRequestId =
             widget.depositRequestId ?? _createdDepositRequestId;
         if (depositRequestId == null) {
-          showError('Checkout ainda não está pronto. Tente novamente.', processPayment);
+          showError(
+            'Checkout ainda não está pronto. Tente novamente.',
+            processPayment,
+          );
           return;
         }
 
@@ -630,6 +640,9 @@ class _CheckoutWidgetState extends State<CheckoutWidget> {
     );
   }
 }
+
+/// Backend fake usado apenas em testes/demos locais, habilitado via
+/// [CheckoutWidget.debugUseMockBackend].
 class MockBackendSpaService {
   static String createOrderAndGetDepositId() {
     return '7f867680-df5f-40c0-b21c-7d569d3ef010';

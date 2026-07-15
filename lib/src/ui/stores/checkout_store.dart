@@ -217,15 +217,6 @@ abstract class CheckoutStoreBase with Store {
   // LÓGICA CORE TRANSFERIDA DO WIDGET
   // ==========================================
 
-  /// Formata a data de validade pro Gateway
-  String _toBackendCardExpiry(String value) {
-    final parts = value.split('/');
-    if (parts.length != 2) return '';
-    final month = parts[0].padLeft(2, '0');
-    final year = parts[1];
-    return '20$year$month';
-  }
-
   /// Processa o pagamento delegando pro Orchestrator de acordo com o selectedMethod
   @action
   Future<ValueResult<dynamic>> processPayment({
@@ -248,7 +239,9 @@ abstract class CheckoutStoreBase with Store {
         final cardData = checkout_request.CardPaymentData(
           cardHolderName: cardHolderName.trim(),
           cardNumber: cardNumber.trim(),
-          cardExpiryDate: _toBackendCardExpiry(expiryDate.trim()),
+          // O backend espera MM/YY dentro do payload criptografado e faz a
+          // conversão para YYYYMM ele mesmo (DecryptCardService).
+          cardExpiryDate: expiryDate.trim(),
           securityCode: securityCode.trim(),
           taxId: taxId.trim(),
         );

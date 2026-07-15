@@ -67,9 +67,9 @@ void main() {
                 data: {'keyId': 'key_123', 'pemPublicKey': validMockPemKey},
               ),
             );
-          } else if (options.path == '/payments/card' &&
+          } else if (options.path == '/deposit-request/public/card-payment' &&
               options.method == 'POST') {
-            sentEncryptedCard = options.data['encryptedCard'] as String?;
+            sentEncryptedCard = options.data['encryptedCardData'] as String?;
             sentInstallmentNumber = options.data['installmentNumber'] as int?;
             handler.resolve(
               Response(
@@ -167,7 +167,7 @@ void main() {
                 data: {'keyId': 'key_123', 'pemPublicKey': validMockPemKey},
               ),
             );
-          } else if (options.path == '/payments/card') {
+          } else if (options.path == '/deposit-request/public/card-payment') {
             handler.reject(
               DioException(
                 requestOptions: options,
@@ -209,12 +209,12 @@ void main() {
     test('retorna o status do pagamento com sucesso', () async {
       gatewayClient.dio.interceptors.add(
         MockInterceptor((options, handler) {
-          if (options.path == '/payments/status/req_789') {
+          if (options.path == '/deposit-request/public/status-pix/req_789') {
             handler.resolve(
               Response(
                 requestOptions: options,
                 statusCode: 200,
-                data: {'depositRequestId': 'req_789', 'status': 'processing'},
+                data: {'id': 'req_789', 'status': 'WAITING_PAYMENT'},
               ),
             );
           }

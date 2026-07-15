@@ -5,6 +5,8 @@ import '../../../models/value_result.dart';
 import '../../client/gateway-client/gateway_client.dart';
 import '../../dto/gateway/public_key_response.dart';
 import '../../dto/gateway/card_payment_request.dart';
+import '../../dto/gateway/deposit_request_status.dart';
+import '../../dto/gateway/gateway_payment_status.dart';
 import '../../dto/gateway/payment_status_response.dart';
 
 /// Serviço responsável por orquestrar chamadas de pagamento com o Gateway.
@@ -48,7 +50,7 @@ class GatewayService {
   ) async {
     try {
       final response = await _client.dio.post(
-        '/payments/card',
+        '/deposit-request/public/card-payment',
         data: request.toJson(),
       );
       final data = PaymentStatusResponse.fromJson(response.data);
@@ -65,10 +67,21 @@ class GatewayService {
   ) async {
     try {
       final response = await _client.dio.get(
-        '/payments/status/$depositRequestId',
+        '/deposit-request/public/status-pix/$depositRequestId',
       );
-      final data = PaymentStatusResponse.fromJson(response.data);
-      return ValueResult.success(data);
+      final data = response.data as Map<String, dynamic>;
+      final depositStatus = DepositRequestStatus.fromValue(
+        data['status'] as String?,
+      );
+      return ValueResult.success(
+        PaymentStatusResponse(
+          status:
+              depositStatus?.toGatewayPaymentStatus() ??
+              GatewayPaymentStatus.failed,
+          depositRequestId: (data['id'] as String?) ?? depositRequestId,
+          nsu: data['nsuOperation'] as String?,
+        ),
+      );
     } on DioException catch (e) {
       return _parseGatewayError<PaymentStatusResponse>(e);
     } catch (e) {
@@ -78,6 +91,7 @@ class GatewayService {
     }
   }
 
+
   Future<ValueResult<PaymentStatusResponse>> payWithEncryptedCard(
     String depositRequestId,
     CardPaymentData cardData,
@@ -86,13 +100,19 @@ class GatewayService {
     int? installmentNumber,
   }) async {
     try {
-      final encryptedCard = CardEncryptor.encrypt(pemPublicKey, cardData);
+      final encryptedCardData = CardEncryptor.encrypt(pemPublicKey, cardData);
+
+      final taxId = cardData.taxId?.trim();
+      final cardPayer = (taxId != null && taxId.isNotEmpty)
+          ? CardPayer(cardHolderName: cardData.cardHolderName, cpf: taxId)
+          : null;
 
       final request = CardPaymentRequest(
         depositRequestId: depositRequestId,
-        encryptedCard: encryptedCard,
+        encryptedCardData: encryptedCardData,
         keyId: keyId,
         installmentNumber: installmentNumber,
+        cardPayer: cardPayer,
       );
 
       return await payWithCard(request);

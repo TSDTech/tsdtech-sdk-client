@@ -29,6 +29,7 @@ export 'src/dto/gateway/public_key_response.dart';
 export 'src/dto/gateway/card_payment_request.dart';
 export 'src/dto/gateway/payment_status_response.dart';
 export 'src/dto/gateway/gateway_payment_status.dart';
+export 'src/dto/gateway/deposit_request_status.dart';
 
 // Gateway Client & Service (from PR #3)
 export 'src/client/gateway-client/gateway_client.dart' show GatewayClient;

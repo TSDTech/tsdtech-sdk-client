@@ -71,7 +71,7 @@ GQIDAQAB
   test('payWithCard returns PaymentStatusResponse approved', () async {
     client.dio.interceptors.add(
       MockInterceptor((options, handler) {
-        if (options.path == '/payments/card' && options.method == 'POST') {
+        if (options.path == '/deposit-request/public/card-payment' && options.method == 'POST') {
           handler.resolve(
             Response(
               requestOptions: options,
@@ -85,7 +85,7 @@ GQIDAQAB
     final result = await service.payWithCard(
       CardPaymentRequest(
         depositRequestId: 'req_456',
-        encryptedCard: 'data',
+        encryptedCardData: 'data',
         keyId: 'key_123',
       ),
     );
@@ -95,12 +95,12 @@ GQIDAQAB
   test('getPaymentStatus returns PaymentStatusResponse processing', () async {
     client.dio.interceptors.add(
       MockInterceptor((options, handler) {
-        if (options.path == '/payments/status/req_789') {
+        if (options.path == '/deposit-request/public/status-pix/req_789') {
           handler.resolve(
             Response(
               requestOptions: options,
               statusCode: 200,
-              data: {'depositRequestId': 'req_789', 'status': 'processing'},
+              data: {'id': 'req_789', 'status': 'WAITING_PAYMENT'},
             ),
           );
         }
@@ -115,12 +115,12 @@ GQIDAQAB
     () async {
       client.dio.interceptors.add(
         MockInterceptor((options, handler) {
-          if (options.path == '/payments/card' && options.method == 'POST') {
-            final encryptedCard = options.data['encryptedCard'];
-            expect(encryptedCard, isA<String>());
-            expect((encryptedCard as String).isNotEmpty, isTrue);
+          if (options.path == '/deposit-request/public/card-payment' && options.method == 'POST') {
+            final encryptedCardData = options.data['encryptedCardData'];
+            expect(encryptedCardData, isA<String>());
+            expect((encryptedCardData as String).isNotEmpty, isTrue);
             expect(
-              RegExp(r'^[A-Za-z0-9+/=]+$').hasMatch(encryptedCard),
+              RegExp(r'^[A-Za-z0-9+/=]+$').hasMatch(encryptedCardData),
               isTrue,
             );
 
@@ -163,7 +163,7 @@ GQIDAQAB
     () async {
       client.dio.interceptors.add(
         MockInterceptor((options, handler) {
-          if (options.path == '/payments/card') {
+          if (options.path == '/deposit-request/public/card-payment') {
             handler.reject(
               DioException(
                 requestOptions: options,
@@ -181,7 +181,7 @@ GQIDAQAB
       final result = await service.payWithCard(
         CardPaymentRequest(
           depositRequestId: 'req_err',
-          encryptedCard: 'data',
+          encryptedCardData: 'data',
           keyId: 'key_123',
         ),
       );

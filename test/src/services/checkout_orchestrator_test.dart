@@ -105,7 +105,7 @@ GQIDAQAB
                 },
               ),
             );
-          } else if (options.path == '/payments/card') {
+          } else if (options.path == '/deposit-request/public/card-payment') {
             handler.resolve(
               Response(
                 requestOptions: options,
@@ -201,7 +201,7 @@ GQIDAQAB
                   },
                 ),
               );
-            } else if (options.path == '/payments/card') {
+            } else if (options.path == '/deposit-request/public/card-payment') {
               handler.resolve(
                 Response(
                   requestOptions: options,
@@ -248,7 +248,7 @@ GQIDAQAB
                 },
               ),
             );
-          } else if (options.path == '/payments/card') {
+          } else if (options.path == '/deposit-request/public/card-payment') {
             handler.reject(
               DioException(
                 requestOptions: options,

@@ -93,6 +93,38 @@ class CheckoutOrchestrator {
     return payResult;
   }
 
+  /// Executes the card payment flow for an already-created deposit request,
+  /// mirroring the PIX flow ([payWithPix]).
+  ///
+  /// Steps:
+  /// 1. [CheckoutsService.createDepositCard] — converts the deposit request
+  ///    to the card payment method and creates the payment intent
+  /// 2. [GatewayService.payDepositRequest] — fetches the public key, encrypts
+  ///    the card data and submits the payment
+  ///
+  /// Returns [ValueResult.failure] with a contextual message if any step fails.
+  Future<ValueResult<PaymentStatusResponse>> payWithCardDeposit(
+    String depositRequestId,
+    CardPaymentData cardData, {
+    int? installmentNumber,
+  }) async {
+    final createResult = await _checkoutService.createDepositCard(
+      depositRequestId,
+    );
+    if (createResult.isError) {
+      return ValueResult.failure(
+        '[createDepositCard] ${createResult.error}',
+        title: createResult.title,
+      );
+    }
+
+    return _gatewayService.payDepositRequest(
+      depositRequestId,
+      cardData,
+      installmentNumber: installmentNumber,
+    );
+  }
+
   /// Convenience method for PIX payments (one-step flow).
   ///
   /// Delegates directly to [CheckoutsService.createCheckout]. The gateway is

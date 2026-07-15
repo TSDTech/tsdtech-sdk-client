@@ -8,6 +8,7 @@ import 'package:tsdtech_client_sdk/src/ui/config/tsdtech_ui_config.dart';
 
 class SectionCard extends StatelessWidget {
   const SectionCard({
+    super.key,
     required this.title,
     required this.subtitle,
     required this.child,
@@ -43,7 +44,7 @@ class SectionCard extends StatelessWidget {
 }
 
 class CartPreview extends StatelessWidget {
-  const CartPreview({required this.items, required this.total});
+  const CartPreview({super.key, required this.items, required this.total});
   final List<CartItem> items;
   final double total;
 
@@ -112,7 +113,7 @@ class CartPreview extends StatelessWidget {
 }
 
 class InfoTile extends StatelessWidget {
-  const InfoTile({required this.title, required this.content});
+  const InfoTile({super.key, required this.title, required this.content});
   final String title;
   final String content;
 
@@ -140,7 +141,7 @@ class InfoTile extends StatelessWidget {
 }
 
 class FeatureChip extends StatelessWidget {
-  const FeatureChip({required this.label});
+  const FeatureChip({super.key, required this.label});
   final String label;
 
   @override
@@ -150,7 +151,7 @@ class FeatureChip extends StatelessWidget {
 }
 
 class HeroMetric extends StatelessWidget {
-  const HeroMetric({required this.label, required this.value});
+  const HeroMetric({super.key, required this.label, required this.value});
   final String label;
   final String value;
 
@@ -188,7 +189,7 @@ class HeroMetric extends StatelessWidget {
 }
 
 class PaletteRow extends StatelessWidget {
-  const PaletteRow({required this.label, required this.value});
+  const PaletteRow({super.key, required this.label, required this.value});
   final String label;
   final String value;
 
@@ -213,7 +214,7 @@ class PaletteRow extends StatelessWidget {
 }
 
 class ColorSwatchCard extends StatelessWidget {
-  const ColorSwatchCard({required this.label, required this.color});
+  const ColorSwatchCard({super.key, required this.label, required this.color});
   final String label;
   final Color color;
 

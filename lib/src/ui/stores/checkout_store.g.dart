@@ -394,6 +394,22 @@ mixin _$CheckoutStore on CheckoutStoreBase, Store {
     );
   }
 
+  late final _$fetchFeeAmountAsyncAction = AsyncAction(
+    'CheckoutStoreBase.fetchFeeAmount',
+    context: context,
+  );
+
+  @override
+  Future<ValueResult<DepositRequestFeeResponse>> fetchFeeAmount(
+    String depositRequestId,
+    double amount,
+    PaymentMethodType selectedMethod,
+  ) {
+    return _$fetchFeeAmountAsyncAction.run(
+      () => super.fetchFeeAmount(depositRequestId, amount, selectedMethod),
+    );
+  }
+
   late final _$CheckoutStoreBaseActionController = ActionController(
     name: 'CheckoutStoreBase',
     context: context,
@@ -635,6 +651,24 @@ mixin _$CheckoutStore on CheckoutStoreBase, Store {
     );
     try {
       return super.startPixPollingWithBackoff(paymentId, onSuccess: onSuccess);
+    } finally {
+      _$CheckoutStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void startCardPollingWithBackoff(
+    String depositRequestId, {
+    required VoidCallback onSuccess,
+  }) {
+    final _$actionInfo = _$CheckoutStoreBaseActionController.startAction(
+      name: 'CheckoutStoreBase.startCardPollingWithBackoff',
+    );
+    try {
+      return super.startCardPollingWithBackoff(
+        depositRequestId,
+        onSuccess: onSuccess,
+      );
     } finally {
       _$CheckoutStoreBaseActionController.endAction(_$actionInfo);
     }
